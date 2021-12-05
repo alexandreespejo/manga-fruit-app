@@ -5,3 +5,10 @@ export const Container = styled.SafeAreaView`
   background-color: ${(props) => props.theme.background};
   align-items: center;
 `;
+
+export const ListContainer = styled.SafeAreaView`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: blue;
+`;
