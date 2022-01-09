@@ -8,13 +8,14 @@ import { ApplicationContext } from "../../contexts/Application";
 
 export default function SearchBar() {
   const [search, setSearch] = useState('')
-  const { setSearchData } = useContext(ApplicationContext)
+  const { setSearchData,startLoad,endLoad  } = useContext(ApplicationContext)
 
   const onSearch = () => {
+    startLoad();
     getSearch(search).then((data) => {
-      console.log(data)
       setSearchData(data.mangas)
-    }).catch(err => console.log(err))
+    }).catch(err => console.log(err)
+    ).finally(()=>endLoad());
   }
   return (
     <Container>
@@ -28,9 +29,9 @@ export default function SearchBar() {
         placeholder="Pesquise um titulo"
         selectionColor={Colors.light.text}
       />
-      <Button onPress={() => { }}>
+      {/* <Button onPress={() => { }}>
         <Feather name="sliders" size={25} color={Colors.light.text} />
-      </Button>
+      </Button> */}
     </Container>
   );
 }

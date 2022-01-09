@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { Image, Container, Title, InfoWrapper, TitleContainer, RankContainer } from "./style";
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function MangaCard({ data }) {
+export default function MangaCard({ data,onMangaSelect }) {
   const styles = StyleSheet.create({
     containerShadow: {
       shadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -12,7 +12,7 @@ export default function MangaCard({ data }) {
     }
   })
   return (
-    <Container style={styles.containerShadow}>
+    <Container style={styles.containerShadow} onPress={()=>onMangaSelect()}>
       <Image
         source={{
           url: data?.cover ?? 'https://reactnative.dev/img/tiny_logo.png',
