@@ -1,17 +1,18 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import ChapterScreen from '../screens/Chapter';
 import SearchScreen from '../screens/Search';
+import MangaStack from './mangaStack';
 
 const Stack = createStackNavigator();
 
 export default function SearchStack() {
   return (
     <Stack.Navigator initialRouteName="Search" screenOptions={{
-      headerShown: false,
+      title:"",
       gestureEnabled: false,
+      animationEnabled:false,
     }}>
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="Chapter" component={ChapterScreen} />
+      <Stack.Screen name="MangaStack" component={MangaStack} />
     </Stack.Navigator>
   );
 }

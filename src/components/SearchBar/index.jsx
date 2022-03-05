@@ -17,6 +17,7 @@ export default function SearchBar() {
     }).catch(err => console.log(err)
     ).finally(()=>endLoad());
   }
+  
   return (
     <Container>
       <Button onPress={() => onSearch()}>

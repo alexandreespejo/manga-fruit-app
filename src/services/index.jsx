@@ -15,3 +15,13 @@ export const getSearch = async (title) => {
   });
   return data
 };
+
+export const getChapters = async (id,page) => {
+  const { data } = await api.get('/chapters/', {
+    params: {
+      id,
+      page
+    }
+  });
+  return data
+};

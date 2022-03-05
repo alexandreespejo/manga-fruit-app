@@ -1,8 +1,17 @@
 import { StyleSheet } from "react-native";
 import { Image, Container, Title, InfoWrapper, TitleContainer, RankContainer } from "./style";
 import { MaterialIcons } from '@expo/vector-icons';
+import { ApplicationContext } from "../../contexts/Application";
+import { useCallback, useContext } from "react";
 
-export default function MangaCard({ data,onMangaSelect }) {
+export default function MangaCard({ data,goToChapter }) {
+  const { setSelectedManga } = useContext(ApplicationContext);
+
+  const onMangaSelect=useCallback(()=>{
+    setSelectedManga(data);
+    goToChapter();
+  })
+
   const styles = StyleSheet.create({
     containerShadow: {
       shadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -11,6 +20,7 @@ export default function MangaCard({ data,onMangaSelect }) {
       elevation: 1,
     }
   })
+  
   return (
     <Container style={styles.containerShadow} onPress={()=>onMangaSelect()}>
       <Image
