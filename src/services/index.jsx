@@ -13,7 +13,8 @@ export const getSearch = async (title) => {
       title: title
     }
   });
-  return data
+
+  return data;
 };
 
 export const getChapters = async (id,page) => {
@@ -23,5 +24,17 @@ export const getChapters = async (id,page) => {
       page
     }
   });
-  return data
+
+  return data;
+};
+
+export const getPages = async (id,key = undefined) => {
+  const { data } = await api.get('/pages/', {
+    params: {
+      id,
+      key
+    }
+  });
+
+  return data;
 };

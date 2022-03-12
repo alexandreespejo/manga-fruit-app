@@ -6,7 +6,7 @@ import { getChapters } from "../../services";
 import { Container,Banner,ContentWrraper,Label, ChapterButton,ChapterContainer, ChapterList } from "./style";
 
 
-export default function ChapterScreen() {
+export default function ChapterScreen({navigation}) {
   const { selectedManga,startLoad,endLoad } = useContext(ApplicationContext);
   const [page,setPage]= useState(0);
   const [maxPages,setMaxPages]= useState(1);
@@ -14,12 +14,14 @@ export default function ChapterScreen() {
   const [chapters,setChapters]= useState([]);
 
   useEffect(()=>{
+    if(chapters.length==0) return
     startLoad();
     loadChapters();
   },[])
 
   const loadChapters=()=>{
     const nextPage = page+1;
+    
     getChapters(selectedManga.id_serie,nextPage).then((data)=>{
       setPage(nextPage);
       if(nextPage===1){
@@ -33,12 +35,17 @@ export default function ChapterScreen() {
     });
   }
 
+  const openReader=(selected_id)=>{
+    navigation.navigate('Reader',{id:selected_id});
+  }
+
   const listChapters=(data)=>{
     const {item} = data;
     let label = `Capitulo ${item?.number}`;
     if(item?.chapter_name && item?.chapter_name != '') label += ` : ${item?.chapter_name}`
+    
     return (
-    <ChapterButton>
+    <ChapterButton onPress={()=>openReader(item.id_release)}>
       <Text numberOfLines={1}>{label}</Text>
     </ChapterButton>
     )
