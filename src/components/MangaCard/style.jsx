@@ -38,7 +38,7 @@ export const TitleContainer = styled.View`
   flex: 1;
 `
 
-export const RankContainer = styled.View`
+export const TagsContainer = styled.View`
   display: flex;
   justify-content: space-between;
   align-items: center;

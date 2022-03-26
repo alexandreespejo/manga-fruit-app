@@ -7,12 +7,26 @@ const api = axios.create({
   },
 });
 
+const mangadexApi = axios.create({
+  baseURL: 'https://api.mangadex.org/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const getSearch = async (title) => {
-  const { data } = await api.get('/search/', {
+  const { data } = await mangadexApi.get('manga/', {
     params: {
-      title: title
+      title: title,
+      availableTranslatedLanguage:['pt-br']
     }
   });
+
+  return data;
+};
+
+export const getCover = async (cover_id) => {
+  const { data } = await mangadexApi.get(`cover/${cover_id}`);
 
   return data;
 };

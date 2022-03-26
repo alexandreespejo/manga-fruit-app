@@ -13,7 +13,7 @@ export default function SearchBar() {
   const onSearch = () => {
     startLoad();
     getSearch(search).then((data) => {
-      setSearchData(data.mangas)
+      setSearchData(data.data)
     }).catch(err => console.log(err)
     ).finally(()=>endLoad());
   }
