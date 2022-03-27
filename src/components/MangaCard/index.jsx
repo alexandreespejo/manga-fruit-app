@@ -1,7 +1,6 @@
 import { useCallback, useContext,useEffect,useState} from "react";
-import { StyleSheet,View } from "react-native";
-import { Image, Container, Title, InfoWrapper, TitleContainer, TagsContainer } from "./style";
-import { MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet } from "react-native";
+import { Image, Container, Title, InfoWrapper, TitleContainer, TagsContainer,Tag } from "./style";
 import { ApplicationContext } from "../../contexts/Application";
 import { getCover } from "../../services";
 
@@ -62,7 +61,7 @@ export default function MangaCard({ data,goToChapter }) {
         </TitleContainer>
         <TagsContainer>
           {tags.map(tag=>{
-            return <Title>{tag}</Title>
+            return <Tag key={tag}>{tag}</Tag>
           })}
         </TagsContainer>
       </InfoWrapper>

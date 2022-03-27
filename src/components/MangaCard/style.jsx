@@ -44,3 +44,9 @@ export const TagsContainer = styled.View`
   align-items: center;
   flex-direction: row;
 `
+export const Tag = styled.Text`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: aqua;
+`
