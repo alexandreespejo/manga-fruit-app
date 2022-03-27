@@ -22,7 +22,7 @@ export default function ChapterScreen({navigation}) {
   const loadChapters=()=>{
     const nextPage = page+1;
     
-    getChapters(selectedManga.id_serie,nextPage).then((data)=>{
+    getChapters(selectedManga.id,nextPage).then((data)=>{
       setPage(nextPage);
       if(nextPage===1){
         setMaxPages(data.numberPages)

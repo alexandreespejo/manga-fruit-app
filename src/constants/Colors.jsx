@@ -7,6 +7,7 @@ export default {
     background: "#fff",
     items: "#f9f9f9",
     tint: tintColorLight,
+    tags:['#38C98D','#EBB22C','#EB2E6A']
   },
   dark: {
     text: "#fff",

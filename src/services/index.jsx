@@ -31,13 +31,8 @@ export const getCover = async (cover_id) => {
   return data;
 };
 
-export const getChapters = async (id,page) => {
-  const { data } = await api.get('/chapters/', {
-    params: {
-      id,
-      page
-    }
-  });
+export const getChapters = async (id) => {
+  const { data } = await mangadexApi.get(`manga/${id}/aggregate`);
 
   return data;
 };

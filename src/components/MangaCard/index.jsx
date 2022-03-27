@@ -45,14 +45,16 @@ export default function MangaCard({ data,goToChapter }) {
       elevation: 1,
     }
   });
+
+  const renderTags = () => {
+    return tags.map((tag,index)=>{
+      return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
+    })
+  };
   
   return (
     <Container style={styles.containerShadow} onPress={()=>onMangaSelect()}>
-      <Image
-        source={{
-          url: cover,
-        }}
-      />
+      <Image source={{ url: cover }}/>
       <InfoWrapper>
         <TitleContainer>
           <Title>{data?.attributes?.title?.en}</Title>
@@ -60,9 +62,7 @@ export default function MangaCard({ data,goToChapter }) {
           <Title autor>Status: {data?.attributes?.status ?? ''}</Title>
         </TitleContainer>
         <TagsContainer>
-          {tags.map(tag=>{
-            return <Tag key={tag}>{tag}</Tag>
-          })}
+          {renderTags()}
         </TagsContainer>
       </InfoWrapper>
     </Container>

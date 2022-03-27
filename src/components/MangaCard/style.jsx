@@ -20,9 +20,9 @@ export const Image = styled.Image`
 `;
 
 export const Title = styled.Text`
-   font-size: ${({ autor }) => autor ? '14px' : '18px'} ;
-   font-weight: ${({ autor }) => autor ? '400' : 'bold'} ;
-   color:${({ theme, autor }) => autor ? theme.text : 'black'} ;
+   font-size: ${({ autor,tag }) => autor || tag ? '14px' : '18px'} ;
+   font-weight: ${({ autor,tag }) => autor||tag ? '400' : 'bold'} ;
+   color:${({ theme, autor,tag }) => autor ? theme.text :tag?'white':'black'} ;
 `;
 
 export const InfoWrapper = styled.View`
@@ -44,9 +44,13 @@ export const TagsContainer = styled.View`
   align-items: center;
   flex-direction: row;
 `
-export const Tag = styled.Text`
+export const Tag = styled.View`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: aqua;
+  border-radius: 10px;
+  margin-right: 5px;
+  padding: 2px 8px;
+  background-color: ${({ theme }) =>theme.tint};
+  color:white;
 `
