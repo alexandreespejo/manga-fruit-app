@@ -25,7 +25,8 @@ export default function MangaCard({ data,goToChapter }) {
     getCover(coverArt?.id).then(item=>{
 
       const {fileName} = item?.data?.attributes;
-      setCover(`https://uploads.mangadex.org/covers/${data.id}/${fileName}`);
+      const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`;
+      setCover(responseCover);
 
     }).catch((err)=>{
       console.log(err);
@@ -33,7 +34,7 @@ export default function MangaCard({ data,goToChapter }) {
   };
 
   const onMangaSelect=useCallback(()=>{
-    setSelectedManga(data);
+    setSelectedManga({...data,coverLink:cover});
     goToChapter();
   });
 

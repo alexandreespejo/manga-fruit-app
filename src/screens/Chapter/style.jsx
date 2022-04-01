@@ -37,14 +37,15 @@ export const ChapterButton = styled.TouchableOpacity`
 `;
 
 export const ChapterContainer= styled.View`
+   position: absolute;
    background: ${(props) => props.theme.background};
    border-top-right-radius: 40px;
    border-top-left-radius: 40px;
-   margin-top: 50px;
+   margin-top: 30%;
    width:95%;
-   /* min-height:50%; */
    padding: 20px;
 `;
+
 export const ChapterList= styled.FlatList`
    width:100%;
    margin-bottom: 120px;

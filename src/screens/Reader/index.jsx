@@ -16,9 +16,12 @@ export default function ReaderScreen({navigation,route}) {
     startLoad();
 
     getPages(id).then(data=>{
-      setPages(data?.images.map(item=>{
-        return {url:item?.legacy}
-      }));
+      const pageList = data?.chapter?.data.map(item=>{
+        return {url:`${data?.baseUrl}/some-token/data/${data?.chapter?.hash}/${item}`}
+      });
+
+      setPages(pageList);
+
     }).catch(err=>console.log(err)
     ).finally(()=>{
       endLoad();

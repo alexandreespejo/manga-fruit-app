@@ -14,22 +14,28 @@ export default function ChapterScreen({navigation}) {
   const [chapters,setChapters]= useState([]);
 
   useEffect(()=>{
-    if(chapters.length==0) return
     startLoad();
     loadChapters();
   },[])
 
   const loadChapters=()=>{
-    const nextPage = page+1;
+    // const nextPage = page+1;
     
-    getChapters(selectedManga.id,nextPage).then((data)=>{
-      setPage(nextPage);
-      if(nextPage===1){
-        setMaxPages(data.numberPages)
+    getChapters(selectedManga.id).then((data)=>{
+
+      let chapterList=[];
+
+      for(let volume in data.volumes){
+        const {chapters} = data.volumes[volume];
+        for(let chapter in chapters){
+          chapterList.push(chapters[chapter]);
+        }
       }
-      setChapters([...chapters,...data.chapters]);
-    }).catch(err=> console.log(err)
-    ).finally(()=> {
+
+      setChapters(chapterList);
+    }).catch(err=>{
+       console.log(err)
+    }).finally(()=> {
       setIsLoading(false);
       endLoad();
     });
@@ -39,13 +45,11 @@ export default function ChapterScreen({navigation}) {
     navigation.navigate('Reader',{id:selected_id});
   }
 
-  const listChapters=(data)=>{
-    const {item} = data;
-    let label = `Capitulo ${item?.number}`;
-    if(item?.chapter_name && item?.chapter_name != '') label += ` : ${item?.chapter_name}`
+  const listChapters=({item})=>{
+    let label = `Capitulo ${item?.chapter}`;
     
     return (
-    <ChapterButton onPress={()=>openReader(item.id_release)}>
+    <ChapterButton onPress={()=>openReader(item?.id)}>
       <Text numberOfLines={1}>{label}</Text>
     </ChapterButton>
     )
@@ -72,33 +76,33 @@ export default function ChapterScreen({navigation}) {
       elevation: 1,
     }
   })
-
   return (
     <Container>
       <Banner source={{
-          url: selectedManga?.cover ?? 'https://reactnative.dev/img/tiny_logo.png',
+          url: selectedManga?.coverLink ?? 'https://reactnative.dev/img/tiny_logo.png',
         }}
       />
       <ContentWrraper>
         <Label title>
-          {selectedManga?.name || 'Titulo do mangá'}
+          {selectedManga?.attributes?.title?.en || 'Titulo do mangá'}
         </Label>
-        <Label desc> 
-          {selectedManga?.description || 'Descrição do mangá'}
+        <ChapterList
+            data={chapters}
+            renderItem={listChapters}
+            keyExtractor={(item) => item.id}
+            // onEndReached={onReachListEnd}
+            // onEndReachedThreshold={0.1}
+            // ListFooterComponent={renderFooterLoader}
+          />
+        {/* <Label desc> 
+          {selectedManga?.attributes?.description?.en || 'Descrição do mangá'}
         </Label>
         <ChapterContainer style={styles.containerShadow}>
           <Label >
             Lista de capitulos
           </Label>
-          <ChapterList
-            data={chapters}
-            renderItem={listChapters}
-            keyExtractor={(i,index) => index}
-            onEndReached={onReachListEnd}
-            onEndReachedThreshold={0.1}
-            ListFooterComponent={renderFooterLoader}
-          />
-        </ChapterContainer>
+         
+        </ChapterContainer> */}
       </ContentWrraper>
     </Container>
   );
