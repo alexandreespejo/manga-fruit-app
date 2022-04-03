@@ -11,10 +11,6 @@ export const Banner = styled.Image`
 `;
 
 export const ContentWrraper = styled.View`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   height: 80%;
   width: 100%;
   bottom:0;
@@ -48,5 +44,6 @@ export const ChapterContainer= styled.View`
 
 export const ChapterList= styled.FlatList`
    width:100%;
-   margin-bottom: 120px;
+   padding-left: 25px;
+   margin-bottom: 100px;
 `;

@@ -86,7 +86,10 @@ export default function ChapterScreen({navigation}) {
         <Label title>
           {selectedManga?.attributes?.title?.en || 'Titulo do mangá'}
         </Label>
-        <ChapterList
+        {/* <Label desc> 
+          {selectedManga?.attributes?.description?.en || 'Descrição do mangá'}
+        </Label> */}
+          <ChapterList
             data={chapters}
             renderItem={listChapters}
             keyExtractor={(item) => item.id}
@@ -94,15 +97,7 @@ export default function ChapterScreen({navigation}) {
             // onEndReachedThreshold={0.1}
             // ListFooterComponent={renderFooterLoader}
           />
-        {/* <Label desc> 
-          {selectedManga?.attributes?.description?.en || 'Descrição do mangá'}
-        </Label>
-        <ChapterContainer style={styles.containerShadow}>
-          <Label >
-            Lista de capitulos
-          </Label>
          
-        </ChapterContainer> */}
       </ContentWrraper>
     </Container>
   );

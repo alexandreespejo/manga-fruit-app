@@ -1,12 +1,13 @@
-import { useCallback, useContext,useEffect,useState} from "react";
+import React,{ useCallback, useContext,useEffect,useState} from "react";
 import { StyleSheet } from "react-native";
 import { Image, Container, Title, InfoWrapper, TitleContainer, TagsContainer,Tag } from "./style";
 import { ApplicationContext } from "../../contexts/Application";
 import { getCover } from "../../services";
+import LottieView from 'lottie-react-native';
 
 export default function MangaCard({ data,goToChapter }) {
   const { setSelectedManga } = useContext(ApplicationContext);
-  const [cover,setCover]=useState('https://reactnative.dev/img/tiny_logo.png');
+  const [cover,setCover]=useState(null);
   const [tags,setTags]=useState([]);
 
   useEffect(() => {
@@ -19,18 +20,20 @@ export default function MangaCard({ data,goToChapter }) {
     setTags(tagList.map(item=>item?.attributes?.name?.en));
   };
 
-  const loadCover=()=>{
-    const coverArt = data?.relationships.filter(item=>item.type==='cover_art')[0];
+  const loadCover = async ()=>{
+    try{
 
-    getCover(coverArt?.id).then(item=>{
+      const coverArt = data?.relationships.filter(item=>item.type==='cover_art')[0];
+      const coverData = await getCover(coverArt?.id);
+      const {fileName} = coverData?.data?.attributes;
 
-      const {fileName} = item?.data?.attributes;
-      const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`;
+      const responseCover = await `https://uploads.mangadex.org/covers/${data.id}/${fileName}`;
+
       setCover(responseCover);
 
-    }).catch((err)=>{
-      console.log(err);
-    });
+    }catch(err){
+      console.log(err)
+    }
   };
 
   const onMangaSelect=useCallback(()=>{
@@ -55,7 +58,10 @@ export default function MangaCard({ data,goToChapter }) {
   
   return (
     <Container style={styles.containerShadow} onPress={()=>onMangaSelect()}>
-      <Image source={{ url: cover }}/>
+     { 
+      cover ? <Image source={{ url: cover }}/>
+      : <LottieView source={require('../../../assets/animations/image-loading.json')} autoPlay loop style={{height:'90%',width:90}}/>
+     }
       <InfoWrapper>
         <TitleContainer>
           <Title>{data?.attributes?.title?.en}</Title>
