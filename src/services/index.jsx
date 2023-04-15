@@ -1,18 +1,11 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: 'http://localhost:5000',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import axios from 'axios'
 
 const mangadexApi = axios.create({
   baseURL: 'https://api.mangadex.org/',
   headers: {
     'Content-Type': 'application/json',
   },
-});
+})
 
 export const getSearch = async (title) => {
   const { data } = await mangadexApi.get('manga/', {
@@ -20,16 +13,16 @@ export const getSearch = async (title) => {
       title: title,
       availableTranslatedLanguage:['pt-br'],
     }
-  });
+  })
 
-  return data;
-};
+  return data
+}
 
 export const getCover = async (cover_id) => {
-  const { data } = await mangadexApi.get(`cover/${cover_id}`);
+  const { data } = await mangadexApi.get(`cover/${cover_id}`)
 
-  return data;
-};
+  return data
+}
 
 export const getChapters = async (id,page) => {
   
@@ -37,12 +30,12 @@ export const getChapters = async (id,page) => {
     params: {
       translatedLanguage:['pt-br'],
     }
-  });
+  })
   
-  return data;
-};
+  return data
+}
 
 export const getPages = async (id) => {
-  const { data } = await mangadexApi.get(`/at-home/server/${id}`);
-  return data;
-};
+  const { data } = await mangadexApi.get(`/at-home/server/${id}`)
+  return data
+}

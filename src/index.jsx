@@ -6,8 +6,11 @@ import { ApplicationProvider } from "./contexts/Application";
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import MyTabs from "./navigation";
+import { useLoadedAssets } from "./hooks/useLoadedAssets"
 
 function Main() {
+  const assetsLoad = useLoadedAssets()
+  if (!assetsLoad) return null
   return (
     <ApplicationProvider>
       <ThemeProvider theme={Colors.light}>
@@ -15,7 +18,7 @@ function Main() {
           <StatusBar
             barStyle="dark-content"
           />
-          <MyTabs/>
+          <MyTabs />
         </NavigationContainer>
       </ThemeProvider>
     </ApplicationProvider>

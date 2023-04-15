@@ -1,30 +1,33 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import React from "react";
+import { Ionicons, Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons"
+import * as Font from "expo-font"
+import * as SplashScreen from "expo-splash-screen"
+import React from "react"
 
 export function useLoadedAssets() {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+  const [isLoadingComplete, setLoadingComplete] = React.useState(false)
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
-        SplashScreen.preventAutoHideAsync();
+        SplashScreen.preventAutoHideAsync()
 
         // Load fonts
-        await Font.loadAsync(Ionicons.font);
+        await Font.loadAsync(Ionicons.font)
+        await Font.loadAsync(Entypo.font)
+        await Font.loadAsync(MaterialIcons.font)
+        await Font.loadAsync(FontAwesome.font)
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        console.warn(e)
       } finally {
-        setLoadingComplete(true);
-        SplashScreen.hideAsync();
+        setLoadingComplete(true)
+        SplashScreen.hideAsync()
       }
     }
 
-    loadResourcesAndDataAsync();
-  }, []);
+    loadResourcesAndDataAsync()
+  }, [])
 
-  return isLoadingComplete;
+  return isLoadingComplete
 }

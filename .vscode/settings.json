@@ -1,0 +1,29 @@
+{
+    "editor.suggestSelection": "first",
+    "workbench.colorTheme": "Dracula",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "editor.tabSize": 2,
+    "editor.acceptSuggestionOnEnter": "on",
+    "javascript.suggest.enabled": true,
+    "editor.renderLineHighlight": "gutter",
+    "emmet.syntaxProfiles": {
+        "javascript": "jsx",
+    },
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "breadcrumbs.enabled": true,
+    "editor.parameterHints.enabled": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "javascript",
+        "typescriptreact"
+    ],
+}
