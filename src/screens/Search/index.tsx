@@ -1,12 +1,17 @@
-import React, { useCallback, useContext, useEffect, useState } from "react"
+import React, { FC, useCallback, useContext, useEffect, useState } from "react"
+import { NavigationProp } from '@react-navigation/native'
 import { StyleSheet, TouchableOpacity, Text } from "react-native"
 import { Container, Image, InfoWrapper, Input, MangaCardContainer, MangaListContainer, SearchContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
 import { getCover, getSearch } from "../../services/index"
 import { ApplicationContext } from "../../contexts/Application"
 import Colors from "../../constants/Colors"
 
-function MangaCard({ data }: { data: any }) {
-  const { setSelectedManga } = useContext(ApplicationContext)
+interface MangaCardProps {
+  data: any
+  onSelectManga: (data: any) => void
+}
+
+function MangaCard({ data, onSelectManga }: MangaCardProps) {
   const [cover, setCover] = useState(null)
   const [tags, setTags] = useState([])
 
@@ -29,7 +34,6 @@ function MangaCard({ data }: { data: any }) {
 
       const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`
 
-      console.log(responseCover)
       setCover(responseCover)
 
     } catch (err) {
@@ -37,8 +41,8 @@ function MangaCard({ data }: { data: any }) {
     }
   }
 
-  const onMangaSelect = () => {
-    setSelectedManga({ ...data, coverLink: cover })
+  const onCardClick = () => {
+    onSelectManga({ ...data, coverLink: cover })
   }
 
   const styles = StyleSheet.create({
@@ -57,7 +61,7 @@ function MangaCard({ data }: { data: any }) {
   }
 
   return (
-    <MangaCardContainer style={styles.containerShadow} onPress={() => onMangaSelect()}>
+    <MangaCardContainer style={styles.containerShadow} onPress={onCardClick}>
       {
         cover && <Image source={{ url: cover }} />
       }
@@ -75,9 +79,9 @@ function MangaCard({ data }: { data: any }) {
   )
 }
 
-function SearchBar() {
+function SearchBar({ setSearchData }) {
   const [search, setSearch] = useState('')
-  const { setSearchData, startLoad, endLoad } = useContext(ApplicationContext)
+  const { startLoad, endLoad } = useContext(ApplicationContext)
 
   const onSearch = () => {
     startLoad()
@@ -95,7 +99,7 @@ function SearchBar() {
         placeholder="Pesquise um titulo"
         selectionColor={Colors.light.text}
       />
-      <TouchableOpacity onPress={() => onSearch()}>
+      <TouchableOpacity onPress={onSearch}>
         <Text>
           Search
         </Text>
@@ -104,15 +108,19 @@ function SearchBar() {
   )
 }
 
-export default function SearchScreen({ navigation }: { navigation: any }) {
-  const { searchData } = useContext(ApplicationContext)
+export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const [searchData, setSearchData] = useState([])
+
+  const handleSelectManga = (mangaData: any) => {
+    navigation.navigate('Chapter', { mangaData })
+  }
 
   return (
     <Container>
-      <SearchBar />
+      <SearchBar setSearchData={setSearchData} />
       <MangaListContainer contentContainerStyle={{ alignItems: 'center' }}>
         {
-          searchData?.map((mangaData: any) => <MangaCard key={mangaData.id} data={mangaData} />)
+          searchData?.map((mangaData: any) => <MangaCard key={mangaData.id} data={mangaData} onSelectManga={handleSelectManga} />)
         }
       </MangaListContainer>
     </Container>
