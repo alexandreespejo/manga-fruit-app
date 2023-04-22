@@ -1,10 +1,12 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { StyleSheet, TouchableOpacity, Text } from "react-native"
 import { Container, Image, InfoWrapper, Input, MangaCardContainer, MangaListContainer, SearchContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
-import { getCover, getSearch } from "../../services/index"
+import { getCover, getSearch } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
 import Colors from "../../constants/Colors"
+import { FontAwesome } from "@expo/vector-icons"
+import { getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
 
 interface MangaCardProps {
   data: any
@@ -68,7 +70,6 @@ function MangaCard({ data, onSelectManga }: MangaCardProps) {
       <InfoWrapper>
         <TitleContainer>
           <Title>{data?.attributes?.title?.en}</Title>
-          <Title autor>Lançamento: {data?.attributes?.year ?? 'Indefinido'}</Title>
           <Title autor>Status: {data?.attributes?.status ?? ''}</Title>
         </TitleContainer>
         <TagsContainer>
@@ -97,12 +98,10 @@ function SearchBar({ setSearchData }) {
         onChangeText={setSearch}
         value={search}
         placeholder="Pesquise um titulo"
-        selectionColor={Colors.light.text}
+        placeholderTextColor={Colors.light.text}
       />
       <TouchableOpacity onPress={onSearch}>
-        <Text>
-          Search
-        </Text>
+        <FontAwesome name="search" size={24} color={Colors.light.tint} />
       </TouchableOpacity>
     </SearchContainer>
   )
@@ -111,18 +110,21 @@ function SearchBar({ setSearchData }) {
 export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [searchData, setSearchData] = useState([])
 
-  const handleSelectManga = (mangaData: any) => {
+  const handleSelectManga = async (mangaData: any) => {
     navigation.navigate('Chapter', { mangaData })
   }
+
+  const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
 
   return (
     <Container>
       <SearchBar setSearchData={setSearchData} />
-      <MangaListContainer contentContainerStyle={{ alignItems: 'center' }}>
-        {
-          searchData?.map((mangaData: any) => <MangaCard key={mangaData.id} data={mangaData} onSelectManga={handleSelectManga} />)
-        }
-      </MangaListContainer>
+      <MangaListContainer
+        contentContainerStyle={{ alignItems: 'center' }}
+        data={searchData}
+        keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
+        renderItem={renderManga}
+      />
     </Container>
   )
 }

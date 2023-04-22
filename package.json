@@ -1,11 +1,13 @@
 {
   "dependencies": {
     "@expo/vector-icons": "13.0.0",
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "6.0.9",
     "@react-navigation/native": "6.0.6",
     "@react-navigation/stack": "6.0.11",
     "@types/node": "18.15.11",
+    "@types/styled-components-react-native": "^5.2.1",
     "axios": "0.24.0",
     "eslint": "7.32.0 || 8.2.0",
     "expo": "46.0.0",
@@ -36,7 +38,7 @@
     "@babel/core": "7.12.9",
     "@tsconfig/react-native": "2.0.3",
     "@types/jest": "29.5.0",
-    "@types/react": "18.0.0",
+    "@types/react": "18",
     "@types/react-native": "0.64.12",
     "@types/react-test-renderer": "18.0.0",
     "eslint-config-airbnb": "19.0.4",

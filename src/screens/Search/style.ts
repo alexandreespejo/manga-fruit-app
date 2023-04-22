@@ -1,8 +1,5 @@
 import styled from 'styled-components/native'
 
-export const MangaListContainer = styled.ScrollView`
-  width:100%;
-`
 export const MangaCardContainer = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
@@ -22,7 +19,7 @@ export const Image = styled.Image`
    border-radius: 10px;
 `;
 
-export const Title = styled.Text`
+export const Title = styled.Text<any>`
    font-size: ${({ autor, tag }) => autor || tag ? '14px' : '18px'} ;
    font-weight: ${({ autor, tag }) => autor || tag ? '400' : 'bold'} ;
    color:${({ theme, autor, tag }) => autor ? theme.text : tag ? 'white' : 'black'} ;
@@ -90,3 +87,7 @@ export const ListContainer = styled.SafeAreaView`
   align-items: center;
   background-color: blue;
 `
+
+export const MangaListContainer = styled.FlatList`
+  width:100%;
+`;

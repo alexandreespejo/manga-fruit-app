@@ -11,7 +11,7 @@ export const Banner = styled.Image`
 `;
 
 export const ContentWrraper = styled.View`
-  height: 80%;
+  height: 100%;
   width: 100%;
   bottom:0;
   left: 0;
@@ -20,11 +20,11 @@ export const ContentWrraper = styled.View`
   border-top-left-radius: 40px;
 `;
 
-export const Label = styled.Text`
-   padding:${({ title,desc }) => title ? '20px' : desc? '5px 20px':'5px 0px 10px'}  ;
+export const Label = styled.Text<any>`
+   padding:${({ title, desc }) => title ? '20px' : desc ? '5px 20px' : '5px 0px 10px'}  ;
    font-size: ${({ title }) => title ? '24px' : '16px'} ;
-   font-weight: ${({ title,desc }) => title || !desc ? 'bold' : '400'} ;
-   color:${({ theme,title,desc}) =>   title || desc?theme.text: theme.tint} ;
+   font-weight: ${({ title, desc }) => title || !desc ? 'bold' : '400'} ;
+   color:${({ theme, title, desc }) => title || desc ? theme.text : theme.tint} ;
 `;
 
 export const ChapterButton = styled.TouchableOpacity`
@@ -32,7 +32,7 @@ export const ChapterButton = styled.TouchableOpacity`
    width: 100%;
 `;
 
-export const ChapterContainer= styled.View`
+export const ChapterContainer = styled.View`
    position: absolute;
    background: ${(props) => props.theme.background};
    border-top-right-radius: 40px;
@@ -42,8 +42,8 @@ export const ChapterContainer= styled.View`
    padding: 20px;
 `;
 
-export const ChapterList= styled.FlatList`
+export const ChapterList = styled.FlatList`
    width:100%;
    padding-left: 25px;
-   margin-bottom: 100px;
+   margin-bottom: 5px;
 `;

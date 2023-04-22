@@ -4,6 +4,7 @@ import Load from '../components/Load';
 import { ApplicationContext } from '../contexts/Application';
 import SearchStack from './searchStack';
 import Colors from '../constants/Colors';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,27 +15,18 @@ export default function MyTabs() {
     <>
       <Tab.Navigator initialRouteName="HomeStack" screenOptions={{
         headerShown: false,
-        gestureEnabled: false,
         tabBarActiveTintColor: Colors.light.tint,
       }}>
-
-        {/* <Tab.Screen name="SearchStack" component={SearchStack} options={{
-          tabBarLabel: '',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="explore" color={color} size={size} />
-          ),
-        }} /> */}
         <Tab.Screen name="HomeStack" component={SearchStack} options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => null,
+          tabBarLabel: '',
+          tabBarIcon: ({ focused }) => <FontAwesome name="home" size={30} color={focused ? Colors.light.tint : 'lightgray'} />,
         }} />
-        <Tab.Screen name="FavoriteStack" component={SearchStack} options={{
-          tabBarLabel: 'Favoritos',
-          tabBarIcon: ({ color, size }) => null,
-        }} />
-
+        {/* <Tab.Screen name="FavoriteStack" component={SearchStack} options={{
+          tabBarLabel: '',
+          tabBarIcon: ({ focused }) => <FontAwesome name="star" size={30} color={focused ? Colors.light.tint : 'lightgray'} />,
+        }} /> */}
       </Tab.Navigator>
-      {isLoading && <Load />}
+      {isLoading && <Load footer={{}} />}
     </>
 
   );
