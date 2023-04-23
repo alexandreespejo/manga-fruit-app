@@ -7,10 +7,12 @@ const mangadexApi = axios.create({
   },
 })
 
-export const getSearch = async (title: string) => {
+export const getSearch = async (title: string, limit: number, offset?: number) => {
   const { data } = await mangadexApi.get('manga/', {
     params: {
       title: title,
+      limit,
+      offset: offset ?? 0,
       availableTranslatedLanguage: ['pt-br'],
     }
   })

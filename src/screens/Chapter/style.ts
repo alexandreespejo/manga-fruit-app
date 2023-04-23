@@ -20,11 +20,18 @@ export const ContentWrraper = styled.View`
   border-top-left-radius: 40px;
 `;
 
+export const HeaderWrapper = styled.View`
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+   padding:20px;
+`
+
 export const Label = styled.Text<any>`
-   padding:${({ title, desc }) => title ? '20px' : desc ? '5px 20px' : '5px 0px 10px'}  ;
-   font-size: ${({ title }) => title ? '24px' : '16px'} ;
-   font-weight: ${({ title, desc }) => title || !desc ? 'bold' : '400'} ;
-   color:${({ theme, title, desc }) => title || desc ? theme.text : theme.tint} ;
+   font-size: 24px;
+   font-weight: bold;
+   color:${({ theme }) => theme.text};
 `;
 
 export const ChapterButton = styled.TouchableOpacity`

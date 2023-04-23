@@ -2,9 +2,11 @@ import { useContext, useEffect, useState } from "react"
 import { Text } from "react-native"
 import { ApplicationContext } from "../../contexts/Application"
 import { getChapters } from "../../services/mangadex"
-import { Container, ContentWrraper, Label, ChapterButton, ChapterList } from "./style"
+import { Container, ContentWrraper, Label, ChapterButton, ChapterList, HeaderWrapper } from "./style"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
-import { getChapterRead, storeChapterRead } from "../../services/storage"
+import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
+import { FontAwesome } from "@expo/vector-icons"
+import Colors from "../../constants/Colors"
 
 export default function ChapterScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const { mangaData } = route.params ?? {}
@@ -19,8 +21,19 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
     console.log('mangaData=>', mangaData.id)
     startLoad()
     loadReadChapters()
+    loadFavorites()
     loadChapters()
   }, [])
+
+  const loadFavorites = () => {
+    getFavoriteMangaList().then(list => {
+      console.log(list)
+    })
+  }
+
+  const changeFavoriteState = () => {
+    // storeFavoriteMangaList()
+  }
 
   const loadReadChapters = () => {
     getChapterRead().then(mangas => {
@@ -82,9 +95,12 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
   return (
     <Container>
       <ContentWrraper>
-        <Label title>
-          {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
-        </Label>
+        <HeaderWrapper>
+          <Label>
+            {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
+          </Label>
+          <FontAwesome name="star" size={30} color={true ? Colors.light.tint : 'lightgray'} />
+        </HeaderWrapper>
         <ChapterList
           data={chapters}
           renderItem={listChapters}

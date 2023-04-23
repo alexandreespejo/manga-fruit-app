@@ -1,11 +1,9 @@
 import React, { memo, useContext, useEffect, useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { StyleSheet, TouchableOpacity, Text } from "react-native"
+import { StyleSheet, TouchableOpacity } from "react-native"
 import { Container, Image, InfoWrapper, Input, MangaCardContainer, MangaListContainer, SearchContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
-import { getCover, getSearch } from "../../services/mangadex"
+import { getCover } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
-import Colors from "../../constants/Colors"
-import { FontAwesome } from "@expo/vector-icons"
 
 interface MangaCardProps {
   data: any
@@ -79,32 +77,7 @@ const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
   )
 })
 
-function SearchBar({ search, setSearch, onSearch }) {
-  return (
-    <SearchContainer>
-      <Input
-        onChangeText={setSearch}
-        value={search}
-        placeholder="Pesquise um titulo"
-        placeholderTextColor={Colors.light.text}
-      />
-      <TouchableOpacity onPress={onSearch}>
-        <FontAwesome name="search" size={24} color={Colors.light.tint} />
-      </TouchableOpacity>
-    </SearchContainer>
-  )
-}
-
-const DEFAULT_PAGINATION = {
-  limit: 15,
-  page: 0,
-  total: 15,
-}
-
-export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const pagination = useRef(DEFAULT_PAGINATION)
-
-  const [search, setSearch] = useState('')
+export default function FavoritesScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [searchData, setSearchData] = useState([])
   const { startLoad, endLoad } = useContext(ApplicationContext)
 
@@ -112,38 +85,15 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     navigation.navigate('Chapter', { mangaData })
   }
 
-  const handleSearch = () => {
-    setSearchData([])
-    pagination.current = { ...DEFAULT_PAGINATION }
-    searchRequest()
-  }
-
-  const searchRequest = () => {
-    const { page, limit, total } = pagination.current
-    const offset = page * limit
-    if (offset && offset > total) return
-
-    startLoad()
-    getSearch(search, limit, offset).then((data) => {
-      if (data.total !== total) pagination.current.total = data.total
-      pagination.current.page = page + 1
-
-      setSearchData(oldList => [...oldList, ...data.data])
-    }).catch(err => console.log(err)
-    ).finally(() => endLoad())
-  }
-
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
 
   return (
     <Container>
-      <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={searchData}
         keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
         renderItem={renderManga}
-        onEndReached={searchRequest}
       />
     </Container>
   )
