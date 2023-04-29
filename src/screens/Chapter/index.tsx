@@ -1,38 +1,53 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Text } from "react-native"
 import { ApplicationContext } from "../../contexts/Application"
 import { getChapters } from "../../services/mangadex"
-import { Container, ContentWrraper, Label, ChapterButton, ChapterList, HeaderWrapper } from "./style"
-import { NavigationProp, RouteProp } from "@react-navigation/native"
+import { Container, Label, ChapterButton, ChapterList, HeaderWrapper } from "./style"
+import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
 
+const DEFAULT_PAGINATION = {
+  limit: 30,
+  page: 0,
+  total: 30,
+}
+
 export default function ChapterScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
+  const pagination = useRef({ ...DEFAULT_PAGINATION })
+
   const { mangaData } = route.params ?? {}
   const { startLoad, endLoad } = useContext(ApplicationContext)
-  const [page, setPage] = useState(0)
-  const [maxPages, setMaxPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(false)
   const [chapters, setChapters] = useState([])
   const [chaptersRead, setChaptersRead] = useState([])
+  const [chapterIsFavorite, setChapterIsFavorite] = useState(false)
 
   useEffect(() => {
-    console.log('mangaData=>', mangaData.id)
-    startLoad()
-    loadReadChapters()
-    loadFavorites()
     loadChapters()
   }, [])
 
+  useFocusEffect(useCallback(() => {
+    loadReadChapters()
+    loadFavorites()
+  }, []))
+
   const loadFavorites = () => {
     getFavoriteMangaList().then(list => {
-      console.log(list)
+      setChapterIsFavorite(list.find(favMangaData => JSON.stringify(favMangaData) === JSON.stringify(mangaData)) !== undefined)
     })
   }
 
   const changeFavoriteState = () => {
-    // storeFavoriteMangaList()
+    getFavoriteMangaList().then(list => {
+      let favList = list
+      if (chapterIsFavorite) favList = favList.filter(favMangaData => JSON.stringify(favMangaData) !== JSON.stringify(mangaData))
+      else favList.push(mangaData)
+
+      storeFavoriteMangaList(favList).then(() => {
+        setChapterIsFavorite(!chapterIsFavorite)
+      })
+    })
   }
 
   const loadReadChapters = () => {
@@ -42,36 +57,31 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
   }
 
   const loadChapters = () => {
-    // const nextPage = page+1
+    const { page, limit, total } = pagination.current
+    const offset = page * limit
+    if (offset && offset > total) return
 
-    getChapters(mangaData?.id).then((data) => {
+    startLoad()
+    getChapters(mangaData?.id, limit, offset).then((data) => {
+      if (data.total !== total) pagination.current.total = data.total
+      pagination.current.page = page + 1
 
-      let chapterList = []
-
-      for (let volume in data.volumes) {
-        const { chapters } = data.volumes[volume]
-        for (let chapter in chapters) {
-          chapterList.push(chapters[chapter])
-        }
-      }
-
-      setChapters(chapterList)
+      setChapters(oldList => [...oldList, ...data.data])
     }).catch(err => {
       console.log(err)
     }).finally(() => {
-      setIsLoading(false)
       endLoad()
     })
   }
 
   const openReader = async (chapterData: any) => {
-    await storeChapterRead(mangaData.id, chapterData.chapter)
+    await storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
     navigation.navigate('Reader', { chapterData })
   }
 
   const listChapters = ({ item }) => {
-    const label = `Capitulo ${item?.chapter}`
-    const isRead = chaptersRead && chaptersRead.find(data => data === item?.chapter)
+    const label = `Capitulo ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
+    const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
 
     return (
       <ChapterButton onPress={() => openReader(item)}>
@@ -80,37 +90,25 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
     )
   }
 
-  // const renderFooterLoader = () => {
-  //   if (!isLoading) return null
-  //   return <Load />
-  // }
-
-  // const onReachListEnd = () => {
-  //   const nextPage = page + 1
-  //   if (nextPage <= maxPages) {
-  //     setIsLoading(true)
-  //     loadChapters()
-  //   }
-
   return (
     <Container>
-      <ContentWrraper>
-        <HeaderWrapper>
-          <Label>
-            {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
-          </Label>
-          <FontAwesome name="star" size={30} color={true ? Colors.light.tint : 'lightgray'} />
-        </HeaderWrapper>
-        <ChapterList
-          data={chapters}
-          renderItem={listChapters}
-          keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
-        // onEndReached={onReachListEnd}
-        // onEndReachedThreshold={0.1}
-        // ListFooterComponent={renderFooterLoader}
+      <HeaderWrapper>
+        <Label>
+          {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
+        </Label>
+        <FontAwesome
+          onPress={changeFavoriteState}
+          name="star"
+          size={30}
+          color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
         />
-
-      </ContentWrraper>
+      </HeaderWrapper>
+      <ChapterList
+        data={chapters}
+        renderItem={listChapters}
+        keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
+        onEndReached={loadChapters}
+      />
     </Container>
   )
 }

@@ -1,14 +1,14 @@
-import React from 'react';
-import { ActivityIndicator } from 'react-native';
-import Colors from '../../constants/Colors';
-import { Container } from './style';
+import React from 'react'
+import { ActivityIndicator } from 'react-native'
+import Colors from '../../constants/Colors'
+import { Container } from './style'
 
-function Load({footer}) {
+function Load() {
   return (
-    <Container footer={footer}>
+    <Container>
       <ActivityIndicator size="large" color={Colors.light.tint} />
     </Container>
-  );
+  )
 }
 
-export default Load;
+export default Load

@@ -6,13 +6,9 @@ import { getPages } from "../../services/mangadex"
 import { CloseButton } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
+import Load from "../../components/Load"
 
-type ChapterDataType = {
-  "chapter": string,
-  "count": number,
-  "id": string,
-  "others": string[]
-} | undefined
+type ChapterDataType = any | undefined
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const chapterData: ChapterDataType = route?.params?.chapterData
@@ -23,7 +19,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     if (!chapterData) return
 
     startLoad()
-    const id = chapterData.others.length ? chapterData.others[0] : chapterData.id
+    const id = chapterData.id
     getPages(id).then(data => {
 
       const pageList = data?.chapter?.data.map(item => {
@@ -65,7 +61,11 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   return (
     <Modal visible={true} transparent={true}>
       {pages?.length > 0 &&
-        <ImageViewer renderHeader={header} imageUrls={pages} />
+        <ImageViewer
+          renderHeader={header}
+          imageUrls={pages}
+          loadingRender={() => <Load />}
+        />
       }
     </Modal>
   )

@@ -26,10 +26,13 @@ export const getCover = async (cover_id: string) => {
   return data
 }
 
-export const getChapters = async (id: string, page?: string) => {
+export const getChapters = async (id: string, limit: number, offset?: number) => {
 
-  const { data } = await mangadexApi.get(`manga/${id}/aggregate`, {
+  const { data } = await mangadexApi.get(`chapter/`, {
     params: {
+      manga: id,
+      limit,
+      offset: offset ?? 0,
       translatedLanguage: ['pt-br'],
     }
   })

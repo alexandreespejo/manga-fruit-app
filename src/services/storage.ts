@@ -1,14 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-type StoreFavoriteDataType = (mangaId: string) => Promise<void>
-type GetFavoriteDataType = () => Promise<string[]>
+type StoreFavoriteDataType = (mangaList: any[]) => Promise<void>
+type GetFavoriteDataType = () => Promise<any[]>
+
 type StoreChapterReadType = (mangaId: string, chapterId: string) => Promise<void>
 type GetChapterReadType = () => Promise<object>
 
-export const storeFavoriteMangaList: StoreFavoriteDataType = async (mangaId) => {
+export const storeFavoriteMangaList: StoreFavoriteDataType = async (mangaList) => {
   try {
-    const currentList = await getFavoriteMangaList()
-    currentList.push(mangaId)
-    await AsyncStorage.setItem('@manga_app_favorites', JSON.stringify(currentList))
+    await AsyncStorage.setItem('@manga_app_favorites', JSON.stringify(mangaList))
   } catch (e) {
     // saving error
   }

@@ -1,9 +1,10 @@
-import React, { memo, useContext, useEffect, useRef, useState } from "react"
-import { NavigationProp } from '@react-navigation/native'
-import { StyleSheet, TouchableOpacity } from "react-native"
-import { Container, Image, InfoWrapper, Input, MangaCardContainer, MangaListContainer, SearchContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
+import React, { memo, useCallback, useContext, useEffect, useState } from "react"
+import { NavigationProp, useFocusEffect } from '@react-navigation/native'
+import { StyleSheet } from "react-native"
+import { Container, Image, InfoWrapper, MangaCardContainer, MangaListContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
+import { getFavoriteMangaList } from "../../services/storage"
 
 interface MangaCardProps {
   data: any
@@ -78,7 +79,7 @@ const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
 })
 
 export default function FavoritesScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const [searchData, setSearchData] = useState([])
+  const [mangaList, setMangaList] = useState([])
   const { startLoad, endLoad } = useContext(ApplicationContext)
 
   const handleSelectManga = async (mangaData: any) => {
@@ -87,11 +88,18 @@ export default function FavoritesScreen({ navigation }: { navigation: Navigation
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
 
+  useFocusEffect(useCallback(() => {
+    startLoad()
+    getFavoriteMangaList().then(list => {
+      setMangaList(list)
+    }).finally(() => endLoad())
+  }, []))
+
   return (
     <Container>
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
-        data={searchData}
+        data={mangaList}
         keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
         renderItem={renderManga}
       />
