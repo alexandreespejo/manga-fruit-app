@@ -1,83 +1,12 @@
-import React, { memo, useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { StyleSheet, TouchableOpacity, Text } from "react-native"
-import { Container, Image, InfoWrapper, Input, MangaCardContainer, MangaListContainer, SearchContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
-import { getCover, getSearch } from "../../services/mangadex"
+import { Pressable } from "react-native"
+import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
+import { getSearch } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
 import Colors from "../../constants/Colors"
 import { FontAwesome } from "@expo/vector-icons"
-
-interface MangaCardProps {
-  data: any
-  onSelectManga: (data: any) => void
-}
-
-const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
-  const [cover, setCover] = useState(null)
-  const [tags, setTags] = useState([])
-
-  useEffect(() => {
-    loadTags()
-    loadCover()
-  }, [data])
-
-  const loadTags = () => {
-    const tagList = data?.attributes?.tags
-    setTags(tagList.map((item: any) => item?.attributes?.name?.en))
-  }
-
-  const loadCover = async () => {
-    try {
-
-      const coverArt = data?.relationships.filter((item: any) => item.type === 'cover_art')[0]
-      const coverData = await getCover(coverArt?.id)
-      const { fileName } = coverData?.data?.attributes
-
-      const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`
-
-      setCover(responseCover)
-
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const onCardClick = () => {
-    onSelectManga({ ...data, coverLink: cover })
-  }
-
-  const styles = StyleSheet.create({
-    containerShadow: {
-      shadowColor: 'rgba(0, 0, 0, 0.3)',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.5,
-      elevation: 1,
-    }
-  })
-
-  const renderTags = () => {
-    return tags.map((tag, index) => {
-      return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
-    })
-  }
-
-  return (
-    <MangaCardContainer style={styles.containerShadow} onPress={onCardClick}>
-      {
-        cover && <Image source={{ url: cover }} />
-      }
-      <InfoWrapper>
-        <TitleContainer>
-          <Title>{data?.attributes?.title?.en}</Title>
-          <Title autor>Status: {data?.attributes?.status ?? ''}</Title>
-        </TitleContainer>
-        <TagsContainer>
-          {renderTags()}
-        </TagsContainer>
-      </InfoWrapper>
-    </MangaCardContainer>
-  )
-})
+import { MangaCard } from "../../components/MangaCard"
 
 function SearchBar({ search, setSearch, onSearch }) {
   return (
@@ -88,9 +17,9 @@ function SearchBar({ search, setSearch, onSearch }) {
         placeholder="Pesquise um titulo"
         placeholderTextColor={Colors.light.text}
       />
-      <TouchableOpacity onPress={onSearch}>
-        <FontAwesome name="search" size={24} color={Colors.light.tint} />
-      </TouchableOpacity>
+      <SearchButton onPress={onSearch}>
+        <FontAwesome name="search" size={24} color={Colors.light.background} />
+      </SearchButton>
     </SearchContainer>
   )
 }

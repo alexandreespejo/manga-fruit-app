@@ -55,22 +55,12 @@ export const Tag = styled.View`
   color:white;
 `
 
-export const SearchButton = styled.TouchableOpacity`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 40px;
-  border-radius: 25px;
-  background-color: ${(props) => props.theme.tint};
-`
-
 export const SearchContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
   color:${(props) => props.theme.text};
+  padding: 0 8px;
   background-color: ${(props) => props.theme.items};
   height: 50px;
   width: 90%;
