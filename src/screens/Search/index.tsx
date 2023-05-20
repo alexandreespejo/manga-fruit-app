@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { Pressable } from "react-native"
+import { Alert } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
@@ -58,8 +58,21 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
       pagination.current.page = page + 1
 
       setSearchData(oldList => [...oldList, ...data.data])
-    }).catch(err => console.log(err)
-    ).finally(() => endLoad())
+    }).catch(err => {
+      console.log(err)
+      Alert.alert(
+        'Falha',
+        'Infelizmente estamos com problemas no servidor, tente novamente mais tarde!',
+        [
+          {
+            text: 'OK',
+            onPress: () => { },
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false }
+      )
+    }).finally(() => endLoad())
   }
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />

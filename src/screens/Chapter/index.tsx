@@ -7,6 +7,9 @@ import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/nat
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
+import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads"
+
+const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-4863844449125415/7605085638';
 
 const DEFAULT_PAGINATION = {
   limit: 30,
@@ -103,6 +106,13 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
           color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
         />
       </HeaderWrapper>
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+      />
       <ChapterList
         data={chapters}
         renderItem={listChapters}
