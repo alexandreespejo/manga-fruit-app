@@ -9,7 +9,8 @@ import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
 import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads"
 
-const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-4863844449125415/7605085638';
+// const adUnitId = 'ca-app-pub-4863844449125415/7605085638';
+const adUnitId = TestIds.BANNER;
 
 const DEFAULT_PAGINATION = {
   limit: 30,
