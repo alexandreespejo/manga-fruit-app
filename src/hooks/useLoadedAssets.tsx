@@ -19,7 +19,6 @@ export function useLoadedAssets() {
         await Font.loadAsync(FontAwesome.font)
 
         //Load ads SDK
-        // AppOpenAd.createForAdRequest(TestIds.APP_OPEN)
         await mobileAds().initialize()
 
       } catch (e) {

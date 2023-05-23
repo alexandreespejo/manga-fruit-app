@@ -60,8 +60,8 @@ export const SearchButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  width: 40px;
+  height: 100%;
+  flex: 1;
   border-radius: 25px;
   background-color: ${(props) => props.theme.tint};
 `
@@ -70,8 +70,10 @@ export const SearchContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   color:${(props) => props.theme.text};
   background-color: ${(props) => props.theme.items};
+  border: 1px ${(props) => props.theme.tint};
   height: 50px;
   width: 90%;
   border-radius:25px;

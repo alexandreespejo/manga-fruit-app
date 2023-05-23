@@ -9,13 +9,13 @@ import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
 import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads"
 
-// const adUnitId = 'ca-app-pub-4863844449125415/7605085638';
-const adUnitId = TestIds.BANNER;
+const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
+// const adUnitId = TestIds.BANNER
 
 const DEFAULT_PAGINATION = {
-  limit: 30,
+  limit: 40,
   page: 0,
-  total: 30,
+  total: 40,
 }
 
 export default function ChapterScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
@@ -119,6 +119,7 @@ export default function ChapterScreen({ navigation, route }: { navigation: Navig
         renderItem={listChapters}
         keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
         onEndReached={loadChapters}
+        onEndReachedThreshold={0.3}
       />
     </Container>
   )

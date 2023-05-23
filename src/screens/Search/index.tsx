@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { Alert } from "react-native"
+import { Alert, Keyboard } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
 import { ApplicationContext } from "../../contexts/Application"
@@ -9,6 +9,16 @@ import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
 
 function SearchBar({ search, setSearch, onSearch }) {
+  // useEffect(() => {
+  //   const showSubscription = Keyboard.addListener('', () => {
+  //     setKeyboardStatus('Keyboard Shown')
+  //   })
+
+  //   return () => {
+  //     showSubscription.remove()
+  //   }
+  // }, [])
+
   return (
     <SearchContainer>
       <Input
@@ -16,6 +26,7 @@ function SearchBar({ search, setSearch, onSearch }) {
         value={search}
         placeholder="Pesquise um titulo"
         placeholderTextColor={Colors.light.text}
+        onSubmitEditing={onSearch}
       />
       <SearchButton onPress={onSearch}>
         <FontAwesome name="search" size={24} color={Colors.light.background} />
