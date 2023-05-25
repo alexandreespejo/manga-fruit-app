@@ -7,3 +7,7 @@ export const CloseButton = styled.TouchableOpacity`
   right: 0;
   top: 0;
 `;
+
+export const ReaderContainer = styled.Modal`
+  background-color: black;
+`

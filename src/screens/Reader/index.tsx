@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react"
-import { Modal, Alert } from "react-native"
+import { useEffect, useState } from "react"
+import { Alert } from "react-native"
 import ImageViewer from "react-native-image-zoom-viewer"
-import { ApplicationContext } from "../../contexts/Application"
 import { getPages } from "../../services/mangadex"
-import { CloseButton } from "./style"
+import { CloseButton, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
@@ -12,13 +11,13 @@ type ChapterDataType = any | undefined
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const chapterData: ChapterDataType = route?.params?.chapterData
-  const { startLoad, endLoad } = useContext(ApplicationContext)
+  const [isLoading, setIsLoading] = useState(false)
   const [pages, setPages] = useState([])
 
   useEffect(() => {
     if (!chapterData) return
 
-    startLoad()
+    setIsLoading(true)
     const id = chapterData.id
     getPages(id).then(data => {
 
@@ -42,7 +41,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
         { cancelable: false }
       )
     }).finally(() => {
-      endLoad()
+      setIsLoading(false)
     })
   }, [chapterData])
 
@@ -58,15 +57,18 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     )
   }
 
+  if (isLoading) return <Load />
+
   return (
-    <Modal visible={true} transparent={true}>
+    <ReaderContainer visible={true}>
       {pages?.length > 0 &&
         <ImageViewer
           renderHeader={header}
           imageUrls={pages}
           loadingRender={() => <Load />}
+          onCancel={closePage}
         />
       }
-    </Modal>
+    </ReaderContainer>
   )
 }
