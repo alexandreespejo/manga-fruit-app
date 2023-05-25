@@ -7,21 +7,26 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import MyTabs from "./navigation";
 import { useLoadedAssets } from "./hooks/useLoadedAssets"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function Main() {
   const assetsLoad = useLoadedAssets()
+  const queryClient = new QueryClient()
+
   if (!assetsLoad) return null
   return (
-    <ApplicationProvider>
-      <ThemeProvider theme={Colors.light}>
-        <NavigationContainer>
-          <StatusBar
-            barStyle="dark-content"
-          />
-          <MyTabs />
-        </NavigationContainer>
-      </ThemeProvider>
-    </ApplicationProvider>
+    <QueryClientProvider client={queryClient}>
+      <ApplicationProvider>
+        <ThemeProvider theme={Colors.light}>
+          <NavigationContainer>
+            <StatusBar
+              barStyle="dark-content"
+            />
+            <MyTabs />
+          </NavigationContainer>
+        </ThemeProvider>
+      </ApplicationProvider>
+    </QueryClientProvider>
   );
 }
 

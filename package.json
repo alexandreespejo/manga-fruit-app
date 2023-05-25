@@ -6,6 +6,7 @@
     "@react-navigation/bottom-tabs": "6.0.9",
     "@react-navigation/native": "6.0.6",
     "@react-navigation/stack": "6.0.11",
+    "@tanstack/react-query": "^4.29.7",
     "@types/node": "18.15.11",
     "@types/styled-components-react-native": "^5.2.1",
     "axios": "0.24.0",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
+    "@tanstack/eslint-plugin-query": "^4.29.9",
     "@tsconfig/react-native": "2.0.3",
     "@types/jest": "29.5.0",
     "@types/react": "18",

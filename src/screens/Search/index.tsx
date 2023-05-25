@@ -1,23 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { Alert, Keyboard } from "react-native"
+import { Alert } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
-import { ApplicationContext } from "../../contexts/Application"
 import Colors from "../../constants/Colors"
 import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
+import Load from "../../components/Load"
 
 function SearchBar({ search, setSearch, onSearch }) {
-  // useEffect(() => {
-  //   const showSubscription = Keyboard.addListener('', () => {
-  //     setKeyboardStatus('Keyboard Shown')
-  //   })
-
-  //   return () => {
-  //     showSubscription.remove()
-  //   }
-  // }, [])
 
   return (
     <SearchContainer>
@@ -46,7 +37,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
 
   const [search, setSearch] = useState('')
   const [searchData, setSearchData] = useState([])
-  const { startLoad, endLoad } = useContext(ApplicationContext)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSelectManga = async (mangaData: any) => {
     navigation.navigate('Chapter', { mangaData })
@@ -63,14 +54,13 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     const offset = page * limit
     if (offset && offset > total) return
 
-    startLoad()
+    setIsLoading(true)
     getSearch(search, limit, offset).then((data) => {
       if (data.total !== total) pagination.current.total = data.total
       pagination.current.page = page + 1
 
       setSearchData(oldList => [...oldList, ...data.data])
     }).catch(err => {
-      console.log(err)
       Alert.alert(
         'Falha',
         'Infelizmente estamos com problemas no servidor, tente novamente mais tarde!',
@@ -83,13 +73,14 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
         ],
         { cancelable: false }
       )
-    }).finally(() => endLoad())
+    }).finally(() => setIsLoading(false))
   }
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
 
   return (
     <Container>
+      {isLoading && <Load />}
       <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}

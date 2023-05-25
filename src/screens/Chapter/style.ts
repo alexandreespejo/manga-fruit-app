@@ -1,3 +1,4 @@
+import { VirtualizedList } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
@@ -49,8 +50,9 @@ export const ChapterContainer = styled.View`
    padding: 20px;
 `;
 
-export const ChapterList = styled.FlatList`
+export const ChapterList = styled(VirtualizedList)`
    width:100%;
    padding-left: 25px;
+   margin-top: 5px;
    margin-bottom: 5px;
 `;

@@ -28,7 +28,7 @@ export const getCover = async (cover_id: string) => {
 
 export const getChapters = async (id: string, limit: number, offset?: number) => {
 
-  const { data } = await mangadexApi.get(`chapter/`, {
+  const data = await mangadexApi.get(`chapter/`, {
     params: {
       manga: id,
       limit,

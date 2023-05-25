@@ -1,7 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useContext } from 'react';
-import Load from '../components/Load';
-import { ApplicationContext } from '../contexts/Application';
 import HomeStack from './homeStack';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,8 +7,6 @@ import FavoritesStack from './favoritesStack';
 const Tab = createBottomTabNavigator();
 
 export default function MyTabs() {
-  const { isLoading } = useContext(ApplicationContext);
-
   return (
     <>
       <Tab.Navigator initialRouteName="HomeStack" screenOptions={{
@@ -27,7 +22,6 @@ export default function MyTabs() {
           tabBarIcon: ({ focused }) => <FontAwesome name="star" size={30} color={focused ? Colors.light.tint : 'lightgray'} />,
         }} />
       </Tab.Navigator>
-      {isLoading && <Load footer={{}} />}
     </>
 
   );

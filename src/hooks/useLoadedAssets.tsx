@@ -19,7 +19,7 @@ export function useLoadedAssets() {
         await Font.loadAsync(FontAwesome.font)
 
         //Load ads SDK
-        await mobileAds().initialize()
+        // await mobileAds().initialize()
 
       } catch (e) {
         // We might want to provide this error information to an error reporting service
