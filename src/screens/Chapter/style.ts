@@ -53,6 +53,6 @@ export const ChapterContainer = styled.View`
 export const ChapterList = styled(VirtualizedList)`
    width:100%;
    padding-left: 25px;
-   margin-top: 5px;
+   margin-top: 10px;
    margin-bottom: 5px;
 `;

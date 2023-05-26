@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { ActivityIndicator, Text } from "react-native"
 import { getChapters } from "../../services/mangadex"
 import { Container, Label, ChapterButton, ChapterList, HeaderWrapper } from "./style"
-import { NavigationProp, RouteProp } from "@react-navigation/native"
+import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
@@ -19,20 +19,17 @@ const DEFAULT_PAGINATION = {
 }
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
-  const pagination = useRef({ ...DEFAULT_PAGINATION })
-
   const { mangaData } = route.params ?? {}
   const [chaptersRead, setChaptersRead] = useState([])
   const [chapterIsFavorite, setChapterIsFavorite] = useState(false)
 
   const loadChapters = async ({ pageParam = 0 }) => {
-    const { limit, total } = pagination.current
+    const { limit, total } = DEFAULT_PAGINATION
     const offset = pageParam
     if (pageParam > total) return []
 
-    loadReadChapters()
     const { data } = await getChapters(mangaData?.id, limit, offset)
-    if (data.total !== total) pagination.current.total = data.total
+    if (data.total !== total) DEFAULT_PAGINATION.total = data.total
     return data
   }
 
@@ -46,7 +43,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   } = useInfiniteQuery({
     queryKey: [`chapter-${mangaData?.id}`],
     queryFn: loadChapters,
-    getNextPageParam: (lastPage) => (lastPage?.offset + pagination.current.limit)
+    getNextPageParam: (lastPage) => (lastPage?.offset + DEFAULT_PAGINATION.limit)
   })
 
   const chapters = useMemo(() => {
@@ -90,7 +87,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     navigation.navigate('Reader', { chapterData })
   }
 
-  const listChapters = useCallback(({ item }) => {
+  const renderChapter = useCallback(({ item }) => {
     const label = `Capitulo ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
     const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
 
@@ -101,7 +98,10 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     )
   }, [chaptersRead])
 
-  useEffect(() => loadFavorites())
+  useFocusEffect(useCallback(() => {
+    loadFavorites()
+    loadReadChapters()
+  }, []))
 
   return (
     <Container>
@@ -117,22 +117,22 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
         />
       </HeaderWrapper>
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
       <ChapterList
         data={chapters}
-        renderItem={listChapters}
+        renderItem={renderChapter}
         keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
         onEndReached={() => hasNextPage && fetchNextPage()}
         getItemCount={() => chapters.length}
         getItem={(data, index) => data[index]}
-        initialNumToRender={pagination.current.limit}
-        maxToRenderPerBatch={pagination.current.limit}
+        initialNumToRender={DEFAULT_PAGINATION.limit}
+        maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
         onEndReachedThreshold={0.5}
         progressViewOffset={50}
         refreshing={isFetchingNextPage || isFetching}
