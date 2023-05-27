@@ -8,5 +8,5 @@ export const Container = styled.SafeAreaView`
 
 export const MangaListContainer = styled.FlatList`
   width:100%;
-  margin-top: 5px;
+  margin-top: 10px;
 `;

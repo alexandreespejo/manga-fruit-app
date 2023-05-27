@@ -30,6 +30,7 @@ export const HeaderWrapper = styled.View`
 `
 
 export const Label = styled.Text<any>`
+   max-width: 80%;
    font-size: 24px;
    font-weight: bold;
    color:${({ theme }) => theme.text};
@@ -55,4 +56,8 @@ export const ChapterList = styled(VirtualizedList)`
    padding-left: 25px;
    margin-top: 10px;
    margin-bottom: 5px;
+`;
+
+export const ChapterText = styled.Text`
+  
 `;

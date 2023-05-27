@@ -1,17 +1,16 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { ActivityIndicator, Text } from "react-native"
+import { ActivityIndicator } from "react-native"
 import { getChapters } from "../../services/mangadex"
-import { Container, Label, ChapterButton, ChapterList, HeaderWrapper } from "./style"
+import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
-import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads"
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import Load from "../../components/Load"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
-// const adUnitId = TestIds.BANNER
 
 const DEFAULT_PAGINATION = {
   limit: 40,
@@ -20,18 +19,18 @@ const DEFAULT_PAGINATION = {
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
   const { mangaData } = route.params ?? {}
+  const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])
   const [chapterIsFavorite, setChapterIsFavorite] = useState(false)
 
-  const loadChapters = async ({ pageParam = 0 }) => {
-    const { limit, total } = DEFAULT_PAGINATION
+  const loadChapters = useCallback(async ({ pageParam = 0 }) => {
+    const { limit } = DEFAULT_PAGINATION
     const offset = pageParam
-    if (pageParam > total) return []
-
+    if (pageParam > chaptersTotal) return []
     const { data } = await getChapters(mangaData?.id, limit, offset)
-    if (data.total !== total) DEFAULT_PAGINATION.total = data.total
+    if (data.total !== chaptersTotal) setChaptersTotal(data.total)
     return data
-  }
+  }, [chaptersTotal])
 
   const {
     data,
@@ -43,14 +42,18 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   } = useInfiniteQuery({
     queryKey: [`chapter-${mangaData?.id}`],
     queryFn: loadChapters,
-    getNextPageParam: (lastPage) => (lastPage?.offset + DEFAULT_PAGINATION.limit)
+    getNextPageParam: (lastPage) => {
+      const currentOffset = (lastPage?.offset + lastPage?.limit)
+      if (currentOffset > lastPage?.total) return null
+      return currentOffset
+    }
   })
 
   const chapters = useMemo(() => {
     const list: any[] = []
 
-    data?.pages.forEach(page => {
-      page.data.forEach(pageData => {
+    data?.pages?.forEach(page => {
+      page?.data?.forEach(pageData => {
         list.push(pageData)
       })
     })
@@ -60,14 +63,14 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
   const loadFavorites = () => {
     getFavoriteMangaList().then(list => {
-      setChapterIsFavorite(list.find(favMangaData => JSON.stringify(favMangaData) === JSON.stringify(mangaData)) !== undefined)
+      setChapterIsFavorite(list?.find(favMangaData => JSON.stringify(favMangaData) === JSON.stringify(mangaData)) !== undefined)
     })
   }
 
   const changeFavoriteState = () => {
     getFavoriteMangaList().then(list => {
       let favList = list
-      if (chapterIsFavorite) favList = favList.filter(favMangaData => JSON.stringify(favMangaData) !== JSON.stringify(mangaData))
+      if (chapterIsFavorite) favList = favList?.filter(favMangaData => JSON.stringify(favMangaData) !== JSON.stringify(mangaData))
       else favList.push(mangaData)
 
       storeFavoriteMangaList(favList).then(() => {
@@ -78,7 +81,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
   const loadReadChapters = () => {
     getChapterRead().then(mangas => {
-      if (mangas[mangaData.id]) setChaptersRead(mangas[mangaData.id])
+      if (mangas[mangaData?.id]) setChaptersRead(mangas[mangaData?.id])
     })
   }
 
@@ -93,7 +96,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
     return (
       <ChapterButton onPress={() => openReader(item)}>
-        <Text numberOfLines={1} style={{ color: isRead ? 'gray' : 'black' }}>{label}</Text>
+        <ChapterText numberOfLines={1} style={{ color: isRead ? 'gray' : 'black' }}>{label}</ChapterText>
       </ChapterButton>
     )
   }, [chaptersRead])
@@ -131,12 +134,11 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         onEndReached={() => hasNextPage && fetchNextPage()}
         getItemCount={() => chapters.length}
         getItem={(data, index) => data[index]}
-        initialNumToRender={DEFAULT_PAGINATION.limit}
         maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
         onEndReachedThreshold={0.5}
         progressViewOffset={50}
-        refreshing={isFetchingNextPage || isFetching}
-        ListFooterComponent={(isFetchingNextPage || isFetching) && <ActivityIndicator size="large" color={Colors.light.tint} />}
+        refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
+        ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={Colors.light.tint} />}
       />
     </Container>
   )
