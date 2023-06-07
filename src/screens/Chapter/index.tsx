@@ -1,11 +1,10 @@
-import { memo, useCallback, useMemo, useState } from "react"
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { memo, useCallback, useMemo, useRef, useState } from "react"
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
 import { getChapters } from "../../services/mangadex"
 import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
-import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
@@ -19,12 +18,17 @@ const DEFAULT_PAGINATION = {
   total: 40,
 }
 
+interface HandleFilterProps {
+  initialChapter?: number
+}
+
 const FiltersModal = memo(({
+  handleFilter
 }: {
-    // isModalVisible: boolean,
-    // setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>
-  }) => {
+  handleFilter: (props: HandleFilterProps) => void
+}) => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
+  const [initialChapter, setInitialChapter] = useState('')
 
   if (!isFilterModalVisible) return (
     <RoundedButton
@@ -43,12 +47,24 @@ const FiltersModal = memo(({
         <FilterForm>
           <ChapterInput
             placeholder="Capitulo Inicial"
+            placeholderTextColor={Colors.light.text}
+            value={initialChapter.toString()}
+            onChangeText={value => setInitialChapter(value)}
           />
-          <CustomButton children='Filtrar' />
+          <CustomButton
+            onPress={() => {
+              setIsFilterModalVisible(false)
+              handleFilter({
+                initialChapter: initialChapter === '0' || initialChapter === '' ? 1 : Number(initialChapter)
+              })
+            }}
+            children='Filtrar'
+          />
           <CustomButton
             onPress={() => setIsFilterModalVisible(false)}
             variant="Secondary"
             children='Cancelar'
+            style={{ marginTop: 10 }}
           />
         </FilterForm>
       </FilterFormWrapper>
@@ -57,14 +73,19 @@ const FiltersModal = memo(({
 })
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
+  const queryClient = useQueryClient()
   const { mangaData } = route.params ?? {}
+  const paginationRef = useRef({
+    initialOffset: 0
+  })
   const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])
   const [chapterIsFavorite, setChapterIsFavorite] = useState(false)
+  const currentQueryKey = `chapter-${mangaData?.id}`
 
-  const loadChapters = useCallback(async ({ pageParam = 0 }) => {
+  const loadChapters = useCallback(async ({ pageParam = null }) => {
     const { limit } = DEFAULT_PAGINATION
-    const offset = pageParam
+    const offset = pageParam ?? paginationRef.current.initialOffset
     if (pageParam > chaptersTotal) return []
     const { data } = await getChapters(mangaData?.id, limit, offset)
     if (data.total !== chaptersTotal) setChaptersTotal(data.total)
@@ -79,7 +100,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: [`chapter-${mangaData?.id}`],
+    queryKey: [currentQueryKey],
     queryFn: loadChapters,
     getNextPageParam: (lastPage) => {
       const currentOffset = (lastPage?.offset + lastPage?.limit)
@@ -140,6 +161,14 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     )
   }, [chaptersRead])
 
+  const handleFilter = ({
+    initialChapter
+  }) => {
+    queryClient.removeQueries([currentQueryKey])
+    paginationRef.current.initialOffset = initialChapter - 1
+    fetchNextPage()
+  }
+
   useFocusEffect(useCallback(() => {
     loadFavorites()
     loadReadChapters()
@@ -153,7 +182,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
         </Label>
         <HeaderWrapper>
-          <FiltersModal />
+          <FiltersModal handleFilter={handleFilter} />
           <RoundedButton
             name='star'
             onPress={changeFavoriteState}
@@ -161,14 +190,13 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
       <ChapterList
         data={chapters}
         renderItem={renderChapter}
