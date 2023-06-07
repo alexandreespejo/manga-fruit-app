@@ -7,6 +7,9 @@ import Colors from "../../constants/Colors"
 import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
+
+const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
 function SearchBar({ search, setSearch, onSearch }) {
 
@@ -82,6 +85,13 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     <Container>
       {isLoading && <Load />}
       <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
+      {/* <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+      /> */}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={searchData}

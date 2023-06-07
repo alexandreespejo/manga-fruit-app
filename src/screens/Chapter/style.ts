@@ -6,6 +6,38 @@ export const Container = styled.SafeAreaView`
   display: flex;
 `;
 
+export const FiltersModalContainer = styled.Modal``;
+
+export const FilterFormWrapper = styled.View`
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   width: 100%;
+   background-color: rgba(0,0,0,0.5);
+`
+
+export const ChapterInput = styled.TextInput.attrs(() => ({
+   keyboardType: 'numeric',
+}))`
+   height: 50px;
+   width: 90%;
+   border-radius: 8px;
+   margin-bottom: 10px;
+   border: 1px ${(props) => props.theme.tint};
+   font-size: 20px;
+   padding:0 10px;
+   color:${(props) => props.theme.text};
+`
+
+export const FilterForm = styled.View`
+   align-items: center;
+   border-radius: 8px;
+   height: auto;
+   width: 80%;
+   padding: 10px 0;
+   background: ${(props) => props.theme.items};
+`
+
 export const Banner = styled.Image`
    height: 30%;
    width: 100%;
@@ -26,7 +58,7 @@ export const HeaderWrapper = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
-   padding:20px;
+   padding: 0 20px;
 `
 
 export const Label = styled.Text<any>`

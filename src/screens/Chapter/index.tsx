@@ -2,13 +2,15 @@ import { memo, useCallback, useMemo, useState } from "react"
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
 import { getChapters } from "../../services/mangadex"
-import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText } from "./style"
+import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import Load from "../../components/Load"
+import { CustomButton } from "../../components/Button"
+import { RoundedButton } from "../../components/RoundedButton"
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -16,6 +18,43 @@ const DEFAULT_PAGINATION = {
   limit: 40,
   total: 40,
 }
+
+const FiltersModal = memo(({
+}: {
+    // isModalVisible: boolean,
+    // setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>
+  }) => {
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
+
+  if (!isFilterModalVisible) return (
+    <RoundedButton
+      name='filter'
+      onPress={() => setIsFilterModalVisible(true)}
+      color={Colors.light.text}
+    />
+  )
+
+  return (
+    <FiltersModalContainer
+      visible={true}
+      transparent
+    >
+      <FilterFormWrapper>
+        <FilterForm>
+          <ChapterInput
+            placeholder="Capitulo Inicial"
+          />
+          <CustomButton children='Filtrar' />
+          <CustomButton
+            onPress={() => setIsFilterModalVisible(false)}
+            variant="Secondary"
+            children='Cancelar'
+          />
+        </FilterForm>
+      </FilterFormWrapper>
+    </FiltersModalContainer>
+  )
+})
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
   const { mangaData } = route.params ?? {}
@@ -87,7 +126,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
   const openReader = async (chapterData: any) => {
     await storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
-    navigation.navigate('Reader', { chapterData })
+    navigation.navigate('Reader', { chapterData, mangaData })
   }
 
   const renderChapter = useCallback(({ item }) => {
@@ -113,20 +152,23 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         <Label>
           {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
         </Label>
-        <FontAwesome
-          onPress={changeFavoriteState}
-          name="star"
-          size={30}
-          color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
-        />
+        <HeaderWrapper>
+          <FiltersModal />
+          <RoundedButton
+            name='star'
+            onPress={changeFavoriteState}
+            color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
+          />
+        </HeaderWrapper>
       </HeaderWrapper>
-      <BannerAd
+
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
       <ChapterList
         data={chapters}
         renderItem={renderChapter}
@@ -140,6 +182,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
         ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={Colors.light.tint} />}
       />
+
     </Container>
   )
 })
