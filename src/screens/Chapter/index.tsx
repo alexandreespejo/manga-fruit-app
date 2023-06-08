@@ -4,7 +4,7 @@ import { ActivityIndicator } from "react-native"
 import { getChapters } from "../../services/mangadex"
 import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
-import { getChapterRead, getFavoriteMangaList, storeChapterRead, storeFavoriteMangaList } from "../../services/storage"
+import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
 import Colors from "../../constants/Colors"
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
@@ -146,7 +146,6 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   }
 
   const openReader = async (chapterData: any) => {
-    await storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
     navigation.navigate('Reader', { chapterData, mangaData })
   }
 

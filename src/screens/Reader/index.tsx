@@ -6,6 +6,7 @@ import { ActionButton, ActionContainer, ActionLabel, CloseButton, HeaderContaine
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
+import { storeChapterRead } from "../../services/storage"
 
 type ChapterDataType = any | undefined
 
@@ -21,6 +22,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
   useEffect(() => {
     if (!chapterData) return
+    storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
     loadChapterSequence()
     loadPages()
   }, [chapterData])
