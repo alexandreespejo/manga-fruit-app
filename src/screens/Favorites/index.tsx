@@ -29,13 +29,13 @@ export default function FavoritesScreen({ navigation }: { navigation: Navigation
   return (
     <Container>
       {isLoading && <Load />}
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={mangaList}

@@ -1,8 +1,10 @@
 import { Ionicons, Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons"
+import Local from 'expo-localization'
 import * as Font from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
 import React from "react"
 import mobileAds from 'react-native-google-mobile-ads'
+import internalization from "../services/internalization"
 
 export function useLoadedAssets() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false)
@@ -17,9 +19,10 @@ export function useLoadedAssets() {
         await Font.loadAsync(Entypo.font)
         await Font.loadAsync(MaterialIcons.font)
         await Font.loadAsync(FontAwesome.font)
-
+        // const { locale } = await Local.getLocalizationAsync()
+        // internalization.locale = locale
         //Load ads SDK
-        await mobileAds().initialize()
+        // await mobileAds().initialize()
 
       } catch (e) {
         // We might want to provide this error information to an error reporting service

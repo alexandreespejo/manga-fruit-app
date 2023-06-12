@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
-import { getChapters } from "../../services/mangadex"
+import { getChapters, LanguageTypes } from "../../services/mangadex"
 import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
@@ -9,7 +9,10 @@ import Colors from "../../constants/Colors"
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
 import { RoundedButton } from "../../components/RoundedButton"
+
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
+import { Dropdown } from "../../components/Dropdown"
+import internalization from "../../services/internalization"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -20,7 +23,10 @@ const DEFAULT_PAGINATION = {
 
 interface HandleFilterProps {
   initialChapter?: number
+  language?: string
 }
+
+const LanguageOptions = ['pt-br', 'en']
 
 const FiltersModal = memo(({
   handleFilter
@@ -29,6 +35,9 @@ const FiltersModal = memo(({
 }) => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
   const [initialChapter, setInitialChapter] = useState('')
+  const [selectedChapterLang, setSelectedChapterLang] = useState('pt-br')
+
+  console.log(internalization.t('welcome'))
 
   if (!isFilterModalVisible) return (
     <RoundedButton
@@ -45,6 +54,12 @@ const FiltersModal = memo(({
     >
       <FilterFormWrapper>
         <FilterForm>
+          <Dropdown
+            label="Linguagem"
+            options={LanguageOptions}
+            onSelect={lang => setSelectedChapterLang(lang)}
+            defaultSelected={selectedChapterLang}
+          />
           <ChapterInput
             placeholder="Capitulo Inicial"
             placeholderTextColor={Colors.light.text}
@@ -55,7 +70,8 @@ const FiltersModal = memo(({
             onPress={() => {
               setIsFilterModalVisible(false)
               handleFilter({
-                initialChapter: initialChapter === '0' || initialChapter === '' ? 1 : Number(initialChapter)
+                initialChapter: initialChapter === '0' || initialChapter === '' ? 1 : Number(initialChapter),
+                language: selectedChapterLang
               })
             }}
             children='Filtrar'
@@ -76,7 +92,8 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   const queryClient = useQueryClient()
   const { mangaData } = route.params ?? {}
   const paginationRef = useRef({
-    initialOffset: 0
+    initialOffset: 0,
+    language: 'pt-br'
   })
   const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])
@@ -87,7 +104,8 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     const { limit } = DEFAULT_PAGINATION
     const offset = pageParam ?? paginationRef.current.initialOffset
     if (pageParam > chaptersTotal) return []
-    const { data } = await getChapters(mangaData?.id, limit, offset)
+    const selectedLang = paginationRef.current.language as LanguageTypes
+    const { data } = await getChapters(mangaData?.id, limit, offset, selectedLang)
     if (data.total !== chaptersTotal) setChaptersTotal(data.total)
     return data
   }, [chaptersTotal])
@@ -161,10 +179,14 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   }, [chaptersRead])
 
   const handleFilter = ({
-    initialChapter
+    initialChapter,
+    language
   }) => {
     queryClient.removeQueries([currentQueryKey])
-    paginationRef.current.initialOffset = initialChapter - 1
+    paginationRef.current = {
+      initialOffset: initialChapter - 1,
+      language: language
+    }
     fetchNextPage()
   }
 
@@ -189,13 +211,13 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
       <ChapterList
         data={chapters}
         renderItem={renderChapter}

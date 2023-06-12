@@ -7,6 +7,8 @@ const mangadexApi = axios.create({
   },
 })
 
+export type LanguageTypes = 'pt-br' | 'en'
+
 export const getSearch = async (title: string, limit: number, offset?: number) => {
   const { data } = await mangadexApi.get('manga/', {
     params: {
@@ -26,16 +28,18 @@ export const getCover = async (cover_id: string) => {
   return data
 }
 
-export const getChapters = async (id: string, limit: number, offset?: number) => {
+export const getChapters = async (id: string, limit: number, offset?: number, lang?: LanguageTypes) => {
 
   const data = await mangadexApi.get(`chapter/`, {
     params: {
       manga: id,
       limit,
       offset: offset ?? 0,
-      translatedLanguage: ['pt-br'],
+      translatedLanguage: [lang ?? 'pt-br'],
     }
   })
+
+  console.log(data)
 
   return data
 }
