@@ -1,9 +1,11 @@
-import "react-native-gesture-handler"
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import "expo-dev-client"
 import Main from "./src"
 
 export default function App() {
   return (
-    <Main />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Main />
+    </GestureHandlerRootView>
   )
 }

@@ -27,6 +27,7 @@ interface HandleFilterProps {
 }
 
 const LanguageOptions = ['pt-br', 'en']
+const defaultLanguage = internalization.t('languageFilter')
 
 const FiltersModal = memo(({
   handleFilter
@@ -35,9 +36,7 @@ const FiltersModal = memo(({
 }) => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
   const [initialChapter, setInitialChapter] = useState('')
-  const [selectedChapterLang, setSelectedChapterLang] = useState('pt-br')
-
-  console.log(internalization.t('welcome'))
+  const [selectedChapterLang, setSelectedChapterLang] = useState(defaultLanguage)
 
   if (!isFilterModalVisible) return (
     <RoundedButton
@@ -93,7 +92,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   const { mangaData } = route.params ?? {}
   const paginationRef = useRef({
     initialOffset: 0,
-    language: 'pt-br'
+    language: defaultLanguage
   })
   const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])

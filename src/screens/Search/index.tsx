@@ -8,6 +8,7 @@ import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
+import internalization from "../../services/internalization"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
@@ -18,7 +19,7 @@ function SearchBar({ search, setSearch, onSearch }) {
       <Input
         onChangeText={setSearch}
         value={search}
-        placeholder="Pesquise um titulo"
+        placeholder={internalization.t('searchInputPlaceholder')}
         placeholderTextColor={Colors.light.text}
         onSubmitEditing={onSearch}
       />
@@ -65,8 +66,8 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
       setSearchData(oldList => [...oldList, ...data.data])
     }).catch(err => {
       Alert.alert(
-        'Falha',
-        'Infelizmente estamos com problemas no servidor, tente novamente mais tarde!',
+        internalization.t('searchRequestErrorTitle'),
+        internalization.t('searchRequestErrorMessage'),
         [
           {
             text: 'OK',
