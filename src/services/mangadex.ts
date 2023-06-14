@@ -39,8 +39,6 @@ export const getChapters = async (id: string, limit: number, offset?: number, la
     }
   })
 
-  console.log(data)
-
   return data
 }
 

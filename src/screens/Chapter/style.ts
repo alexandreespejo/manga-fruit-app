@@ -16,11 +16,15 @@ export const FilterFormWrapper = styled.View`
    background-color: rgba(0,0,0,0.5);
 `
 
+export const FormField = styled.View`
+   width: 90%;
+`
+
 export const ChapterInput = styled.TextInput.attrs(() => ({
    keyboardType: 'numeric',
 }))`
    height: 50px;
-   width: 90%;
+   width: 100%;
    border-radius: 8px;
    margin-bottom: 10px;
    border: 1px ${(props) => props.theme.tint};
@@ -33,8 +37,8 @@ export const FilterForm = styled.View`
    align-items: center;
    border-radius: 8px;
    height: auto;
-   width: 80%;
-   padding: 10px 0;
+   width: 90%;
+   padding: 15px 0;
    background: ${(props) => props.theme.items};
 `
 
@@ -60,13 +64,6 @@ export const HeaderWrapper = styled.View`
    justify-content: space-between;
    padding: 0 20px;
 `
-
-export const Label = styled.Text<any>`
-   max-width: 80%;
-   font-size: 24px;
-   font-weight: bold;
-   color:${({ theme }) => theme.text};
-`;
 
 export const ChapterButton = styled.TouchableOpacity`
    height: 25px;

@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { LabelContainer } from "./style"
 
-export type LabelVariants = 'Title' | 'Text' | 'Description'
+export type LabelVariants = 'Headline' | 'Title' | 'Text' | 'Description'
 
 interface LabelType {
   variant?: LabelVariants

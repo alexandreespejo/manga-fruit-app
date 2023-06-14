@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ChapterScreen from '../screens/Chapter'
 import ReaderScreen from '../screens/Reader'
 import FavoritesScreen from '../screens/Favorites'
+import internalization from '../services/internalization'
 
 const Stack = createStackNavigator()
 
@@ -10,6 +11,8 @@ export default function FavoritesStack() {
     <Stack.Navigator initialRouteName="Favorites" screenOptions={{
       gestureEnabled: false,
       animationEnabled: false,
+      headerTitle: '',
+      headerBackTitle: internalization.t('headerBackLabel')
     }}>
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Chapter" component={ChapterScreen} />

@@ -5,17 +5,31 @@ import { I18n } from 'i18n-js'
 const internalization = new I18n({
   en: {
     languageFilter: 'en',
-    //search screen 
+    headerBackLabel: 'Back',
+    //search screen
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
     searchRequestErrorMessage: 'Server problems, please try again later!',
+    //chapter screen
+    chapterListLabel: 'Chapter',
+    chapterFilterConfirm: 'Filter',
+    chapterFilterCancel: 'Cancel',
+    chapterFilterLanguageLabel: 'Language',
+    chapterFilterInitialChapterLabel: 'Initial chapter',
   },
   pt: {
     languageFilter: 'pt-br',
+    headerBackLabel: 'Voltar',
     //search screen 
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',
     searchRequestErrorMessage: 'Problemas no servidor, por favor tente novamente mais tarde!',
+    //chapter screen
+    chapterListLabel: 'Capitulo',
+    chapterFilterConfirm: 'Filtrar',
+    chapterFilterCancel: 'Cancelar',
+    chapterFilterLanguageLabel: 'Linguagem',
+    chapterFilterInitialChapterLabel: 'Capitulo inicial',
   }
 })
 

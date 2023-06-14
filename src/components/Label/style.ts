@@ -8,6 +8,11 @@ interface LabelContainerProps {
 export const LabelContainer = styled.Text<LabelContainerProps>`
   color: ${({ theme }) => theme.text}
 
+  ${({ variant }) => variant === 'Headline' && css`
+    font-size: 24px;
+    font-weight: bold;
+  `}
+
   ${({ variant }) => variant === 'Title' && css`
     font-size: 20px;
     line-height: 30px;

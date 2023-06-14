@@ -1,8 +1,8 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { ActivityIndicator } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { getChapters, LanguageTypes } from "../../services/mangadex"
-import { Container, Label, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput } from "./style"
+import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
 import Colors from "../../constants/Colors"
@@ -13,6 +13,7 @@ import { RoundedButton } from "../../components/RoundedButton"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Dropdown } from "../../components/Dropdown"
 import internalization from "../../services/internalization"
+import { Label } from "../../components/Label"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -26,7 +27,19 @@ interface HandleFilterProps {
   language?: string
 }
 
-const LanguageOptions = ['pt-br', 'en']
+const LanguageOptions = {
+  'en': [
+    { label: 'Portuguese', value: 'pt-br' },
+    { label: 'English', value: 'en' },
+  ],
+  'pt-br': [
+    { label: 'Portugues', value: 'pt-br' },
+    { label: 'Ingles', value: 'en' },
+  ]
+}
+
+const currentLanguageOptions = LanguageOptions[internalization.t('languageFilter')] ?? []
+
 const defaultLanguage = internalization.t('languageFilter')
 
 const FiltersModal = memo(({
@@ -35,7 +48,7 @@ const FiltersModal = memo(({
   handleFilter: (props: HandleFilterProps) => void
 }) => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
-  const [initialChapter, setInitialChapter] = useState('')
+  const [initialChapter, setInitialChapter] = useState('1')
   const [selectedChapterLang, setSelectedChapterLang] = useState(defaultLanguage)
 
   if (!isFilterModalVisible) return (
@@ -54,17 +67,19 @@ const FiltersModal = memo(({
       <FilterFormWrapper>
         <FilterForm>
           <Dropdown
-            label="Linguagem"
-            options={LanguageOptions}
+            label={internalization.t('chapterFilterLanguageLabel')}
+            options={currentLanguageOptions}
             onSelect={lang => setSelectedChapterLang(lang)}
             defaultSelected={selectedChapterLang}
           />
-          <ChapterInput
-            placeholder="Capitulo Inicial"
-            placeholderTextColor={Colors.light.text}
-            value={initialChapter.toString()}
-            onChangeText={value => setInitialChapter(value)}
-          />
+          <FormField>
+            <Label children={internalization.t('chapterFilterInitialChapterLabel')} />
+            <ChapterInput
+              placeholderTextColor={Colors.light.text}
+              value={initialChapter.toString()}
+              onChangeText={value => setInitialChapter(value)}
+            />
+          </FormField>
           <CustomButton
             onPress={() => {
               setIsFilterModalVisible(false)
@@ -73,12 +88,12 @@ const FiltersModal = memo(({
                 language: selectedChapterLang
               })
             }}
-            children='Filtrar'
+            children={internalization.t('chapterFilterConfirm')}
           />
           <CustomButton
             onPress={() => setIsFilterModalVisible(false)}
             variant="Secondary"
-            children='Cancelar'
+            children={internalization.t('chapterFilterCancel')}
             style={{ marginTop: 10 }}
           />
         </FilterForm>
@@ -167,7 +182,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   }
 
   const renderChapter = useCallback(({ item }) => {
-    const label = `Capitulo ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
+    const label = `${internalization.t('chapterListLabel')} ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
     const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
 
     return (
@@ -198,9 +213,10 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     <Container>
       {isInitialLoading && <Load />}
       <HeaderWrapper>
-        <Label>
-          {mangaData?.attributes?.title?.en || 'Titulo do mangá'}
-        </Label>
+        <Label
+          variant="Headline"
+          children={mangaData?.attributes?.title?.en ?? 'Title'}
+        />
         <HeaderWrapper>
           <FiltersModal handleFilter={handleFilter} />
           <RoundedButton
