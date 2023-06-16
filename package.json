@@ -22,8 +22,6 @@
     "expo-status-bar": "~1.4.2",
     "expo-web-browser": "~12.0.0",
     "i18n-js": "4.2.0",
-    "lottie-ios": "3.2.3",
-    "lottie-react-native": "5.1.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-icons": "4.3.1",

@@ -6,6 +6,8 @@ const internalization = new I18n({
   en: {
     languageFilter: 'en',
     headerBackLabel: 'Back',
+    homeScreenTitle: 'Home',
+    favoriteScreenTitle: 'Favorites',
     //search screen
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
@@ -20,6 +22,8 @@ const internalization = new I18n({
   pt: {
     languageFilter: 'pt-br',
     headerBackLabel: 'Voltar',
+    homeScreenTitle: 'Inicio',
+    favoriteScreenTitle: 'Favoritos',
     //search screen 
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',

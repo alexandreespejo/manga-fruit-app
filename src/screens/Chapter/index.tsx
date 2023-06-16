@@ -216,6 +216,9 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         <Label
           variant="Headline"
           children={mangaData?.attributes?.title?.en ?? 'Title'}
+          style={{
+            maxWidth: '70%'
+          }}
         />
         <HeaderWrapper>
           <FiltersModal handleFilter={handleFilter} />

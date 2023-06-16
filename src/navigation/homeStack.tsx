@@ -11,12 +11,11 @@ export default function HomeStack() {
     <Stack.Navigator initialRouteName="Home" screenOptions={{
       gestureEnabled: false,
       animationEnabled: false,
-      headerTitle: '',
       headerBackTitle: internalization.t('headerBackLabel')
     }}>
-      <Stack.Screen name="Home" component={SearchScreen} />
-      <Stack.Screen name="Chapter" component={ChapterScreen} />
-      <Stack.Screen name="Reader" component={ReaderScreen} />
+      <Stack.Screen name="Home" options={{ title: internalization.t('homeScreenTitle') }} component={SearchScreen} />
+      <Stack.Screen name="Chapter" options={{ title: '' }} component={ChapterScreen} />
+      <Stack.Screen name="Reader" options={{ title: '' }} component={ReaderScreen} />
     </Stack.Navigator>
   )
 }

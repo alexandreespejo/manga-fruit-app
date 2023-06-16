@@ -11,12 +11,11 @@ export default function FavoritesStack() {
     <Stack.Navigator initialRouteName="Favorites" screenOptions={{
       gestureEnabled: false,
       animationEnabled: false,
-      headerTitle: '',
       headerBackTitle: internalization.t('headerBackLabel')
     }}>
-      <Stack.Screen name="Favorites" component={FavoritesScreen} />
-      <Stack.Screen name="Chapter" component={ChapterScreen} />
-      <Stack.Screen name="Reader" component={ReaderScreen} />
+      <Stack.Screen name="Favorites" options={{ title: internalization.t('favoriteScreenTitle') }} component={FavoritesScreen} />
+      <Stack.Screen name="Chapter" options={{ title: '' }} component={ChapterScreen} />
+      <Stack.Screen name="Reader" options={{ title: '' }} component={ReaderScreen} />
     </Stack.Navigator>
   )
 }
