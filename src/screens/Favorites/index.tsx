@@ -5,6 +5,7 @@ import { getFavoriteMangaList } from "../../services/storage"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
+import { createRecommendations } from "../../services/recommendations"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 
@@ -20,6 +21,7 @@ export default function FavoritesScreen({ navigation }: { navigation: Navigation
   useFocusEffect(useCallback(() => {
     setIsLoading(true)
     getFavoriteMangaList().then(list => {
+      // createRecommendations(list)
       setMangaList(list)
     }).finally(() => {
       setIsLoading(false)

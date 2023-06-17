@@ -9,6 +9,7 @@ const internalization = new I18n({
     homeScreenTitle: 'Home',
     favoriteScreenTitle: 'Favorites',
     //search screen
+    searchMostPopular: 'Most Popular',
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
     searchRequestErrorMessage: 'Server problems, please try again later!',
@@ -25,6 +26,7 @@ const internalization = new I18n({
     homeScreenTitle: 'Inicio',
     favoriteScreenTitle: 'Favoritos',
     //search screen 
+    searchMostPopular: 'Mais Populares',
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',
     searchRequestErrorMessage: 'Problemas no servidor, por favor tente novamente mais tarde!',

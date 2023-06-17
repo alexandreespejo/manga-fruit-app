@@ -1,3 +1,4 @@
+import { VirtualizedList } from 'react-native';
 import styled from 'styled-components/native'
 
 export const MangaCardContainer = styled.TouchableOpacity`
@@ -100,7 +101,7 @@ export const ListContainer = styled.SafeAreaView`
   background-color: blue;
 `
 
-export const MangaListContainer = styled.FlatList`
+export const MangaListContainer = styled(VirtualizedList)`
   margin-top: 10px;
   width:100%;
 `;
