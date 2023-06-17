@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { ActivityIndicator, View } from "react-native"
+import { ActivityIndicator } from "react-native"
 import { getChapters, LanguageTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"

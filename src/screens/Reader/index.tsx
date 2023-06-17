@@ -7,6 +7,10 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
+import { AdEventType, InterstitialAd } from "react-native-google-mobile-ads"
+
+const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
+const interstitial = InterstitialAd.createForAdRequest(intersticialId)
 
 type ChapterDataType = any | undefined
 
@@ -14,6 +18,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   const chapterData: ChapterDataType = route?.params?.chapterData
   const mangaData: any = route?.params?.mangaData
   const [isLoading, setIsLoading] = useState(false)
+  const [loadedAd, setLoadedAd] = useState(false)
   const [pages, setPages] = useState([])
   const [chapterSequence, setChapterSequence] = useState({
     prev: null,
@@ -72,8 +77,10 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
   const handleChapterSequence = (direction: 'prev' | 'next') => {
     const selectedChapter = chapterSequence[direction]
-    if (selectedChapter)
+    if (selectedChapter) {
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+      if (loadedAd) interstitial.show()
+    }
   }
 
   const closePage = () => {
@@ -102,6 +109,18 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       </HeaderContainer>
     )
   }
+
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      setLoadedAd(true)
+    });
+
+    // Start loading the interstitial straight away
+    interstitial.load()
+
+    // Unsubscribe from events on unmount
+    return unsubscribe
+  })
 
   return (
     <ReaderContainer visible={true}>
