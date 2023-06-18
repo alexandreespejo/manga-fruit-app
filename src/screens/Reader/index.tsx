@@ -7,12 +7,11 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-import { AdEventType, InterstitialAd } from "react-native-google-mobile-ads"
+import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
-const interstitial = InterstitialAd.createForAdRequest(intersticialId)
 
 type ChapterDataType = any | undefined
 
@@ -23,7 +22,6 @@ const getReadChapterAmount = async () => {
 
 const incrementReadChapterAmount = async () => {
   const readAmount = await getReadChapterAmount()
-  console.log(readAmount)
   await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', String(Number(readAmount) + 1))
 }
 
@@ -32,10 +30,13 @@ const resetReadChapterAmount = async () => {
 }
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
+  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+    requestNonPersonalizedAdsOnly: true,
+  })
+
   const chapterData: ChapterDataType = route?.params?.chapterData
   const mangaData: any = route?.params?.mangaData
   const [isLoading, setIsLoading] = useState(false)
-  const [loadedAd, setLoadedAd] = useState(false)
   const [pages, setPages] = useState([])
   const [chapterSequence, setChapterSequence] = useState({
     prev: null,
@@ -48,17 +49,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     incrementReadChapterAmount()
     loadChapterSequence()
     loadPages()
-
-    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-      setLoadedAd(true)
-    })
-
-    interstitial.load()
-
-    return () => {
-      setLoadedAd(false)
-      unsubscribe()
-    }
+    load()
   }, [chapterData])
 
   const loadChapterSequence = async () => {
@@ -108,10 +99,11 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
       const readAmount = await getReadChapterAmount()
-      if (loadedAd && Number(readAmount) > 4) {
+
+      if (isLoaded && Number(readAmount) > 4) {
         await resetReadChapterAmount()
+        show()
         navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
-        interstitial.show()
       } else
         navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
 
