@@ -8,11 +8,28 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
 import { AdEventType, InterstitialAd } from "react-native-google-mobile-ads"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import internalization from "../../services/internalization"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 const interstitial = InterstitialAd.createForAdRequest(intersticialId)
 
 type ChapterDataType = any | undefined
+
+const getReadChapterAmount = async () => {
+  const readAmount = await AsyncStorage.getItem('@manga_fruit_read_amount_chapter') ?? '0'
+  return readAmount
+}
+
+const incrementReadChapterAmount = async () => {
+  const readAmount = await getReadChapterAmount()
+  console.log(readAmount)
+  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', String(Number(readAmount) + 1))
+}
+
+const resetReadChapterAmount = async () => {
+  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', '0')
+}
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const chapterData: ChapterDataType = route?.params?.chapterData
@@ -28,8 +45,20 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   useEffect(() => {
     if (!chapterData) return
     storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
+    incrementReadChapterAmount()
     loadChapterSequence()
     loadPages()
+
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      setLoadedAd(true)
+    })
+
+    interstitial.load()
+
+    return () => {
+      setLoadedAd(false)
+      unsubscribe()
+    }
   }, [chapterData])
 
   const loadChapterSequence = async () => {
@@ -57,10 +86,10 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
       setPages(pageList)
 
-    }).catch((err) => {
+    }).catch(() => {
       Alert.alert(
-        'Falha',
-        'Infelizmente não foi possivel carregar esse capitulo, tente mais tarde',
+        internalization.t('searchRequestErrorTitle'),
+        internalization.t('searchRequestErrorMessage'),
         [
           {
             text: 'OK',
@@ -75,11 +104,17 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     })
   }
 
-  const handleChapterSequence = (direction: 'prev' | 'next') => {
+  const handleChapterSequence = async (direction: 'prev' | 'next') => {
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
-      navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
-      if (loadedAd) interstitial.show()
+      const readAmount = await getReadChapterAmount()
+      if (loadedAd && Number(readAmount) > 4) {
+        await resetReadChapterAmount()
+        navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+        interstitial.show()
+      } else
+        navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+
     }
   }
 
@@ -94,12 +129,12 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
           {
             chapterSequence.prev &&
             (<ActionButton onPress={() => handleChapterSequence('prev')}>
-              <ActionLabel children='Anterior' />
+              <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
             </ActionButton>)
           }
           {chapterSequence.next &&
             (<ActionButton onPress={() => handleChapterSequence('next')}>
-              <ActionLabel children='Próximo' />
+              <ActionLabel children={internalization.t('readerNextPageLabel')} />
             </ActionButton>)
           }
         </ActionContainer>
@@ -109,18 +144,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       </HeaderContainer>
     )
   }
-
-  useEffect(() => {
-    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-      setLoadedAd(true)
-    });
-
-    // Start loading the interstitial straight away
-    interstitial.load()
-
-    // Unsubscribe from events on unmount
-    return unsubscribe
-  })
 
   return (
     <ReaderContainer visible={true}>

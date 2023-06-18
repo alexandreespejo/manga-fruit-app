@@ -19,6 +19,9 @@ const internalization = new I18n({
     chapterFilterCancel: 'Cancel',
     chapterFilterLanguageLabel: 'Language',
     chapterFilterInitialChapterLabel: 'Initial chapter',
+    //reader screen
+    readerNextPageLabel: 'Next',
+    readerPreviousPageLabel: 'Previous',
   },
   pt: {
     languageFilter: 'pt-br',
@@ -36,6 +39,9 @@ const internalization = new I18n({
     chapterFilterCancel: 'Cancelar',
     chapterFilterLanguageLabel: 'Linguagem',
     chapterFilterInitialChapterLabel: 'Capitulo inicial',
+    //reader screen
+    readerNextPageLabel: 'Próximo',
+    readerPreviousPageLabel: 'Anterior',
   }
 })
 

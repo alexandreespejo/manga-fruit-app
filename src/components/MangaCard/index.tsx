@@ -40,15 +40,6 @@ export const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
     onSelectManga({ ...data, coverLink: cover })
   }
 
-  const styles = StyleSheet.create({
-    containerShadow: {
-      shadowColor: 'rgba(0, 0, 0, 0.3)',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.5,
-      elevation: 1,
-    }
-  })
-
   const renderTags = () => {
     return tags.map((tag, index) => {
       return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
@@ -56,7 +47,7 @@ export const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
   }
 
   return (
-    <MangaCardContainer style={styles.containerShadow} onPress={onCardClick}>
+    <MangaCardContainer onPress={onCardClick}>
       <Image source={{ uri: cover }} />
       <InfoWrapper>
         <TitleContainer>

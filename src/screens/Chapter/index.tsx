@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
 import { getChapters, LanguageTypes } from "../../services/mangadex"
-import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField } from "./style"
+import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
 import Colors from "../../constants/Colors"
@@ -186,9 +186,12 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
 
     return (
-      <ChapterButton onPress={() => openReader(item)}>
-        <ChapterText numberOfLines={1} style={{ color: isRead ? 'gray' : 'black' }}>{label}</ChapterText>
-      </ChapterButton>
+      <>
+        <ChapterButton onPress={() => openReader(item)}>
+          <ChapterText numberOfLines={1} style={{ color: isRead ? 'gray' : 'black' }}>{label}</ChapterText>
+        </ChapterButton>
+        <ChapterDivider />
+      </>
     )
   }, [chaptersRead])
 

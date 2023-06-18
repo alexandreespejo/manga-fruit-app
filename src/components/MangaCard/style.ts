@@ -11,6 +11,7 @@ export const MangaCardContainer = styled.TouchableOpacity`
   height: 150px;
   width: 90%;
   border-radius:25px;
+  border: 1px solid lightgray;
 `;
 
 export const Image = styled.Image`

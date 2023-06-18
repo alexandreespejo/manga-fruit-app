@@ -66,9 +66,17 @@ export const HeaderWrapper = styled.View`
 `
 
 export const ChapterButton = styled.TouchableOpacity`
-   height: 25px;
+   height: 30px;
    width: 100%;
-`;
+`
+
+export const ChapterDivider = styled.View`
+   display: flex;
+   flex-direction: row;
+   background-color: lightgray;
+   height: 1px;
+   margin-right: 20px;
+`
 
 export const ChapterContainer = styled.View`
    position: absolute;
@@ -78,7 +86,7 @@ export const ChapterContainer = styled.View`
    margin-top: 30%;
    width:95%;
    padding: 20px;
-`;
+`
 
 export const ChapterList = styled(VirtualizedList)`
    width:100%;
