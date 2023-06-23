@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
-import { getChapters, LanguageTypes } from "../../services/mangadex"
+import { getChapters, LanguageTypes, OrderTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
@@ -25,6 +25,7 @@ const DEFAULT_PAGINATION = {
 interface HandleFilterProps {
   initialChapter?: number
   language?: string
+  order?: OrderTypes
 }
 
 const LanguageOptions = {
@@ -38,8 +39,19 @@ const LanguageOptions = {
   ]
 }
 
-const currentLanguageOptions = LanguageOptions[internalization.t('languageFilter')] ?? []
+const OrderOptions = {
+  'en': [
+    { label: 'Ascending', value: 'asc' },
+    { label: 'Descending', value: 'desc' },
+  ],
+  'pt-br': [
+    { label: 'Crescente', value: 'asc' },
+    { label: 'Decrescente', value: 'desc' },
+  ]
+}
 
+const currentLanguageOptions = LanguageOptions[internalization.t('languageFilter')] ?? []
+const currentOrderOptions = OrderOptions[internalization.t('languageFilter')] ?? []
 const defaultLanguage = internalization.t('languageFilter')
 
 const FiltersModal = memo(({
@@ -50,6 +62,7 @@ const FiltersModal = memo(({
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
   const [initialChapter, setInitialChapter] = useState('1')
   const [selectedChapterLang, setSelectedChapterLang] = useState(defaultLanguage)
+  const [selectedOrder, setSelectedOrder] = useState<OrderTypes>("asc")
 
   if (!isFilterModalVisible) return (
     <RoundedButton
@@ -80,12 +93,19 @@ const FiltersModal = memo(({
               onChangeText={value => setInitialChapter(value)}
             />
           </FormField>
+          <Dropdown
+            label={internalization.t('chapterFilterOrderLabel')}
+            options={currentOrderOptions}
+            onSelect={order => setSelectedOrder(order as OrderTypes)}
+            defaultSelected={selectedOrder}
+          />
           <CustomButton
             onPress={() => {
               setIsFilterModalVisible(false)
               handleFilter({
                 initialChapter: initialChapter === '0' || initialChapter === '' ? 1 : Number(initialChapter),
-                language: selectedChapterLang
+                language: selectedChapterLang,
+                order: selectedOrder
               })
             }}
             children={internalization.t('chapterFilterConfirm')}
@@ -107,7 +127,8 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   const { mangaData } = route.params ?? {}
   const paginationRef = useRef({
     initialOffset: 0,
-    language: defaultLanguage
+    language: defaultLanguage,
+    order: "asc"
   })
   const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])
@@ -115,13 +136,18 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   const currentQueryKey = `chapter-${mangaData?.id}`
 
   const loadChapters = useCallback(async ({ pageParam = null }) => {
-    const { limit } = DEFAULT_PAGINATION
-    const offset = pageParam ?? paginationRef.current.initialOffset
-    if (pageParam > chaptersTotal) return []
-    const selectedLang = paginationRef.current.language as LanguageTypes
-    const { data } = await getChapters(mangaData?.id, limit, offset, selectedLang)
-    if (data.total !== chaptersTotal) setChaptersTotal(data.total)
-    return data
+    try {
+      const { limit } = DEFAULT_PAGINATION
+      const offset = pageParam ?? paginationRef.current.initialOffset
+      if (pageParam > chaptersTotal) return []
+      const selectedLang = paginationRef.current.language as LanguageTypes
+      const selectedOrder = paginationRef.current.order as OrderTypes
+      const { data } = await getChapters(mangaData?.id, limit, offset, selectedLang, selectedOrder)
+      if (data.total !== chaptersTotal) setChaptersTotal(data.total)
+      return data
+    } catch (e) {
+      console.log(e)
+    }
   }, [chaptersTotal])
 
   const {
@@ -197,12 +223,14 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
   const handleFilter = ({
     initialChapter,
-    language
+    language,
+    order
   }) => {
     queryClient.removeQueries([currentQueryKey])
     paginationRef.current = {
       initialOffset: initialChapter - 1,
-      language: language
+      language,
+      order
     }
     fetchNextPage()
   }
@@ -232,13 +260,13 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
       <ChapterList
         data={chapters}
         renderItem={renderChapter}

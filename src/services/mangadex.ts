@@ -8,6 +8,7 @@ const mangadexApi = axios.create({
 })
 
 export type LanguageTypes = 'pt-br' | 'en'
+export type OrderTypes = "asc" | "desc"
 
 export const getSearch = async (title: string, limit: number, offset?: number) => {
   const { data } = await mangadexApi.get('manga/', {
@@ -28,14 +29,19 @@ export const getCover = async (cover_id: string) => {
   return data
 }
 
-export const getChapters = async (id: string, limit: number, offset?: number, lang?: LanguageTypes) => {
-
-  const data = await mangadexApi.get(`chapter/`, {
+export const getChapters = async (
+  id: string,
+  limit: number,
+  offset?: number,
+  lang?: LanguageTypes,
+  order?: OrderTypes
+) => {
+  const data = await mangadexApi.get(`manga/${id}/feed`, {
     params: {
-      manga: id,
       limit,
       offset: offset ?? 0,
       translatedLanguage: [lang ?? 'pt-br'],
+      "order[chapter]": (order ?? "asc")
     }
   })
 

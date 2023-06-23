@@ -1,13 +1,13 @@
+import { useEffect, useState } from "react"
 import { Ionicons, Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons"
 import * as Font from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
-import React from "react"
 import mobileAds from 'react-native-google-mobile-ads'
 
 export function useLoadedAssets() {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false)
+  const [isLoadingComplete, setLoadingComplete] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync()
@@ -18,7 +18,7 @@ export function useLoadedAssets() {
         await Font.loadAsync(MaterialIcons.font)
         await Font.loadAsync(FontAwesome.font)
         //Load ads SDK
-        await mobileAds().initialize()
+        // await mobileAds().initialize()
 
       } catch (e) {
         // We might want to provide this error information to an error reporting service

@@ -26,7 +26,7 @@ export const ChapterInput = styled.TextInput.attrs(() => ({
    height: 50px;
    width: 100%;
    border-radius: 8px;
-   margin-bottom: 10px;
+   /* margin-bottom: 10px; */
    border: 1px ${(props) => props.theme.tint};
    font-size: 20px;
    padding:0 10px;
