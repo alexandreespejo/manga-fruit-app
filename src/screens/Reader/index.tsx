@@ -7,7 +7,7 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-// import { useInterstitialAd } from "react-native-google-mobile-ads"
+import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 
@@ -36,11 +36,19 @@ interface HeaderProps {
 }
 
 const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
-  // const { isLoaded, load, show } = useInterstitialAd(intersticialId, {
-  //   requestNonPersonalizedAdsOnly: true,
-  // })
+  const { isLoaded, load, show } = useInterstitialAd(intersticialId, {
+    requestNonPersonalizedAdsOnly: true,
+  })
 
-  // useEffect(load, [])
+  useEffect(() => {
+    loadAds()
+  }, [])
+
+  const loadAds = async () => {
+    const readAmount = await getReadChapterAmount()
+    if (Number(readAmount) > 4)
+      load()
+  }
 
   const closePage = () => {
     navigation.goBack()
@@ -50,10 +58,10 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
       const readAmount = await getReadChapterAmount()
-      // if (isLoaded && Number(readAmount) > 4) {
-      //   show()
-      //   await resetReadChapterAmount()
-      // }
+      if (isLoaded) {
+        show()
+        await resetReadChapterAmount()
+      }
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
 
     }
