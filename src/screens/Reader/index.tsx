@@ -36,13 +36,9 @@ interface HeaderProps {
 }
 
 const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
-  const { isLoaded, load, show } = useInterstitialAd(intersticialId, {
+  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
     requestNonPersonalizedAdsOnly: true,
   })
-
-  useEffect(() => {
-    loadAds()
-  }, [])
 
   const loadAds = async () => {
     const readAmount = await getReadChapterAmount()
@@ -56,16 +52,23 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
 
   const handleChapterSequence = async (direction: 'prev' | 'next') => {
     const selectedChapter = chapterSequence[direction]
-    if (selectedChapter) {
-      const readAmount = await getReadChapterAmount()
-      if (isLoaded) {
-        show()
-        await resetReadChapterAmount()
-      }
+    if (selectedChapter)
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
-
-    }
   }
+
+  useEffect(() => {
+    if (isClosed)
+      resetReadChapterAmount()
+  }, [isClosed])
+
+  useEffect(() => {
+    if (isLoaded)
+      show()
+  }, [isLoaded])
+
+  useEffect(() => {
+    loadAds()
+  }, [])
 
   return (
     <HeaderContainer>
