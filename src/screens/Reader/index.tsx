@@ -11,7 +11,7 @@ import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 
-const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
+const intersticialId = 'ca-app-pub-4863844449125415/4909628748'
 
 type ChapterDataType = any | undefined
 
@@ -23,6 +23,7 @@ const getReadChapterAmount = async () => {
 const incrementReadChapterAmount = async () => {
   const readAmount = await getReadChapterAmount()
   await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', String(Number(readAmount) + 1))
+  return readAmount
 }
 
 const resetReadChapterAmount = async () => {
@@ -36,12 +37,14 @@ interface HeaderProps {
 }
 
 const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
+  const [c, setC] = useState('')
   const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
     requestNonPersonalizedAdsOnly: true,
   })
 
   const loadAds = async () => {
-    const readAmount = await getReadChapterAmount()
+    const readAmount = await incrementReadChapterAmount()
+    setC(readAmount)
     if (Number(readAmount) > 4)
       load()
   }
@@ -57,13 +60,10 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
   }
 
   useEffect(() => {
-    if (isClosed)
-      resetReadChapterAmount()
-  }, [isClosed])
-
-  useEffect(() => {
-    if (isLoaded)
+    if (isLoaded) {
       show()
+      resetReadChapterAmount()
+    }
   }, [isLoaded])
 
   useEffect(() => {
@@ -87,6 +87,7 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
       </ActionContainer>
       <CloseButton onPress={() => closePage()} >
         <FontAwesome name="close" size={30} color="white" />
+        {c}
       </CloseButton>
     </HeaderContainer>
   )
@@ -132,7 +133,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
         return { url: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}` }
       })
 
-      incrementReadChapterAmount()
       setPages(pageList)
 
     }).catch(() => {
