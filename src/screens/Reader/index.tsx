@@ -10,6 +10,7 @@ import { storeChapterRead } from "../../services/storage"
 import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
+import { Label } from "../../components/Label"
 
 const intersticialId = 'ca-app-pub-4863844449125415/4909628748'
 
@@ -84,10 +85,10 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
             <ActionLabel children={internalization.t('readerNextPageLabel')} />
           </ActionButton>)
         }
+        <Label children={c} />
       </ActionContainer>
       <CloseButton onPress={() => closePage()} >
         <FontAwesome name="close" size={30} color="white" />
-        {c}
       </CloseButton>
     </HeaderContainer>
   )
