@@ -48,6 +48,20 @@ export const getChapters = async (
   return data
 }
 
+export const getLastUpdates = async (
+  lang?: LanguageTypes,
+) => {
+  const data = await mangadexApi.get(`manga`, {
+    params: {
+      limit: 10,
+      availableTranslatedLanguage: [lang ?? 'pt-br'],
+      "order[updatedAt]": "desc"
+    }
+  })
+
+  return data
+}
+
 export const getPages = async (id: string) => {
   const { data } = await mangadexApi.get(`/at-home/server/${id}`)
   return data

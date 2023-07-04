@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from "react"
-import { NavigationProp, useFocusEffect } from '@react-navigation/native'
+import { NavigationProp } from '@react-navigation/native'
 import { Alert, ActivityIndicator } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
@@ -9,7 +9,6 @@ import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
-import { getRecommendations } from "../../services/recommendations"
 import { Label } from "../../components/Label"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
@@ -45,9 +44,6 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   const [searchData, setSearchData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
-  const [recommendationList, setRecommendationList] = useState([])
-  const showRecommendations = search === ''
-  const renderList = showRecommendations ? recommendationList : searchData
 
   const handleSelectManga = async (mangaData: any) => {
     navigation.navigate('Chapter', { mangaData })
@@ -88,37 +84,29 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
 
-  useFocusEffect(useCallback(() => {
-    if (recommendationList.length) return
-    setIsLoading(true)
-    getRecommendations("topten").then(list => {
-      setRecommendationList(list)
-    }).finally(() => setIsLoading(false))
-  }, [recommendationList]))
-
   return (
     <Container>
       {isLoading && <Load />}
       <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
-      {showRecommendations && <Label children={internalization.t('searchMostPopular')} variant="Title" />}
+      /> */}
+      {searchData.length === 0 && <Label children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
-        data={renderList}
+        data={searchData}
         keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
-        getItemCount={() => renderList.length}
+        getItemCount={() => searchData.length}
         getItem={(data, index) => data[index]}
         maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
         renderItem={renderManga}
         onEndReached={searchRequest}
-        refreshing={isFetchingNextPage && !showRecommendations}
-        ListFooterComponent={isFetchingNextPage && !showRecommendations && <ActivityIndicator size="large" color={Colors.light.tint} />}
+        refreshing={isFetchingNextPage}
+        ListFooterComponent={isFetchingNextPage && <ActivityIndicator size="large" color={Colors.light.tint} />}
       />
     </Container>
   )

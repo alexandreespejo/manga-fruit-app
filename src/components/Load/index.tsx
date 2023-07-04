@@ -3,7 +3,11 @@ import { ActivityIndicator } from 'react-native'
 import Colors from '../../constants/Colors'
 import { Container } from './style'
 
-function Load() {
+type LoadProps = {
+  isLoading?: boolean
+}
+
+function Load({ }: LoadProps) {
   return (
     <Container>
       <ActivityIndicator size="large" color={Colors.light.tint} />

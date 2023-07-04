@@ -1,26 +1,34 @@
 import React, { memo, useEffect, useState } from "react"
-import { StyleSheet } from "react-native"
-import { Image, InfoWrapper, MangaCardContainer, Tag, TagsContainer, Title, TitleContainer } from "./style"
+import { Image, InfoWrapper, MangaCardContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
+import { Label } from "../Label"
+import { StyleProp, ViewStyle } from "react-native"
 
 interface MangaCardProps {
   data: any
   onSelectManga: (data: any) => void
+  variant?: 'Large' | 'Small'
+  style?: StyleProp<ViewStyle>
 }
 
-export const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
+export const MangaCard = memo(({
+  data,
+  variant = 'Large',
+  onSelectManga,
+  style
+}: MangaCardProps) => {
   const [cover, setCover] = useState<string | null>(null)
-  const [tags, setTags] = useState([])
+  // const [tags, setTags] = useState([])
 
   useEffect(() => {
     // loadTags()
     loadCover()
   }, [data])
 
-  const loadTags = () => {
-    const tagList = data?.attributes?.tags
-    setTags(tagList.map((item: any) => item?.attributes?.name?.en))
-  }
+  // const loadTags = () => {
+  //   const tagList = data?.attributes?.tags
+  //   setTags(tagList.map((item: any) => item?.attributes?.name?.en))
+  // }
 
   const loadCover = async () => {
     try {
@@ -40,23 +48,20 @@ export const MangaCard = memo(({ data, onSelectManga }: MangaCardProps) => {
     onSelectManga({ ...data, coverLink: cover })
   }
 
-  const renderTags = () => {
-    return tags.map((tag, index) => {
-      return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
-    })
-  }
+  // const renderTags = () => {
+  //   return tags.map((tag, index) => {
+  //     return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
+  //   })
+  // }
 
   return (
-    <MangaCardContainer onPress={onCardClick}>
-      <Image source={{ uri: cover }} />
+    <MangaCardContainer onPress={onCardClick} variant={variant} style={style}>
+      <Image source={{ uri: cover }} variant={variant} />
       <InfoWrapper>
         <TitleContainer>
-          <Title>{data?.attributes?.title?.en}</Title>
-          <Title autor>Status: {data?.attributes?.status ?? ''}</Title>
+          <Label style={{ fontWeight: "bold" }}>{data?.attributes?.title?.en}</Label>
+          {variant === 'Large' && <Title autor>Status: {data?.attributes?.status ?? ''}</Title>}
         </TitleContainer>
-        {/* <TagsContainer>
-          {renderTags()}
-        </TagsContainer> */}
       </InfoWrapper>
     </MangaCardContainer>
   )

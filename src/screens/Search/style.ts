@@ -62,7 +62,7 @@ export const SearchButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   height: 100%;
-  flex: 1;
+  width: 75px;
   border-radius: 25px;
   background-color: ${(props) => props.theme.tint};
 `
@@ -82,7 +82,7 @@ export const SearchContainer = styled.View`
 
 export const Input = styled.TextInput`
   height: 100%;
-  width: 80%;
+  flex: 1;
   font-size: 20px;
   padding:0 10px;
   color:${(props) => props.theme.text};

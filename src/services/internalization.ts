@@ -8,8 +8,10 @@ const internalization = new I18n({
     headerBackLabel: 'Back',
     homeScreenTitle: 'Home',
     favoriteScreenTitle: 'Favorites',
+    //home screen
+    homeMostPopular: 'Most Popular',
+    homeLastUpdated: 'Last Updated',
     //search screen
-    searchMostPopular: 'Most Popular',
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
     searchRequestErrorMessage: 'Server problems, please try again later!',
@@ -29,8 +31,10 @@ const internalization = new I18n({
     headerBackLabel: 'Voltar',
     homeScreenTitle: 'Inicio',
     favoriteScreenTitle: 'Favoritos',
-    //search screen 
-    searchMostPopular: 'Mais Populares',
+    //home screen
+    homeMostPopular: 'Mais Populares',
+    homeLastUpdated: 'Ultimas Atualizações',
+    //search screen
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',
     searchRequestErrorMessage: 'Problemas no servidor, por favor tente novamente mais tarde!',
@@ -47,7 +51,10 @@ const internalization = new I18n({
   }
 })
 
+const supportedLanguages = ['en', 'pt']
+
 // Set the locale once at the beginning of your app.
-internalization.locale = Local.getLocales()[0].languageCode
+const currentLanguageCode = Local.getLocales()[0].languageCode
+internalization.locale = supportedLanguages.includes(currentLanguageCode) ? currentLanguageCode : 'en'
 
 export default internalization

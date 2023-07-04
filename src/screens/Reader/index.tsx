@@ -7,10 +7,9 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-import { useInterstitialAd } from "react-native-google-mobile-ads"
+// import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
-import { Label } from "../../components/Label"
 
 const intersticialId = 'ca-app-pub-4863844449125415/4909628748'
 
@@ -38,17 +37,15 @@ interface HeaderProps {
 }
 
 const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
-  const [c, setC] = useState('')
-  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-    requestNonPersonalizedAdsOnly: true,
-  })
+  // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+  //   requestNonPersonalizedAdsOnly: true,
+  // })
 
-  const loadAds = async () => {
-    const readAmount = await incrementReadChapterAmount()
-    setC(readAmount)
-    if (Number(readAmount) > 4)
-      load()
-  }
+  // const loadAds = async () => {
+  //   const readAmount = await incrementReadChapterAmount()
+  //   if (Number(readAmount) > 4)
+  //     load()
+  // }
 
   const closePage = () => {
     navigation.goBack()
@@ -60,16 +57,16 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
   }
 
-  useEffect(() => {
-    if (isLoaded) {
-      show()
-      resetReadChapterAmount()
-    }
-  }, [isLoaded])
+  // useEffect(() => {
+  //   if (isLoaded) {
+  //     show()
+  //     resetReadChapterAmount()
+  //   }
+  // }, [isLoaded])
 
-  useEffect(() => {
-    loadAds()
-  }, [])
+  // useEffect(() => {
+  //   loadAds()
+  // }, [])
 
   return (
     <HeaderContainer>
@@ -85,7 +82,6 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
             <ActionLabel children={internalization.t('readerNextPageLabel')} />
           </ActionButton>)
         }
-        <Label children={c} />
       </ActionContainer>
       <CloseButton onPress={() => closePage()} >
         <FontAwesome name="close" size={30} color="white" />

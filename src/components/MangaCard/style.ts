@@ -1,23 +1,46 @@
+import { css } from 'styled-components';
 import styled from 'styled-components/native'
 
-export const MangaCardContainer = styled.TouchableOpacity`
+type MangaCardProps = {
+  variant?: 'Large' | 'Small'
+}
+
+export const MangaCardContainer = styled.TouchableOpacity<MangaCardProps>`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  color:${(props) => props.theme.text};
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: ${(props) => props.theme.background};
-  height: 150px;
-  width: 90%;
-  border-radius:25px;
-  border: 1px solid lightgray;
+
+  ${({ variant }) => variant === 'Large' && css`
+    flex-direction: row;
+    align-items: center;
+    color:${(props) => props.theme.text};
+    margin-top: 15px;
+    padding: 10px 15px;
+    background-color: ${(props) => props.theme.background};
+    height: 150px;
+    width: 90%;
+    border-radius: 25px;
+    border: 1px solid lightgray;
+  `}
+
+  ${({ variant }) => variant === 'Small' && css`
+    flex-direction: column;
+    height: 300px;
+    width: 150px;
+  `}
 `;
 
-export const Image = styled.Image`
-   height: 90%;
-   width: 90px;
-   border-radius: 10px;
+export const Image = styled.Image<MangaCardProps>`
+   border-radius: 8px;
+
+  ${({ variant }) => variant === 'Large' && css`
+    height: 90%;
+    width: 90px;
+  `}
+
+  ${({ variant }) => variant === 'Small' && css`
+    height: 200px;
+    width: 150px;
+    border: 1px solid black;
+  `}
 `;
 
 export const Title = styled.Text<any>`

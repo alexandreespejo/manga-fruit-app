@@ -1,21 +1,22 @@
 import styled, { css } from 'styled-components/native';
 import { LabelVariants } from '.';
+import { ColorEnum } from '../../constants/Colors';
 
 interface LabelContainerProps {
   variant?: LabelVariants
+  color?: ColorEnum
 }
 
 export const LabelContainer = styled.Text<LabelContainerProps>`
-  color: ${({ theme }) => theme.text}
+  color: ${({ theme, color }) => color ? theme[color] : theme.text}
 
   ${({ variant }) => variant === 'Headline' && css`
     font-size: 24px;
     font-weight: bold;
   `}
-
+    
   ${({ variant }) => variant === 'Title' && css`
     font-size: 20px;
-    line-height: 30px;
   `}
   
   ${({ variant }) => variant === 'Text' && css`
@@ -24,6 +25,5 @@ export const LabelContainer = styled.Text<LabelContainerProps>`
 
   ${({ variant }) => variant === 'Description' && css`
     font-size: 14px;
-    line-height: 2%;
   `}
 `
