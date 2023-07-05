@@ -7,11 +7,11 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-// import { useInterstitialAd } from "react-native-google-mobile-ads"
+import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 
-const intersticialId = 'ca-app-pub-4863844449125415/4909628748'
+const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
 type ChapterDataType = any | undefined
 
@@ -37,15 +37,15 @@ interface HeaderProps {
 }
 
 const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
-  // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-  //   requestNonPersonalizedAdsOnly: true,
-  // })
+  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+    requestNonPersonalizedAdsOnly: true,
+  })
 
-  // const loadAds = async () => {
-  //   const readAmount = await incrementReadChapterAmount()
-  //   if (Number(readAmount) > 4)
-  //     load()
-  // }
+  const loadAds = async () => {
+    const readAmount = await incrementReadChapterAmount()
+    if (Number(readAmount) > 4)
+      load()
+  }
 
   const closePage = () => {
     navigation.goBack()
@@ -57,16 +57,16 @@ const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
   }
 
-  // useEffect(() => {
-  //   if (isLoaded) {
-  //     show()
-  //     resetReadChapterAmount()
-  //   }
-  // }, [isLoaded])
+  useEffect(() => {
+    if (isLoaded) {
+      show()
+      resetReadChapterAmount()
+    }
+  }, [isLoaded])
 
-  // useEffect(() => {
-  //   loadAds()
-  // }, [])
+  useEffect(() => {
+    loadAds()
+  }, [])
 
   return (
     <HeaderContainer>
@@ -112,13 +112,17 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     if (!currentChapter) return
     const isFirst = currentChapter === '1'
     const offset = isFirst ? 0 : currentChapter - 2
-    const { data } = await getChapters(mangaData?.id, 3, offset)
+    try {
+      const { data } = await getChapters(mangaData?.id, 3, offset)
 
-    if (data?.data)
-      setChapterSequence({
-        prev: data?.data[(isFirst ? null : 0)],
-        next: data?.data[(isFirst ? 1 : 2)],
-      })
+      if (data?.data)
+        setChapterSequence({
+          prev: data?.data[(isFirst ? null : 0)],
+          next: data?.data[(isFirst ? 1 : 2)],
+        })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const loadPages = () => {

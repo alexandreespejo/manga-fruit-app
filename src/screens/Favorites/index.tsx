@@ -5,7 +5,7 @@ import { getFavoriteMangaList } from "../../services/storage"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
-import { createRecommendations } from "../../services/recommendations"
+// import { createRecommendations } from "../../services/recommendations"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 
@@ -31,13 +31,13 @@ export default function FavoritesScreen({ navigation }: { navigation: Navigation
   return (
     <Container>
       {isLoading && <Load />}
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={mangaList}

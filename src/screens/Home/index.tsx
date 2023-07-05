@@ -11,7 +11,7 @@ import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
 
-const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
+const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
 type RenderHorizontalListProps = {
   list: any[]
@@ -92,6 +92,13 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     <Container>
       {isLoading && <Load />}
       <SearchButtonNavigator navigation={navigation} />
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+      />
       <ScrollContainer>
         <RenderHorizontalList
           title={internalization.t('homeMostPopular')}

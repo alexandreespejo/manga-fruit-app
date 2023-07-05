@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react"
+import React, { useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { Alert, ActivityIndicator } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
@@ -88,13 +88,13 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     <Container>
       {isLoading && <Load />}
       <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
       {searchData.length === 0 && <Label children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
