@@ -43,4 +43,5 @@ export const SuggestionFieldContainer = styled.View`
 export const MangaListContainer = styled(VirtualizedList)`
   margin-top: 10px;
   width:100%;
+  min-height: 300px;
 `

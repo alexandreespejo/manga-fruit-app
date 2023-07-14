@@ -36,61 +36,64 @@ interface HeaderProps {
   navigation: NavigationProp<any>
 }
 
-const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
+// const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
+//   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+//   //   requestNonPersonalizedAdsOnly: true,
+//   // })
+
+//   // const loadAds = async () => {
+//   //   const readAmount = await incrementReadChapterAmount()
+//   //   if (Number(readAmount) > 4)
+//   //     load()
+//   // }
+
+//   const closePage = () => {
+//     navigation.goBack()
+//   }
+
+//   const handleChapterSequence = async (direction: 'prev' | 'next') => {
+//     const selectedChapter = chapterSequence[direction]
+//     if (selectedChapter)
+//       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+//   }
+
+//   // useEffect(() => {
+//   //   if (isLoaded) {
+//   //     show()
+//   //     resetReadChapterAmount()
+//   //   }
+//   // }, [isLoaded])
+
+//   // useEffect(() => {
+//   //   loadAds()
+//   // }, [])
+
+//   return (
+//     <HeaderContainer>
+//       <ActionContainer>
+//         {
+//           chapterSequence.prev &&
+//           (<ActionButton onPress={() => handleChapterSequence('prev')}>
+//             <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
+//           </ActionButton>)
+//         }
+//         {chapterSequence.next &&
+//           (<ActionButton onPress={() => handleChapterSequence('next')}>
+//             <ActionLabel children={internalization.t('readerNextPageLabel')} />
+//           </ActionButton>)
+//         }
+//       </ActionContainer>
+//       <CloseButton onPress={() => closePage()} >
+//         <FontAwesome name="close" size={30} color="white" />
+//       </CloseButton>
+//     </HeaderContainer>
+//   )
+// }
+
+export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
     requestNonPersonalizedAdsOnly: true,
   })
-
-  const loadAds = async () => {
-    const readAmount = await incrementReadChapterAmount()
-    if (Number(readAmount) > 4)
-      load()
-  }
-
-  const closePage = () => {
-    navigation.goBack()
-  }
-
-  const handleChapterSequence = async (direction: 'prev' | 'next') => {
-    const selectedChapter = chapterSequence[direction]
-    if (selectedChapter)
-      navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
-  }
-
-  useEffect(() => {
-    if (isLoaded) {
-      show()
-      resetReadChapterAmount()
-    }
-  }, [isLoaded])
-
-  useEffect(() => {
-    loadAds()
-  }, [])
-
-  return (
-    <HeaderContainer>
-      <ActionContainer>
-        {
-          chapterSequence.prev &&
-          (<ActionButton onPress={() => handleChapterSequence('prev')}>
-            <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
-          </ActionButton>)
-        }
-        {chapterSequence.next &&
-          (<ActionButton onPress={() => handleChapterSequence('next')}>
-            <ActionLabel children={internalization.t('readerNextPageLabel')} />
-          </ActionButton>)
-        }
-      </ActionContainer>
-      <CloseButton onPress={() => closePage()} >
-        <FontAwesome name="close" size={30} color="white" />
-      </CloseButton>
-    </HeaderContainer>
-  )
-}
-
-export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const chapterData: ChapterDataType = route?.params?.chapterData
   const mangaData: any = route?.params?.mangaData
   const [isLoading, setIsLoading] = useState(false)
@@ -102,9 +105,12 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
   useEffect(() => {
     if (!chapterData) return
+
+    incrementReadChapterAmount()
     storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
     loadChapterSequence()
     loadPages()
+    load()
   }, [chapterData])
 
   const loadChapterSequence = async () => {
@@ -154,6 +160,46 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     })
   }
 
+  const handleChapterSequence = async (direction: 'prev' | 'next') => {
+    const selectedChapter = chapterSequence[direction]
+    if (selectedChapter) {
+      const readAmount = await getReadChapterAmount()
+      if (isLoaded && Number(readAmount) > 4) {
+        await resetReadChapterAmount()
+        show()
+      }
+
+      navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+    }
+  }
+
+  const closePage = () => {
+    navigation.goBack()
+  }
+
+  const header = () => {
+    return (
+      <HeaderContainer>
+        <ActionContainer>
+          {
+            chapterSequence.prev &&
+            (<ActionButton onPress={() => handleChapterSequence('prev')}>
+              <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
+            </ActionButton>)
+          }
+          {chapterSequence.next &&
+            (<ActionButton onPress={() => handleChapterSequence('next')}>
+              <ActionLabel children={internalization.t('readerNextPageLabel')} />
+            </ActionButton>)
+          }
+        </ActionContainer>
+        <CloseButton onPress={() => closePage()} >
+          <FontAwesome name="close" size={30} color="white" />
+        </CloseButton>
+      </HeaderContainer>
+    )
+  }
+
   return (
     <ReaderContainer visible={true}>
       {
@@ -162,7 +208,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
           : (
             pages?.length > 0 &&
             <ImageViewer
-              renderHeader={() => <Header chapterSequence={chapterSequence} mangaData={mangaData} navigation={navigation} />}
+              renderHeader={header}
               imageUrls={pages}
               loadingRender={() => <Load />}
             />

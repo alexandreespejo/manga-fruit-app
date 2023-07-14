@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react"
-import { NavigationProp, useFocusEffect } from '@react-navigation/native'
+import React, { useState } from "react"
+import { NavigationProp } from '@react-navigation/native'
 import { Container, MangaListContainer, ScrollContainer, SearchNavigatorContainer, SearchNavigatorIndicator } from "./style"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
@@ -10,6 +10,7 @@ import { Label } from "../../components/Label"
 import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
 import Colors from "../../constants/Colors"
+import { useQuery } from "@tanstack/react-query"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -27,9 +28,19 @@ const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any>
 )
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const [isLoading, setIsLoading] = useState(false)
   const [recommendationList, setRecommendationList] = useState([])
-  const [lastUpdatedList, setLastUpdatedList] = useState([])
+
+  const loadLastUpdated = async () => {
+    loadMostPopular()
+    const lang = internalization.t('languageFilter') as LanguageTypes
+    const { data } = await getLastUpdates(lang)
+    return data?.data ?? []
+  }
+
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ['lastUpdates'],
+    queryFn: loadLastUpdated,
+  })
 
   const handleSelectManga = async (mangaData: any) => {
     navigation.navigate('Chapter', { mangaData })
@@ -67,26 +78,12 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     </>
   )
 
-  const loadLastUpdated = async () => {
-    setIsLoading(true)
-    getLastUpdates(internalization.t('languageFilter') as LanguageTypes).then(list => {
-      if (list.data.data)
-        setLastUpdatedList(list.data.data)
-    }).catch(e => console.log(e)).finally(() => setIsLoading(false))
-  }
-
   const loadMostPopular = async () => {
     if (recommendationList.length) return
-    setIsLoading(true)
     getRecommendations("topten").then(list => {
       setRecommendationList(list)
-    }).finally(() => setIsLoading(false))
+    })
   }
-
-  useFocusEffect(useCallback(() => {
-    loadMostPopular()
-    loadLastUpdated()
-  }, []))
 
   return (
     <Container>
@@ -102,11 +99,11 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       <ScrollContainer>
         <RenderHorizontalList
           title={internalization.t('homeMostPopular')}
-          list={recommendationList}
+          list={recommendationList ?? []}
         />
         <RenderHorizontalList
           title={internalization.t('homeLastUpdated')}
-          list={lastUpdatedList}
+          list={data ?? []}
         />
       </ScrollContainer>
     </Container>
