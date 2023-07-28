@@ -44,3 +44,30 @@ export const getChapterRead: GetChapterReadType = async () => {
     return {}
   }
 }
+
+export const getIsDarkMode = async () => {
+  const state = await AsyncStorage.getItem('@manga_fruit_application_is_dark_mode') ?? 'false'
+  return state === 'true'
+}
+
+export const getShowLastReaders = async () => {
+  const state = await AsyncStorage.getItem('@manga_fruit_application_show_last_readers') ?? 'false'
+  return state === 'true'
+}
+
+export const getShowSuggestions = async () => {
+  const state = await AsyncStorage.getItem('@manga_fruit_application_show_suggestions') ?? 'false'
+  return state === 'true'
+}
+
+export const setAppShowSuggestions = async (state: boolean) => {
+  await AsyncStorage.setItem('@manga_fruit_application_show_suggestions', String(state))
+}
+
+export const setAppShowLastReaders = async (state: boolean) => {
+  await AsyncStorage.setItem('@manga_fruit_application_show_last_readers', String(state))
+}
+
+export const setAppIsDarkMode = async (state: boolean) => {
+  await AsyncStorage.setItem('@manga_fruit_application_is_dark_mode', String(state))
+}

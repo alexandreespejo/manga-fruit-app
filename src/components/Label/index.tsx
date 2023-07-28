@@ -10,6 +10,7 @@ interface LabelType {
   children?: string
   color?: ColorEnum
   style?: StyleProp<TextStyle>
+  onPress?: () => void
 }
 
 export const Label: FC<LabelType> = ({ children, variant = 'Text', style, color }) => {

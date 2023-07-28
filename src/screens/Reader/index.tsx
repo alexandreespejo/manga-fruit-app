@@ -7,7 +7,7 @@ import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-import { useInterstitialAd } from "react-native-google-mobile-ads"
+// import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 
@@ -91,9 +91,9 @@ interface HeaderProps {
 // }
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
-  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-    requestNonPersonalizedAdsOnly: true,
-  })
+  // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+  //   requestNonPersonalizedAdsOnly: true,
+  // })
   const chapterData: ChapterDataType = route?.params?.chapterData
   const mangaData: any = route?.params?.mangaData
   const [isLoading, setIsLoading] = useState(false)
@@ -110,7 +110,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
     loadChapterSequence()
     loadPages()
-    load()
+    // load()
   }, [chapterData])
 
   const loadChapterSequence = async () => {
@@ -164,10 +164,10 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
       const readAmount = await getReadChapterAmount()
-      if (isLoaded && Number(readAmount) > 4) {
-        await resetReadChapterAmount()
-        show()
-      }
+      // if (isLoaded && Number(readAmount) > 4) {
+      //   await resetReadChapterAmount()
+      //   show()
+      // }
 
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
     }

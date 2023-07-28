@@ -88,13 +88,13 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     <Container>
       {isLoading && <Load />}
       <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
       {searchData.length === 0 && <Label children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
