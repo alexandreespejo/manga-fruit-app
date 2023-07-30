@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 export const Container = styled.SafeAreaView`
   flex: 1;
   display: flex;
+  background: ${(props) => props.theme.background};
 `;
 
 export const FiltersModalContainer = styled.Modal``;
@@ -63,6 +64,7 @@ export const HeaderWrapper = styled.View`
    align-items: center;
    justify-content: space-between;
    padding: 0 20px;
+   background: ${(props) => props.theme.background};
 `
 
 export const ChapterButton = styled.TouchableOpacity`
@@ -93,8 +95,9 @@ export const ChapterList = styled(VirtualizedList)`
    padding-left: 25px;
    margin-top: 10px;
    margin-bottom: 5px;
+   background-color: ${(props) => props.theme.background};
 `;
 
-export const ChapterText = styled.Text`
-  
+export const ChapterText = styled.Text<{ isRead: boolean }>`
+  color: ${({ theme, isRead }) => isRead ? 'gray' : theme.text};
 `;

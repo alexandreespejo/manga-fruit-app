@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Alert } from "react-native"
+import { Alert, View } from "react-native"
 import ImageViewer from "react-native-image-zoom-viewer"
 import { getChapters, getPages } from "../../services/mangadex"
 import { ActionButton, ActionContainer, ActionLabel, CloseButton, HeaderContainer, ReaderContainer } from "./style"
@@ -10,6 +10,8 @@ import { storeChapterRead } from "../../services/storage"
 // import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
+import { useTheme } from "styled-components"
+import { Label } from "../../components/Label"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
@@ -91,6 +93,8 @@ interface HeaderProps {
 // }
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
+  const theme = useTheme()
+
   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
   //   requestNonPersonalizedAdsOnly: true,
   // })
@@ -201,19 +205,21 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   }
 
   return (
-    <ReaderContainer visible={true}>
-      {
-        isLoading
-          ? <Load />
-          : (
-            pages?.length > 0 &&
-            <ImageViewer
-              renderHeader={header}
-              imageUrls={pages}
-              loadingRender={() => <Load />}
-            />
-          )
-      }
-    </ReaderContainer>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <ReaderContainer visible={true} transparent>
+        {
+          isLoading
+            ? <Load />
+            : (
+              pages?.length > 0 &&
+              <ImageViewer
+                renderHeader={header}
+                imageUrls={pages}
+                loadingRender={() => <Load />}
+              />
+            )
+        }
+      </ReaderContainer>
+    </View>
   )
 }

@@ -5,7 +5,6 @@ import { getChapters, LanguageTypes, OrderTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
-import Colors from "../../constants/Colors"
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
 import { RoundedButton } from "../../components/RoundedButton"
@@ -14,6 +13,7 @@ import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Dropdown } from "../../components/Dropdown"
 import internalization from "../../services/internalization"
 import { Label } from "../../components/Label"
+import { useTheme } from "styled-components"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -59,6 +59,8 @@ const FiltersModal = memo(({
 }: {
   handleFilter: (props: HandleFilterProps) => void
 }) => {
+  const theme = useTheme()
+
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
   const [initialChapter, setInitialChapter] = useState('1')
   const [selectedChapterLang, setSelectedChapterLang] = useState(defaultLanguage)
@@ -68,7 +70,7 @@ const FiltersModal = memo(({
     <RoundedButton
       name='filter'
       onPress={() => setIsFilterModalVisible(true)}
-      color={Colors.light.text}
+      color={theme.text}
     />
   )
 
@@ -88,7 +90,7 @@ const FiltersModal = memo(({
           <FormField>
             <Label children={internalization.t('chapterFilterInitialChapterLabel')} />
             <ChapterInput
-              placeholderTextColor={Colors.light.text}
+              placeholderTextColor={theme.text}
               value={initialChapter.toString()}
               onChangeText={value => setInitialChapter(value)}
             />
@@ -123,6 +125,7 @@ const FiltersModal = memo(({
 })
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
+  const theme = useTheme()
   const queryClient = useQueryClient()
   const { mangaData } = route.params ?? {}
   const paginationRef = useRef({
@@ -214,7 +217,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     return (
       <>
         <ChapterButton onPress={() => openReader(item)}>
-          <ChapterText numberOfLines={1} style={{ color: isRead ? 'gray' : 'black' }}>{label}</ChapterText>
+          <ChapterText numberOfLines={1} isRead={isRead}>{label}</ChapterText>
         </ChapterButton>
         <ChapterDivider />
       </>
@@ -256,7 +259,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           <RoundedButton
             name='star'
             onPress={changeFavoriteState}
-            color={chapterIsFavorite ? Colors.light.tint : 'lightgray'}
+            color={chapterIsFavorite ? theme.tint : 'lightgray'}
           />
         </HeaderWrapper>
       </HeaderWrapper>
@@ -278,7 +281,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         onEndReachedThreshold={0.5}
         progressViewOffset={50}
         refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
-        ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={Colors.light.tint} />}
+        ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={theme.tint} />}
       />
 
     </Container>

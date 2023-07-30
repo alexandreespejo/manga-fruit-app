@@ -1,5 +1,4 @@
 const tintColorLight = "#ee6364"
-const tintColorDark = "#fff"
 
 export type ColorEnum = "text" | "background" | "items" | "tint"
 
@@ -13,9 +12,9 @@ export default {
   },
   dark: {
     text: "#fff",
-    background: "#000",
-    tint: tintColorDark,
-    tabIconDefault: "#ccc",
-    tabIconSelected: tintColorDark,
+    background: "#2a2a2a",
+    items: "#414141",
+    tint: tintColorLight,
+    tags: ['#38C98D', '#EBB22C', '#EB2E6A']
   },
 }

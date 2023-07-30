@@ -15,6 +15,6 @@ export const ButtonContainer = styled.TouchableOpacity<ButtonContainerProps>`
   border-radius: 8px;
   height: 50px;
   width: 90%;
-  background: ${({ theme, variant }) => variant === 'Primary' ? theme.tint : theme.background};
+  background: ${({ theme, variant }) => variant === 'Primary' ? theme.tint : theme.items};
   border: 1px solid ${({ theme }) => theme.tint};
 `;

@@ -2,7 +2,7 @@ import { FC } from "react"
 import { DropdownComponent, DropdownContainer } from "./style"
 import { Label } from "../Label"
 import { FontAwesome } from "@expo/vector-icons"
-import Colors from "../../constants/Colors"
+import { useTheme } from "styled-components"
 
 type DropdownTypeOptions = {
   label: string,
@@ -17,6 +17,7 @@ interface DropdownType {
 }
 
 export const Dropdown: FC<DropdownType> = ({ options, defaultSelected, label, onSelect }) => {
+  const theme = useTheme()
   const list = options?.map(op => op.label)
   const selected = options?.find(op => op.value === defaultSelected)
   return (
@@ -30,7 +31,7 @@ export const Dropdown: FC<DropdownType> = ({ options, defaultSelected, label, on
           onSelect(newSelected.value)
         }}
         dropdownIconPosition='right'
-        renderDropdownIcon={isOpened => <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={Colors.light.text} size={18} />}
+        renderDropdownIcon={isOpened => <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={theme.text} size={18} />}
       />
     </DropdownContainer>
   )

@@ -12,7 +12,7 @@ export const ActionButton = styled.TouchableOpacity`
 `
 
 export const ActionLabel = styled.Text`
-  color: ${({ theme }) => theme.background};
+  color: white;
 `
 
 export const HeaderContainer = styled.View`
@@ -33,5 +33,5 @@ export const ActionContainer = styled.View`
 `
 
 export const ReaderContainer = styled.Modal`
-  background-color: black;
+  background-color: ${(props) => props.theme.background};
 `

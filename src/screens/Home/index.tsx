@@ -9,9 +9,9 @@ import { getRecommendations } from "../../services/recommendations"
 import { Label } from "../../components/Label"
 import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
-import Colors from "../../constants/Colors"
 import { useQuery } from "@tanstack/react-query"
 import { getIsDarkMode, getShowLastReaders, getShowSuggestions } from "../../services/storage"
+import { useTheme } from "styled-components"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -20,13 +20,17 @@ type RenderHorizontalListProps = {
   title: string
 }
 
-const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any> }) => (
-  <SearchNavigatorContainer onPress={() => { navigation.navigate('Search') }}>
-    <SearchNavigatorIndicator>
-      <FontAwesome name="search" size={24} color={Colors.light.background} />
-    </SearchNavigatorIndicator>
-  </SearchNavigatorContainer>
-)
+const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any> }) => {
+  const theme = useTheme()
+
+  return (
+    <SearchNavigatorContainer onPress={() => { navigation.navigate('Search') }}>
+      <SearchNavigatorIndicator>
+        <FontAwesome name="search" size={24} color={theme.background} />
+      </SearchNavigatorIndicator>
+    </SearchNavigatorContainer>
+  )
+}
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [showSuggestions, setShowSuggestions] = useState(false)

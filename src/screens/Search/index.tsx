@@ -3,17 +3,18 @@ import { NavigationProp } from '@react-navigation/native'
 import { Alert, ActivityIndicator } from "react-native"
 import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
-import Colors from "../../constants/Colors"
 import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { Label } from "../../components/Label"
+import { useTheme } from "styled-components"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
 function SearchBar({ search, setSearch, onSearch }) {
+  const theme = useTheme()
 
   return (
     <SearchContainer>
@@ -21,11 +22,11 @@ function SearchBar({ search, setSearch, onSearch }) {
         onChangeText={setSearch}
         value={search}
         placeholder={internalization.t('searchInputPlaceholder')}
-        placeholderTextColor={Colors.light.text}
+        placeholderTextColor={theme.text}
         onSubmitEditing={onSearch}
       />
       <SearchButton onPress={onSearch}>
-        <FontAwesome name="search" size={24} color={Colors.light.background} />
+        <FontAwesome name="search" size={24} color={theme.background} />
       </SearchButton>
     </SearchContainer>
   )
@@ -38,6 +39,7 @@ const DEFAULT_PAGINATION = {
 }
 
 export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const theme = useTheme()
   const pagination = useRef(DEFAULT_PAGINATION)
 
   const [search, setSearch] = useState('')
@@ -106,7 +108,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
         renderItem={renderManga}
         onEndReached={searchRequest}
         refreshing={isFetchingNextPage}
-        ListFooterComponent={isFetchingNextPage && <ActivityIndicator size="large" color={Colors.light.tint} />}
+        ListFooterComponent={isFetchingNextPage && <ActivityIndicator size="large" color={theme.tint} />}
       />
     </Container>
   )
