@@ -1,56 +1,37 @@
-import React, { useCallback, useState } from "react"
-import { NavigationProp, useFocusEffect } from '@react-navigation/native'
+import React, { useState } from "react"
+import { NavigationProp } from '@react-navigation/native'
 import { Container, SwitchContainer } from "./style"
-import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Switch } from "react-native"
 import { Label } from "../../components/Label"
-import { getIsDarkMode, getShowLastReaders, getShowSuggestions, setAppIsDarkMode, setAppShowLastReaders, setAppShowSuggestions } from "../../services/storage"
+import { setAppIsDarkMode, setAppShowSuggestions } from "../../services/storage"
 import { useTheme } from "styled-components/native"
+import { AppStoreType, useAppStore } from "../../store"
+import internalization from "../../services/internalization"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { setThemeIsDark, setShowSuggestion, showSuggestion, themeIsDark } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
-  const [isLoading, setIsLoading] = useState(false)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const [showLastReaders, setShowLastReaders] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-
-  const loadStates = async () => {
-    setIsLoading(true)
-    const appIsDark = await getIsDarkMode()
-    setIsDarkMode(appIsDark)
-
-    const appShowLast = await getShowLastReaders()
-    setShowLastReaders(appShowLast)
-
-    const appShowSuggestion = await getShowSuggestions()
-    setShowSuggestions(appShowSuggestion)
-    setIsLoading(false)
-  }
-
-  useFocusEffect(useCallback(() => {
-    loadStates()
-  }, []))
 
   return (
     <Container>
-      {isLoading && <Load />}
       <SwitchContainer>
         <Switch
           trackColor={switchTrackColor}
-          thumbColor={isDarkMode ? theme.tint : '#f4f3f4'}
+          thumbColor={themeIsDark ? theme.tint : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={() => {
-            const newState = !isDarkMode
+            const newState = !themeIsDark
             setAppIsDarkMode(newState)
-            setIsDarkMode(newState)
+            setThemeIsDark(newState)
           }}
-          value={isDarkMode}
+          value={themeIsDark}
         />
-        <Label variant="Text" onPress={() => setIsDarkMode(!isDarkMode)} style={{ marginLeft: 8 }}>Dark mode</Label>
+        <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configIsDarkModeLabel')}</Label>
       </SwitchContainer>
       {/* <SwitchContainer>
         <Switch
@@ -69,16 +50,16 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
       <SwitchContainer>
         <Switch
           trackColor={switchTrackColor}
-          thumbColor={showSuggestions ? theme.tint : '#f4f3f4'}
+          thumbColor={showSuggestion ? theme.tint : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={() => {
-            const newState = !showSuggestions
+            const newState = !showSuggestion
             setAppShowSuggestions(newState)
-            setShowSuggestions(newState)
+            setShowSuggestion(newState)
           }}
-          value={showSuggestions}
+          value={showSuggestion}
         />
-        <Label variant="Text" onPress={() => setShowSuggestions(!showSuggestions)} style={{ marginLeft: 8 }}>Show Suggestions</Label>
+        <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configShowSuggestionLabel')}</Label>
       </SwitchContainer>
     </Container>
   )

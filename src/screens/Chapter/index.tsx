@@ -263,13 +263,13 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
       <ChapterList
         data={chapters}
         renderItem={renderChapter}

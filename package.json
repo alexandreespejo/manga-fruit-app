@@ -36,7 +36,8 @@
     "react-native-select-dropdown": "^3.3.3",
     "react-native-web": "~0.18.7",
     "styled-components": "5.3.3",
-    "typescript-styled-plugin": "0.18.1"
+    "typescript-styled-plugin": "0.18.1",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

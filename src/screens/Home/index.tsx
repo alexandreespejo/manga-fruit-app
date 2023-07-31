@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react"
-import { NavigationProp, useFocusEffect } from '@react-navigation/native'
+import React, { useState } from "react"
+import { NavigationProp } from '@react-navigation/native'
 import { Container, MangaListContainer, ScrollContainer, SearchNavigatorContainer, SearchNavigatorIndicator } from "./style"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
@@ -10,8 +10,8 @@ import { Label } from "../../components/Label"
 import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
 import { useQuery } from "@tanstack/react-query"
-import { getIsDarkMode, getShowLastReaders, getShowSuggestions } from "../../services/storage"
 import { useTheme } from "styled-components"
+import { AppStoreType, useAppStore } from "../../store"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -33,8 +33,7 @@ const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any>
 }
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [showLastReaders, setShowLastReaders] = useState(false)
+  const showSuggestion = useAppStore((state: AppStoreType) => state.showSuggestion)
   const [recommendationList, setRecommendationList] = useState([])
 
   const loadLastUpdated = async () => {
@@ -92,33 +91,20 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     })
   }
 
-  const loadAppStates = async () => {
-    const appShowLast = await getShowLastReaders()
-    setShowLastReaders(appShowLast)
-
-    const appShowSuggestion = await getShowSuggestions()
-    setShowSuggestions(appShowSuggestion)
-  }
-
-  useFocusEffect(useCallback(() => {
-    loadAppStates()
-  }, []))
-
-
   return (
     <Container>
       {isLoading && <Load />}
       <SearchButtonNavigator navigation={navigation} />
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
+      />
 
       {
-        showSuggestions &&
+        showSuggestion &&
         <ScrollContainer>
           <RenderHorizontalList
             title={internalization.t('homeMostPopular')}

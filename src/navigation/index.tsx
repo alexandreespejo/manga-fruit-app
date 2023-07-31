@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import FavoritesStack from './favoritesStack'
 import UserConfigScreen from '../screens/UserConfig'
 import { useTheme } from 'styled-components'
+import internalization from '../services/internalization'
 
 const Tab = createBottomTabNavigator()
 
@@ -34,7 +35,7 @@ export default function MyTabs() {
         }} />
         <Tab.Screen name="ConfigStack" component={UserConfigScreen} options={{
           tabBarLabel: '',
-          title: 'User config',
+          title: internalization.t('configScreenTitle'),
           tabBarIcon: ({ focused }) => <FontAwesome name="gear" size={30} color={focused ? theme.tint : 'lightgray'} />,
         }} />
       </Tab.Navigator>

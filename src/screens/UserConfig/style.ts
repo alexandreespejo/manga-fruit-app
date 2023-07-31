@@ -11,5 +11,5 @@ export const SwitchContainer = styled.View`
   align-items: center;
   justify-content: flex-start;
   width: 90%;
-  margin-bottom: 16px;
+  margin-top: 16px;
 `;

@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { StatusBar } from "react-native"
 import { ThemeProvider } from 'styled-components'
 import Colors from "../constants/Colors"
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import MyTabs from "../navigation"
-import { getIsDarkMode } from "../services/storage"
+import { useAppStore } from "../store"
 
-type ThemeType = 'light' | 'dark'
 function Screens() {
-  const [actualTheme, setActualTheme] = useState<ThemeType>('light')
-
-  useEffect(() => {
-    (async () => {
-      const isDark = await getIsDarkMode()
-      setActualTheme(isDark ? 'dark' : 'light')
-    })()
-  })
+  const themeIsDark = useAppStore((state: any) => state.themeIsDark)
 
   return (
-    <ThemeProvider theme={Colors[actualTheme]}>
+    <ThemeProvider theme={Colors[themeIsDark ? 'dark' : 'light']}>
       <NavigationContainer>
         <StatusBar
           barStyle="dark-content"

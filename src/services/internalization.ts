@@ -25,6 +25,10 @@ const internalization = new I18n({
     //reader screen
     readerNextPageLabel: 'Next',
     readerPreviousPageLabel: 'Previous',
+    //config screen
+    configScreenTitle: 'Configuration',
+    configShowSuggestionLabel: 'Show Home Suggestions',
+    configIsDarkModeLabel: 'Dark Mode',
   },
   pt: {
     languageFilter: 'pt-br',
@@ -48,6 +52,10 @@ const internalization = new I18n({
     //reader screen
     readerNextPageLabel: 'Próximo',
     readerPreviousPageLabel: 'Anterior',
+    //config screen
+    configScreenTitle: 'Configurações',
+    configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
+    configIsDarkModeLabel: 'Tema Escuro',
   }
 })
 
