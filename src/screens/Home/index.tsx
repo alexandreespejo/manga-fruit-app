@@ -95,13 +95,13 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     <Container>
       {isLoading && <Load />}
       <SearchButtonNavigator navigation={navigation} />
-      <BannerAd
+      {/* <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      />
+      /> */}
 
       {
         showSuggestion &&

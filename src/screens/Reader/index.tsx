@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react"
-import { Alert, View } from "react-native"
-import ImageViewer from "react-native-image-zoom-viewer"
+import { FC, createRef, useEffect, useRef, useState } from "react"
+import { Alert, Dimensions, FlatList, Image, TouchableOpacity } from "react-native"
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { getChapters, getPages } from "../../services/mangadex"
-import { ActionButton, ActionContainer, ActionLabel, CloseButton, HeaderContainer, ReaderContainer } from "./style"
+import { ActionButton, ActionLabel, HeaderContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../services/storage"
-import { useInterstitialAd } from "react-native-google-mobile-ads"
+// import { useInterstitialAd } from "react-native-google-mobile-ads"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
@@ -31,74 +31,89 @@ const resetReadChapterAmount = async () => {
   await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', '0')
 }
 
-interface HeaderProps {
-  chapterSequence: { prev?: any, next?: any }
-  mangaData: any
-  navigation: NavigationProp<any>
+type RenderZoomableImageType = {
+  item: { uri: string }
+  onSingleTap?: () => void
 }
 
-// const Header = ({ chapterSequence, mangaData, navigation }: HeaderProps) => {
-//   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-//   //   requestNonPersonalizedAdsOnly: true,
-//   // })
+const RenderZoomableImage = ({
+  item,
+  onSingleTap
+}: RenderZoomableImageType) => {
+  const { width, height } = Dimensions.get('window')
+  const zoomableViewRef = createRef<ReactNativeZoomableView>()
 
-//   // const loadAds = async () => {
-//   //   const readAmount = await incrementReadChapterAmount()
-//   //   if (Number(readAmount) > 4)
-//   //     load()
-//   // }
+  return (
+    <ReactNativeZoomableView
+      ref={zoomableViewRef}
+      contentWidth={width}
+      contentHeight={height}
+      onSingleTap={onSingleTap}
+      maxZoom={5}
+      minZoom={1}
+      zoomStep={0}
+      // onZoomBefore={() => console.log('started zoom')}
+      // onZoomAfter={() => console.log('ended zoom')}
+      // onZoomBefore={() => {
+      //   if (listState.scrollable)
+      //     setListState({ scrollable: false })
+      // }}
+      // onZoomEnd={() => {
+      //   setListState({ scrollable: true })
+      // }}
+      // onDoubleTapAfter={() => {
+      //   // zoomableViewRef.current.moveTo(width / 2, height / 2)
+      //   zoomableViewRef.current.zoomTo(1)
+      // }}
+      disablePanOnInitialZoom
+    >
+      <Image
+        style={{ width: width, height: height, resizeMode: 'contain' }}
+        source={item}
+      />
+    </ReactNativeZoomableView>
+  )
+}
 
-//   const closePage = () => {
-//     navigation.goBack()
-//   }
+type RenderImageListType = {
+  imageList: any[]
+  onSingleTapImage?: () => void
+}
 
-//   const handleChapterSequence = async (direction: 'prev' | 'next') => {
-//     const selectedChapter = chapterSequence[direction]
-//     if (selectedChapter)
-//       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
-//   }
+const RenderImageList = ({
+  imageList,
+  onSingleTapImage
+}: RenderImageListType) => {
+  const { width, height } = Dimensions.get('window')
 
-//   // useEffect(() => {
-//   //   if (isLoaded) {
-//   //     show()
-//   //     resetReadChapterAmount()
-//   //   }
-//   // }, [isLoaded])
-
-//   // useEffect(() => {
-//   //   loadAds()
-//   // }, [])
-
-//   return (
-//     <HeaderContainer>
-//       <ActionContainer>
-//         {
-//           chapterSequence.prev &&
-//           (<ActionButton onPress={() => handleChapterSequence('prev')}>
-//             <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
-//           </ActionButton>)
-//         }
-//         {chapterSequence.next &&
-//           (<ActionButton onPress={() => handleChapterSequence('next')}>
-//             <ActionLabel children={internalization.t('readerNextPageLabel')} />
-//           </ActionButton>)
-//         }
-//       </ActionContainer>
-//       <CloseButton onPress={() => closePage()} >
-//         <FontAwesome name="close" size={30} color="white" />
-//       </CloseButton>
-//     </HeaderContainer>
-//   )
-// }
+  return (
+    <FlatList
+      keyExtractor={(item, index) => `key-${item}-${index}`}
+      data={imageList}
+      style={{ width: width, height: height }}
+      renderItem={props => (
+        <RenderZoomableImage
+          onSingleTap={onSingleTapImage}
+          {...props}
+        />
+      )}
+      pagingEnabled={true}
+      // scrollEnabled={listState.scrollable}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      horizontal
+    />
+  )
+}
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const theme = useTheme()
-
-  const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-    requestNonPersonalizedAdsOnly: true,
-  })
+  // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
+  //   requestNonPersonalizedAdsOnly: true,
+  // })
   const chapterData: ChapterDataType = route?.params?.chapterData
   const mangaData: any = route?.params?.mangaData
+  const [focusMode, setFocusMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [pages, setPages] = useState([])
   const [chapterSequence, setChapterSequence] = useState({
@@ -106,15 +121,10 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     next: null
   })
 
-  useEffect(() => {
-    if (!chapterData) return
-
-    incrementReadChapterAmount()
-    storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
-    loadChapterSequence()
-    loadPages()
-    load()
-  }, [chapterData])
+  const switchFocusMode = () => {
+    // console.log('taped')
+    setFocusMode(!focusMode)
+  }
 
   const loadChapterSequence = async () => {
     const currentChapter = chapterData?.attributes?.chapter
@@ -140,7 +150,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     getPages(id).then(data => {
 
       const pageList = data?.chapter?.data.map(item => {
-        return { url: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}` }
+        return { uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}` }
       })
 
       setPages(pageList)
@@ -167,10 +177,10 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
       const readAmount = await getReadChapterAmount()
-      if (isLoaded && Number(readAmount) > 4) {
-        await resetReadChapterAmount()
-        show()
-      }
+      // if (isLoaded && Number(readAmount) > 4) {
+      //   await resetReadChapterAmount()
+      //   show()
+      // }
 
       navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
     }
@@ -180,45 +190,50 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     navigation.goBack()
   }
 
-  const header = () => {
+  const Header = () => {
+    if (focusMode) return null
+
     return (
       <HeaderContainer>
-        <ActionContainer>
-          {
-            chapterSequence.prev &&
-            (<ActionButton onPress={() => handleChapterSequence('prev')}>
-              <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
-            </ActionButton>)
-          }
-          {chapterSequence.next &&
-            (<ActionButton onPress={() => handleChapterSequence('next')}>
-              <ActionLabel children={internalization.t('readerNextPageLabel')} />
-            </ActionButton>)
-          }
-        </ActionContainer>
-        <CloseButton onPress={() => closePage()} >
-          <FontAwesome name="close" size={30} color="white" />
-        </CloseButton>
+        {
+          chapterSequence.prev &&
+          (<ActionButton onPress={() => handleChapterSequence('prev')}>
+            <ActionLabel children={internalization.t('readerPreviousPageLabel')} />
+          </ActionButton>)
+        }
+        {chapterSequence.next &&
+          (<ActionButton onPress={() => handleChapterSequence('next')}>
+            <ActionLabel children={internalization.t('readerNextPageLabel')} />
+          </ActionButton>)
+        }
+        <TouchableOpacity onPress={() => closePage()} >
+          <FontAwesome name="close" size={30} color={theme.text} />
+        </TouchableOpacity>
       </HeaderContainer>
     )
   }
 
+  useEffect(() => {
+    if (!chapterData) return
+
+    incrementReadChapterAmount()
+    storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
+    loadChapterSequence()
+    loadPages()
+    // load()
+  }, [chapterData])
+
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      <ReaderContainer visible={true} transparent>
-        {
-          isLoading
-            ? <Load />
-            : (
-              pages?.length > 0 &&
-              <ImageViewer
-                renderHeader={header}
-                imageUrls={pages}
-                loadingRender={() => <Load />}
-              />
-            )
-        }
-      </ReaderContainer>
-    </View>
+    <ReaderContainer>
+      <Header />
+      {
+        isLoading
+          ? <Load />
+          : <RenderImageList
+            onSingleTapImage={switchFocusMode}
+            imageList={pages}
+          />
+      }
+    </ReaderContainer>
   )
 }

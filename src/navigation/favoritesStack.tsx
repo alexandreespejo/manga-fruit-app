@@ -22,7 +22,7 @@ export default function FavoritesStack() {
     }}>
       <Stack.Screen name="Favorites" options={{ title: internalization.t('favoriteScreenTitle') }} component={FavoritesScreen} />
       <Stack.Screen name="Chapter" options={{ title: '' }} component={ChapterScreen} />
-      <Stack.Screen name="Reader" options={{ title: '' }} component={ReaderScreen} />
+      <Stack.Screen name="Reader" options={{ title: '', headerShown: false }} component={ReaderScreen} />
     </Stack.Navigator>
   )
 }

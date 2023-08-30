@@ -24,7 +24,7 @@ export default function HomeStack() {
       <Stack.Screen name="Home" options={{ title: internalization.t('homeScreenTitle') }} component={HomeScreen} />
       <Stack.Screen name="Search" options={{ title: '' }} component={SearchScreen} />
       <Stack.Screen name="Chapter" options={{ title: '' }} component={ChapterScreen} />
-      <Stack.Screen name="Reader" options={{ title: '' }} component={ReaderScreen} />
+      <Stack.Screen name="Reader" options={{ title: '', headerShown: false }} component={ReaderScreen} />
     </Stack.Navigator>
   )
 }
