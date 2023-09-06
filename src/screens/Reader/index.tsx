@@ -1,8 +1,8 @@
-import { FC, createRef, useEffect, useRef, useState } from "react"
-import { Alert, Dimensions, FlatList, Image, TouchableOpacity } from "react-native"
+import { FC, createRef, useEffect, useState } from "react"
+import { Alert, Dimensions, FlatList, Image, Modal, Text, TouchableOpacity } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { getChapters, getPages } from "../../services/mangadex"
-import { ActionButton, ActionLabel, HeaderContainer, ReaderContainer } from "./style"
+import { ActionButton, ActionLabel, AdsContainer, FooterContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
@@ -11,6 +11,7 @@ import { storeChapterRead } from "../../services/storage"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
+import { ScreenRotationIcon } from "../../components/Icons/screenRotation";
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
@@ -32,7 +33,7 @@ const resetReadChapterAmount = async () => {
 }
 
 type RenderZoomableImageType = {
-  item: { uri: string }
+  item: { type: 'image' | 'ads', uri: string }
   onSingleTap?: () => void
 }
 
@@ -42,6 +43,14 @@ const RenderZoomableImage = ({
 }: RenderZoomableImageType) => {
   const { width, height } = Dimensions.get('window')
   const zoomableViewRef = createRef<ReactNativeZoomableView>()
+
+  if (item.type === "ads") {
+    return (
+      <AdsContainer>
+        <Text>Ads Here</Text>
+      </AdsContainer>
+    )
+  }
 
   return (
     <ReactNativeZoomableView
@@ -69,7 +78,7 @@ const RenderZoomableImage = ({
     >
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={item}
+        source={{ uri: item.uri }}
       />
     </ReactNativeZoomableView>
   )
@@ -85,7 +94,6 @@ const RenderImageList = ({
   onSingleTapImage
 }: RenderImageListType) => {
   const { width, height } = Dimensions.get('window')
-
   return (
     <FlatList
       keyExtractor={(item, index) => `key-${item}-${index}`}
@@ -122,7 +130,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   })
 
   const switchFocusMode = () => {
-    // console.log('taped')
     setFocusMode(!focusMode)
   }
 
@@ -148,9 +155,20 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     setIsLoading(true)
     const id = chapterData.id
     getPages(id).then(data => {
+      const list: any[] = data?.chapter?.data
+      const pageList = []
 
-      const pageList = data?.chapter?.data.map(item => {
-        return { uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}` }
+      list.forEach((item, indx) => {
+        if (indx === list.length / 2)
+          pageList.push({
+            type: 'ads',
+            uri: ''
+          })
+
+        pageList.push({
+          type: 'image',
+          uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
+        })
       })
 
       setPages(pageList)
@@ -190,11 +208,11 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     navigation.goBack()
   }
 
-  const Header = () => {
+  const Footer = () => {
     if (focusMode) return null
 
     return (
-      <HeaderContainer>
+      <FooterContainer>
         {
           chapterSequence.prev &&
           (<ActionButton onPress={() => handleChapterSequence('prev')}>
@@ -207,9 +225,12 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
           </ActionButton>)
         }
         <TouchableOpacity onPress={() => closePage()} >
+          <ScreenRotationIcon />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => closePage()} >
           <FontAwesome name="close" size={30} color={theme.text} />
         </TouchableOpacity>
-      </HeaderContainer>
+      </FooterContainer>
     )
   }
 
@@ -224,16 +245,20 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   }, [chapterData])
 
   return (
-    <ReaderContainer>
-      <Header />
-      {
-        isLoading
-          ? <Load />
-          : <RenderImageList
-            onSingleTapImage={switchFocusMode}
-            imageList={pages}
-          />
-      }
-    </ReaderContainer>
+    <Modal>
+      <ReaderContainer>
+        {
+          isLoading
+            ? <Load />
+            : (
+              <RenderImageList
+                onSingleTapImage={switchFocusMode}
+                imageList={pages}
+              />
+            )
+        }
+        <Footer />
+      </ReaderContainer>
+    </Modal>
   )
 }

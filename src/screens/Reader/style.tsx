@@ -1,4 +1,12 @@
+import { Dimensions } from 'react-native'
 import styled from 'styled-components/native'
+const { width, height } = Dimensions.get('window')
+
+export const AdsContainer = styled.View`
+  height: ${height};
+  width: ${width};
+  background-color: red;
+`
 
 export const ActionButton = styled.TouchableOpacity`
   align-items: center;
@@ -15,6 +23,22 @@ export const ReaderContainer = styled.View`
   align-items: center; 
   justify-content: center; 
   background-color: ${(props) => props.theme.background};
+`
+
+export const FooterContainer = styled.View`
+  position: absolute;
+  z-index: 1000;
+  bottom: 16px;
+  height: 48px;
+  width: 90%;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: ${(props) => props.theme.background};
+  border-radius: 8px;
+  padding: 0 16px;
 `
 
 export const HeaderContainer = styled.View`
