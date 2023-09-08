@@ -3,9 +3,9 @@ import styled from 'styled-components/native'
 const { width, height } = Dimensions.get('window')
 
 export const AdsContainer = styled.View`
-  height: ${height};
-  width: ${width};
-  background-color: red;
+  padding: 24px;
+  height: ${height}px;
+  width: ${width}px;
 `
 
 export const ActionButton = styled.TouchableOpacity`

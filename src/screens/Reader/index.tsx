@@ -1,8 +1,7 @@
-import { FC, createRef, useEffect, useState } from "react"
-import { Alert, Dimensions, FlatList, Image, Modal, Text, TouchableOpacity } from "react-native"
-import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
+import { useEffect, useState } from "react"
+import { Alert, Modal, TouchableOpacity } from "react-native"
 import { getChapters, getPages } from "../../services/mangadex"
-import { ActionButton, ActionLabel, AdsContainer, FooterContainer, ReaderContainer } from "./style"
+import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
@@ -12,6 +11,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
 import { ScreenRotationIcon } from "../../components/Icons/screenRotation";
+import { RenderImageList } from "./RenderImageList"
+import { useReaderStore } from "./store"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
@@ -32,90 +33,9 @@ const resetReadChapterAmount = async () => {
   await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', '0')
 }
 
-type RenderZoomableImageType = {
-  item: { type: 'image' | 'ads', uri: string }
-  onSingleTap?: () => void
-}
-
-const RenderZoomableImage = ({
-  item,
-  onSingleTap
-}: RenderZoomableImageType) => {
-  const { width, height } = Dimensions.get('window')
-  const zoomableViewRef = createRef<ReactNativeZoomableView>()
-
-  if (item.type === "ads") {
-    return (
-      <AdsContainer>
-        <Text>Ads Here</Text>
-      </AdsContainer>
-    )
-  }
-
-  return (
-    <ReactNativeZoomableView
-      ref={zoomableViewRef}
-      contentWidth={width}
-      contentHeight={height}
-      onSingleTap={onSingleTap}
-      maxZoom={5}
-      minZoom={1}
-      zoomStep={0}
-      // onZoomBefore={() => console.log('started zoom')}
-      // onZoomAfter={() => console.log('ended zoom')}
-      // onZoomBefore={() => {
-      //   if (listState.scrollable)
-      //     setListState({ scrollable: false })
-      // }}
-      // onZoomEnd={() => {
-      //   setListState({ scrollable: true })
-      // }}
-      // onDoubleTapAfter={() => {
-      //   // zoomableViewRef.current.moveTo(width / 2, height / 2)
-      //   zoomableViewRef.current.zoomTo(1)
-      // }}
-      disablePanOnInitialZoom
-    >
-      <Image
-        style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={{ uri: item.uri }}
-      />
-    </ReactNativeZoomableView>
-  )
-}
-
-type RenderImageListType = {
-  imageList: any[]
-  onSingleTapImage?: () => void
-}
-
-const RenderImageList = ({
-  imageList,
-  onSingleTapImage
-}: RenderImageListType) => {
-  const { width, height } = Dimensions.get('window')
-  return (
-    <FlatList
-      keyExtractor={(item, index) => `key-${item}-${index}`}
-      data={imageList}
-      style={{ width: width, height: height }}
-      renderItem={props => (
-        <RenderZoomableImage
-          onSingleTap={onSingleTapImage}
-          {...props}
-        />
-      )}
-      pagingEnabled={true}
-      // scrollEnabled={listState.scrollable}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      horizontal
-    />
-  )
-}
-
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const theme = useTheme()
+  const changeOrientation = useReaderStore(state => state.changeOrientation)
   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
   //   requestNonPersonalizedAdsOnly: true,
   // })
@@ -128,10 +48,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     prev: null,
     next: null
   })
-
-  const switchFocusMode = () => {
-    setFocusMode(!focusMode)
-  }
 
   const loadChapterSequence = async () => {
     const currentChapter = chapterData?.attributes?.chapter
@@ -159,7 +75,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       const pageList = []
 
       list.forEach((item, indx) => {
-        if (indx === list.length / 2)
+        if (indx === Math.round(list.length / 2))
           pageList.push({
             type: 'ads',
             uri: ''
@@ -224,7 +140,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
             <ActionLabel children={internalization.t('readerNextPageLabel')} />
           </ActionButton>)
         }
-        <TouchableOpacity onPress={() => closePage()} >
+        <TouchableOpacity onPress={() => changeOrientation()} >
           <ScreenRotationIcon />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => closePage()} >
@@ -252,7 +168,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
             ? <Load />
             : (
               <RenderImageList
-                onSingleTapImage={switchFocusMode}
                 imageList={pages}
               />
             )
