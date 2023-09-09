@@ -7227,6 +7227,11 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
+react-native-reanimated-zoom@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-zoom/-/react-native-reanimated-zoom-0.3.3.tgz#99161310c398b2d4220e75ce1d9b76eb075bf3f6"
+  integrity sha512-naeMV19218OsVOAw7jq45mZGxcSgvcn5xAJlXep27R0IBo/fqpLlLuXKK2nyCXyLzuIPwgqS3O+LUMcTd2L5Gg==
+
 react-native-reanimated@~2.12.0:
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.12.0.tgz#5821eecfb1769b1617a67a2d4dec12fdeedb2b6e"

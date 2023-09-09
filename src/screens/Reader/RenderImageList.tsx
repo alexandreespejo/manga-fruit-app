@@ -4,7 +4,9 @@ import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-vi
 import { AdsContainer } from "./style"
 import { useReaderStore } from "./store";
 import { Label } from "../../components/Label";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { Zoom, createZoomListComponent } from 'react-native-reanimated-zoom';
+const ZoomFlatList = createZoomListComponent(FlatList)
+// import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -27,7 +29,7 @@ const RenderZoomableImage = memo(({
     return (
       <AdsContainer>
         <Label variant="Headline">Momento Paga Boleto</Label>
-        <BannerAd
+        {/* <BannerAd
           unitId={readerId1}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
           requestOptions={{
@@ -40,41 +42,47 @@ const RenderZoomableImage = memo(({
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
-        />
+        /> */}
       </AdsContainer>
     )
   }
 
   return (
-    <ReactNativeZoomableView
-      ref={zoomableViewRef}
-      contentWidth={width}
-      contentHeight={height}
-      onSingleTap={onSingleTap}
-      maxZoom={3}
-      minZoom={1}
-      zoomStep={0}
-      pinchToZoomInSensitivity={1}
-      onZoomBefore={(a, b, zoomObject) => {
-        if (scrollEnabled)
-          setScrollEnabled(false)
-      }}
-      // onZoomAfter={() => {
-      //   if (!scrollEnabled)
-      //     setScrollEnabled(true)
-      // }}
-      // onDoubleTapAfter={() => {
-      //   zoomableViewRef.current.moveTo(width / 2, height / 2)
-      //   zoomableViewRef.current.zoomTo(1)
-      // }}
-      disablePanOnInitialZoom
-      visualTouchFeedbackEnabled={false}
-    >
+    <Zoom>
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
         source={{ uri: item.uri }}
       />
-    </ReactNativeZoomableView>
+    </Zoom>
+    // <ReactNativeZoomableView
+    //   ref={zoomableViewRef}
+    //   contentWidth={width}
+    //   contentHeight={height}
+    //   onSingleTap={onSingleTap}
+    //   maxZoom={3}
+    //   minZoom={1}
+    //   zoomStep={0}
+    //   pinchToZoomInSensitivity={1}
+    //   // onZoomBefore={(a, b, zoomObject) => {
+    //   //   if (scrollEnabled)
+    //   //     setScrollEnabled(false)
+    //   // }}
+    //   // onZoomAfter={() => {
+    //   //   if (!scrollEnabled)
+    //   //     setScrollEnabled(true)
+    //   // }}
+    //   // onDoubleTapAfter={() => {
+    //   //   zoomableViewRef.current.moveTo(width / 2, height / 2)
+    //   //   zoomableViewRef.current.zoomTo(1)
+    //   // }}
+    //   disablePanOnInitialZoom
+    //   visualTouchFeedbackEnabled={false}
+    // >
+    //   <Image
+    //     style={{ width: width, height: height, resizeMode: 'contain' }}
+    //     source={{ uri: item.uri }}
+    //   />
+    // </ReactNativeZoomableView>
   )
 })
 
@@ -94,7 +102,7 @@ export const RenderImageList = memo(({
   useEffect(() => setScrollEnabled(true), [])
 
   return (
-    <FlatList
+    <ZoomFlatList
       keyExtractor={(item, index) => `key-${item}-${index}`}
       data={imageList}
       style={{ width: width, height: height }}
@@ -105,7 +113,7 @@ export const RenderImageList = memo(({
         />
       )}
       pagingEnabled={true}
-      scrollEnabled={scrollEnabled}
+      // scrollEnabled={scrollEnabled}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       horizontal={!isVertical}
