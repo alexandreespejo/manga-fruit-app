@@ -1,4 +1,4 @@
-import { createRef, memo } from "react"
+import { createRef, memo, useEffect } from "react"
 import { Dimensions, FlatList, Image } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { AdsContainer } from "./style"
@@ -19,7 +19,9 @@ const RenderZoomableImage = memo(({
   item,
   onSingleTap
 }: RenderZoomableImageType) => {
-  // const setScrollEnabled = useReaderStore(state => state.setScrollEnabled)
+  // console.log('rerender')
+  const setScrollEnabled = useReaderStore(state => state.setScrollEnabled)
+  const scrollEnabled = useReaderStore(state => state.scrollEnabled)
   const zoomableViewRef = createRef<ReactNativeZoomableView>()
   if (item.type === "ads") {
     return (
@@ -49,23 +51,24 @@ const RenderZoomableImage = memo(({
       contentWidth={width}
       contentHeight={height}
       onSingleTap={onSingleTap}
-      maxZoom={5}
+      maxZoom={3}
       minZoom={1}
       zoomStep={0}
-      // onZoomBefore={() => setScrollEnabled(false)}
-      // onZoomAfter={() => setScrollEnabled(true)}
-      // onZoomBefore={() => {
-      //   if (listState.scrollable)
-      //     setListState({ scrollable: false })
-      // }}
-      // onZoomEnd={() => {
-      //   setListState({ scrollable: true })
+      pinchToZoomInSensitivity={1}
+      onZoomBefore={(a, b, zoomObject) => {
+        if (scrollEnabled)
+          setScrollEnabled(false)
+      }}
+      // onZoomAfter={() => {
+      //   if (!scrollEnabled)
+      //     setScrollEnabled(true)
       // }}
       // onDoubleTapAfter={() => {
-      //   // zoomableViewRef.current.moveTo(width / 2, height / 2)
+      //   zoomableViewRef.current.moveTo(width / 2, height / 2)
       //   zoomableViewRef.current.zoomTo(1)
       // }}
       disablePanOnInitialZoom
+      visualTouchFeedbackEnabled={false}
     >
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
@@ -84,7 +87,12 @@ export const RenderImageList = memo(({
   imageList,
   onSingleTapImage
 }: RenderImageListType) => {
-  const [isVertical, scrollEnabled] = useReaderStore(state => [state.verticalOrientation, state.scrollEnabled])
+  const isVertical = useReaderStore(state => state.verticalOrientation)
+  const scrollEnabled = useReaderStore(state => state.scrollEnabled)
+  const setScrollEnabled = useReaderStore(state => state.setScrollEnabled)
+
+  useEffect(() => setScrollEnabled(true), [])
+
   return (
     <FlatList
       keyExtractor={(item, index) => `key-${item}-${index}`}
