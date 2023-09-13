@@ -1,10 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { Container, SwitchContainer } from "./style"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Switch } from "react-native"
 import { Label } from "../../components/Label"
-import { setAppIsDarkMode, setAppShowSuggestions } from "../../services/storage"
+import { setAppIsDarkMode, setAppIsReaderVertical, setAppShowSuggestions } from "../../services/storage"
 import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
@@ -15,7 +15,6 @@ const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const { setThemeIsDark, setShowSuggestion, showSuggestion, themeIsDark, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
-  const [showLastReaders, setShowLastReaders] = useState(false)
 
   return (
     <Container>
@@ -27,7 +26,7 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
           onValueChange={() => {
             const newState = !verticalOrientation
             setVerticalOrientation(newState)
-            // setThemeIsDark(newState)
+            setAppIsReaderVertical(newState)
           }}
           value={verticalOrientation}
         />
@@ -47,20 +46,6 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
         />
         <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configIsDarkModeLabel')}</Label>
       </SwitchContainer>
-      {/* <SwitchContainer>
-        <Switch
-          trackColor={switchTrackColor}
-          thumbColor={showLastReaders ? theme.tint : '#f4f3f4'}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={() => {
-            const newState = !showLastReaders
-            setAppShowLastReaders(newState)
-            setShowLastReaders(newState)
-          }}
-          value={showLastReaders}
-        />
-        <Label variant="Text" onPress={() => setShowLastReaders(!showLastReaders)} style={{ marginLeft: 8 }}>Show Last Readers</Label>
-      </SwitchContainer> */}
       <SwitchContainer>
         <Switch
           trackColor={switchTrackColor}

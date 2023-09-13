@@ -5,30 +5,18 @@ import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./s
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
-import { storeChapterRead } from "../../services/storage"
+import { getReadChapterAmount, incrementReadChapterAmount, storeChapterRead } from "../../services/storage"
 // import { useInterstitialAd } from "react-native-google-mobile-ads"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
 import { RenderImageList } from "./RenderImageList"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
-type ChapterDataType = any | undefined
-
-const getReadChapterAmount = async () => {
-  const readAmount = await AsyncStorage.getItem('@manga_fruit_read_amount_chapter') ?? '0'
-  return readAmount
-}
-
-const incrementReadChapterAmount = async () => {
-  const readAmount = await getReadChapterAmount()
-  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', String(Number(readAmount) + 1))
-  return readAmount
-}
-
-const resetReadChapterAmount = async () => {
-  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', '0')
+type ReaderDataType = {
+  managaId: string
+  chapterId: string
+  chapterNumber: string
 }
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
@@ -36,8 +24,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
   //   requestNonPersonalizedAdsOnly: true,
   // })
-  const chapterData: ChapterDataType = route?.params?.chapterData
-  const mangaData: any = route?.params?.mangaData
+  const data: ReaderDataType = route?.params?.data
   const [focusMode, setFocusMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [pages, setPages] = useState([])
@@ -46,27 +33,27 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     next: null
   })
 
-  const loadChapterSequence = async () => {
-    const currentChapter = chapterData?.attributes?.chapter
-    if (!currentChapter) return
-    const isFirst = currentChapter === '1'
-    const offset = isFirst ? 0 : currentChapter - 2
-    try {
-      const { data } = await getChapters(mangaData?.id, 3, offset)
+  // const loadChapterSequence = async () => {
+  //   const currentChapter = data.chapterNumber
+  //   if (!currentChapter) return
+  //   const isFirst = currentChapter === '1'
+  //   const offset = isFirst ? 0 : currentChapter - 2
+  //   try {
+  //     const { data } = await getChapters(data, 3, offset)
 
-      if (data?.data)
-        setChapterSequence({
-          prev: data?.data[(isFirst ? null : 0)],
-          next: data?.data[(isFirst ? 1 : 2)],
-        })
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  //     if (data?.data)
+  //       setChapterSequence({
+  //         prev: data?.data[(isFirst ? null : 0)],
+  //         next: data?.data[(isFirst ? 1 : 2)],
+  //       })
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
   const loadPages = () => {
     setIsLoading(true)
-    const id = chapterData.id
+    const id = data.chapterId
     getPages(id).then(data => {
       const list: any[] = data?.chapter?.data
       const pageList = []
@@ -113,7 +100,8 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       //   show()
       // }
 
-      navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
+      console.log('next chap')
+      // navigation.navigate('Reader', { chapterData: selectedChapter, mangaData })
     }
   }
 
@@ -148,11 +136,11 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   }
 
   useEffect(() => {
-    if (!chapterData) return
+    if (!data.chapterId) return
 
     incrementReadChapterAmount()
-    storeChapterRead(mangaData.id, chapterData?.attributes?.chapter)
-    loadChapterSequence()
+    storeChapterRead(data.managaId, data.chapterNumber)
+    // loadChapterSequence()
     loadPages()
     // load()
   }, [])

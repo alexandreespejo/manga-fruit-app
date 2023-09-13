@@ -5,6 +5,21 @@ type GetFavoriteDataType = () => Promise<any[]>
 type StoreChapterReadType = (mangaId: string, chapterId: string) => Promise<void>
 type GetChapterReadType = () => Promise<object>
 
+export const getReadChapterAmount = async () => {
+  const readAmount = await AsyncStorage.getItem('@manga_fruit_read_amount_chapter') ?? '0'
+  return readAmount
+}
+
+export const incrementReadChapterAmount = async () => {
+  const readAmount = await getReadChapterAmount()
+  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', String(Number(readAmount) + 1))
+  return readAmount
+}
+
+export const resetReadChapterAmount = async () => {
+  await AsyncStorage.setItem('@manga_fruit_read_amount_chapter', '0')
+}
+
 export const storeFavoriteMangaList: StoreFavoriteDataType = async (mangaList) => {
   try {
     await AsyncStorage.setItem('@manga_app_favorites', JSON.stringify(mangaList))
@@ -62,6 +77,15 @@ export const getShowSuggestions = async () => {
 
 export const setAppShowSuggestions = async (state: boolean) => {
   await AsyncStorage.setItem('@manga_fruit_application_show_suggestions', String(state))
+}
+
+export const getAppIsReaderVertical = async () => {
+  const state = await AsyncStorage.getItem('@manga_fruit_application_reader_vertical') ?? 'false'
+  return state === 'true'
+}
+
+export const setAppIsReaderVertical = async (state: boolean) => {
+  await AsyncStorage.setItem('@manga_fruit_application_reader_vertical', String(state))
 }
 
 export const setAppShowLastReaders = async (state: boolean) => {

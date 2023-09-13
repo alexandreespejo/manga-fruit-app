@@ -207,7 +207,13 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   }
 
   const openReader = async (chapterData: any) => {
-    navigation.navigate('Reader', { chapterData, mangaData })
+    navigation.navigate('Reader', {
+      data: {
+        managaId: mangaData.id,
+        chapterId: chapterData.id,
+        chapterNumber: chapterData?.attributes?.chapter
+      }
+    })
   }
 
   const renderChapter = useCallback(({ item }) => {
