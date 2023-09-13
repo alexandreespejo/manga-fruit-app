@@ -1,122 +1,110 @@
-import { createRef, memo, useEffect } from "react"
+import { createRef, memo, useRef } from "react"
 import { Dimensions, FlatList, Image } from "react-native"
-import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view'
 import { AdsContainer } from "./style"
-import { useReaderStore } from "./store";
-import { Label } from "../../components/Label";
-import { Zoom, createZoomListComponent } from 'react-native-reanimated-zoom';
-const ZoomFlatList = createZoomListComponent(FlatList)
+import { Label } from "../../components/Label"
+import { useAppStore } from "../../store"
 // import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
+
 type RenderZoomableImageType = {
   item: { type: 'image' | 'ads', uri: string }
-  onSingleTap?: () => void
 }
 
 const { width, height } = Dimensions.get('window')
 
-const RenderZoomableImage = memo(({
-  item,
-  onSingleTap
-}: RenderZoomableImageType) => {
-  // console.log('rerender')
-  const setScrollEnabled = useReaderStore(state => state.setScrollEnabled)
-  const scrollEnabled = useReaderStore(state => state.scrollEnabled)
-  const zoomableViewRef = createRef<ReactNativeZoomableView>()
-  if (item.type === "ads") {
-    return (
-      <AdsContainer>
-        <Label variant="Headline">Momento Paga Boleto</Label>
-        {/* <BannerAd
-          unitId={readerId1}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
-        <BannerAd
-          unitId={readerId2}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        /> */}
-      </AdsContainer>
-    )
-  }
-
-  return (
-    <Zoom>
-      <Image
-        style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={{ uri: item.uri }}
-      />
-    </Zoom>
-    // <ReactNativeZoomableView
-    //   ref={zoomableViewRef}
-    //   contentWidth={width}
-    //   contentHeight={height}
-    //   onSingleTap={onSingleTap}
-    //   maxZoom={3}
-    //   minZoom={1}
-    //   zoomStep={0}
-    //   pinchToZoomInSensitivity={1}
-    //   // onZoomBefore={(a, b, zoomObject) => {
-    //   //   if (scrollEnabled)
-    //   //     setScrollEnabled(false)
-    //   // }}
-    //   // onZoomAfter={() => {
-    //   //   if (!scrollEnabled)
-    //   //     setScrollEnabled(true)
-    //   // }}
-    //   // onDoubleTapAfter={() => {
-    //   //   zoomableViewRef.current.moveTo(width / 2, height / 2)
-    //   //   zoomableViewRef.current.zoomTo(1)
-    //   // }}
-    //   disablePanOnInitialZoom
-    //   visualTouchFeedbackEnabled={false}
-    // >
-    //   <Image
-    //     style={{ width: width, height: height, resizeMode: 'contain' }}
-    //     source={{ uri: item.uri }}
-    //   />
-    // </ReactNativeZoomableView>
-  )
-})
-
 type RenderImageListType = {
   imageList: any[]
-  onSingleTapImage?: () => void
 }
 
 export const RenderImageList = memo(({
-  imageList,
-  onSingleTapImage
+  imageList
 }: RenderImageListType) => {
-  const isVertical = useReaderStore(state => state.verticalOrientation)
-  const scrollEnabled = useReaderStore(state => state.scrollEnabled)
-  const setScrollEnabled = useReaderStore(state => state.setScrollEnabled)
+  const isVerticalOrientation = useAppStore(state => state.verticalOrientation)
+  const listRef = useRef<FlatList<any>>()
+  const zoomableViewRef = createRef<ReactNativeZoomableView>()
 
-  useEffect(() => setScrollEnabled(true), [])
+  const RenderZoomableImage = ({
+    item
+  }: RenderZoomableImageType) => {
+
+    console.log('rerendered image')
+
+    if (item.type === "ads") {
+      return (
+        <AdsContainer>
+          <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
+          {/* <BannerAd
+            unitId={readerId1}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+          <BannerAd
+            unitId={readerId2}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          /> */}
+        </AdsContainer>
+      )
+    }
+
+    return (
+      <ReactNativeZoomableView
+        ref={zoomableViewRef}
+        contentWidth={width}
+        contentHeight={height}
+        maxZoom={3}
+        minZoom={1}
+        zoomStep={0}
+        onZoomBefore={(a, b, zoom) => {
+          if (!listRef?.current) return
+
+          if (zoom.zoomLevel > 1.1)
+            return listRef?.current.setNativeProps({ scrollEnabled: false })
+
+          if (zoom.zoomLevel <= 1.1)
+            return listRef?.current.setNativeProps({ scrollEnabled: true })
+        }}
+        // onDoubleTapAfter={() => {
+        //   scrollEnabledRef.current = true
+        //   setScrollEnabled(true)
+        //   zoomableViewRef.current.zoomTo(1)
+        // }}
+        visualTouchFeedbackEnabled={false}
+        disablePanOnInitialZoom
+      >
+        <Image
+          style={{ width: width, height: height, resizeMode: 'contain' }}
+          source={{ uri: item.uri }}
+        />
+      </ReactNativeZoomableView>
+    )
+  }
+
+  console.log('rerender list')
 
   return (
-    <ZoomFlatList
+    <FlatList
+      ref={listRef}
       keyExtractor={(item, index) => `key-${item}-${index}`}
       data={imageList}
       style={{ width: width, height: height }}
       renderItem={props => (
         <RenderZoomableImage
-          onSingleTap={onSingleTapImage}
           {...props}
         />
       )}
-      pagingEnabled={true}
-      // scrollEnabled={scrollEnabled}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      horizontal={!isVertical}
+      horizontal={!isVerticalOrientation}
+      scrollEnabled
+      pagingEnabled
     />
   )
-})
+}, () => true)

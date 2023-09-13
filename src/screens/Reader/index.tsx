@@ -10,9 +10,7 @@ import { storeChapterRead } from "../../services/storage"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
-import { ScreenRotationIcon } from "../../components/Icons/screenRotation";
 import { RenderImageList } from "./RenderImageList"
-import { useReaderStore } from "./store"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
@@ -35,7 +33,6 @@ const resetReadChapterAmount = async () => {
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const theme = useTheme()
-  const changeOrientation = useReaderStore(state => state.changeOrientation)
   // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
   //   requestNonPersonalizedAdsOnly: true,
   // })
@@ -140,9 +137,9 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
             <ActionLabel children={internalization.t('readerNextPageLabel')} />
           </ActionButton>)
         }
-        <TouchableOpacity onPress={() => changeOrientation()} >
+        {/* <TouchableOpacity onPress={() => changeOrientation()} >
           <ScreenRotationIcon />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity onPress={() => closePage()} >
           <FontAwesome name="close" size={30} color={theme.text} />
         </TouchableOpacity>
@@ -158,7 +155,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     loadChapterSequence()
     loadPages()
     // load()
-  }, [chapterData])
+  }, [])
 
   return (
     <Modal>

@@ -5,11 +5,15 @@ export type AppStoreType = {
   setThemeIsDark: (state: boolean) => void
   showSuggestion: boolean
   setShowSuggestion: (state: boolean) => void
+  verticalOrientation: boolean
+  setVerticalOrientation: (state: boolean) => void
 }
 
-export const useAppStore = create((set) => ({
+export const useAppStore = create<AppStoreType>((set, get) => ({
   themeIsDark: false,
   showSuggestion: false,
-  setThemeIsDark: (state: boolean) => set(() => ({ themeIsDark: state })),
-  setShowSuggestion: (state: boolean) => set(() => ({ showSuggestion: state })),
+  verticalOrientation: false,
+  setVerticalOrientation: (state) => set(() => ({ verticalOrientation: state })),
+  setThemeIsDark: (state) => set(() => ({ themeIsDark: state })),
+  setShowSuggestion: (state) => set(() => ({ showSuggestion: state })),
 }))
