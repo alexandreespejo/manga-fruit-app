@@ -4,7 +4,8 @@ import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-vi
 import { AdsContainer } from "./style"
 import { Label } from "../../components/Label"
 import { useAppStore } from "../../store"
-// import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { FlashList } from "@shopify/flash-list"
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -32,7 +33,7 @@ const RenderZoomableImage = memo(({
     return (
       <AdsContainer>
         <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
-        {/* <BannerAd
+        <BannerAd
           unitId={readerId1}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
           requestOptions={{
@@ -45,7 +46,7 @@ const RenderZoomableImage = memo(({
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
-        /> */}
+        />
       </AdsContainer>
     )
   }
@@ -107,5 +108,24 @@ export const RenderImageList = memo(({
       scrollEnabled
       pagingEnabled
     />
+    // <RenderImageListContainer>
+    //   <FlashList
+    //     ref={listRef}
+    //     // keyExtractor={(item) => `key-${JSON.stringify(item)}}`}
+    //     data={imageList}
+    //     renderItem={props => (
+    //       <RenderZoomableImage
+    //         listRef={listRef}
+    //         {...props}
+    //       />
+    //     )}
+    //     showsHorizontalScrollIndicator={false}
+    //     showsVerticalScrollIndicator={false}
+    //     horizontal={!isVerticalOrientation}
+    //     estimatedItemSize={imageList?.length ?? 10}
+    //     scrollEnabled
+    //     pagingEnabled
+    //   />
+    // </RenderImageListContainer>
   )
 }, () => true)

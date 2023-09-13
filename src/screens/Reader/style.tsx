@@ -57,3 +57,8 @@ export const HeaderContainer = styled.View`
   border-radius: 8px;
   padding: 0 16px;
 `
+
+export const RenderImageListContainer = styled.View`
+ height: 100%;
+ width: 100%;
+`
