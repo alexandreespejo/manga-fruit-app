@@ -4,7 +4,6 @@ import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-vi
 import { AdsContainer } from "./style"
 import { Label } from "../../components/Label"
 import { useAppStore } from "../../store"
-import { FlashList } from "@shopify/flash-list"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
@@ -108,24 +107,5 @@ export const RenderImageList = memo(({
       scrollEnabled
       pagingEnabled
     />
-    // <RenderImageListContainer>
-    //   <FlashList
-    //     ref={listRef}
-    //     // keyExtractor={(item) => `key-${JSON.stringify(item)}}`}
-    //     data={imageList}
-    //     renderItem={props => (
-    //       <RenderZoomableImage
-    //         listRef={listRef}
-    //         {...props}
-    //       />
-    //     )}
-    //     showsHorizontalScrollIndicator={false}
-    //     showsVerticalScrollIndicator={false}
-    //     horizontal={!isVerticalOrientation}
-    //     estimatedItemSize={imageList?.length ?? 10}
-    //     scrollEnabled
-    //     pagingEnabled
-    //   />
-    // </RenderImageListContainer>
   )
 }, () => true)
