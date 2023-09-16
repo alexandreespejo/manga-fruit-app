@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ActivityIndicator } from "react-native"
-import { getChapters, LanguageTypes, OrderTypes } from "../../services/mangadex"
+import { getChapters, getMangaAggregation, LanguageTypes, OrderTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
 import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
@@ -14,6 +14,7 @@ import { Dropdown } from "../../components/Dropdown"
 import internalization from "../../services/internalization"
 import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
+import { useCurrentManga } from "./store"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -127,6 +128,7 @@ const FiltersModal = memo(({
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
   const theme = useTheme()
   const queryClient = useQueryClient()
+  const { aggregation, setAggregation } = useCurrentManga()
   const { mangaData } = route.params ?? {}
   const paginationRef = useRef({
     initialOffset: 0,
@@ -206,20 +208,42 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     })
   }
 
+  const loadMangaAggregation = () => {
+    if (aggregation.mangaId === mangaData?.id) return
+
+    const selectedLang = paginationRef.current.language as LanguageTypes
+    getMangaAggregation(mangaData?.id, selectedLang).then(({ data }) => {
+      if (data?.result !== 'ok') return
+      const volumeKeys = Object.keys(data?.volumes)
+      let chapterList = {}
+
+      volumeKeys.forEach(key => {
+        chapterList = {
+          ...chapterList,
+          ...data?.volumes[key].chapters
+        }
+      })
+
+      setAggregation({
+        mangaId: mangaData?.id,
+        chapters: chapterList
+      })
+    })
+  }
+
   const openReader = async (chapterData: any) => {
     navigation.navigate('Reader', {
       data: {
         managaId: mangaData.id,
         chapterId: chapterData.id,
-        chapterNumber: chapterData?.attributes?.chapter
+        chapterNumber: chapterData?.attributes?.chapter,
       }
     })
   }
 
-  const renderChapter = useCallback(({ item }) => {
+  const renderChapter = ({ item }) => {
     const label = `${internalization.t('chapterListLabel')} ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
     const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
-
     return (
       <>
         <ChapterButton onPress={() => openReader(item)}>
@@ -228,7 +252,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         <ChapterDivider />
       </>
     )
-  }, [chaptersRead])
+  }
 
   const handleFilter = ({
     initialChapter,
@@ -247,6 +271,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   useFocusEffect(useCallback(() => {
     loadFavorites()
     loadReadChapters()
+    loadMangaAggregation()
   }, []))
 
   return (

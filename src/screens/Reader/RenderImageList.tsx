@@ -1,5 +1,5 @@
 import { createRef, memo, useRef } from "react"
-import { Dimensions, FlatList, Image } from "react-native"
+import { Dimensions, FlatList, Image, View } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view'
 import { AdsContainer } from "./style"
 import { Label } from "../../components/Label"
@@ -8,6 +8,7 @@ import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
+const readerId3 = 'ca-app-pub-4863844449125415/2114734934'
 
 type RenderZoomableImageType = {
   listRef: React.MutableRefObject<FlatList<any>>
@@ -26,26 +27,38 @@ const RenderZoomableImage = memo(({
 }: RenderZoomableImageType) => {
   const zoomableViewRef = createRef<ReactNativeZoomableView>()
 
-  console.log('rerendered image')
-
   if (item.type === "ads") {
     return (
       <AdsContainer>
         <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
-        <BannerAd
-          unitId={readerId1}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
-        <BannerAd
-          unitId={readerId2}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
+        {/* <View style={{ marginTop: 32 }}>
+          <BannerAd
+            unitId={readerId1}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        </View>
+        <View style={{ marginTop: 32 }}>
+          <BannerAd
+            unitId={readerId2}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        </View> 
+        <View style={{ marginTop: 32 }}>
+          <BannerAd
+            unitId={readerId3}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        </View> 
+        */}
       </AdsContainer>
     )
   }
@@ -108,4 +121,4 @@ export const RenderImageList = memo(({
       pagingEnabled
     />
   )
-}, () => true)
+})

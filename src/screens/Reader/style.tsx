@@ -4,7 +4,6 @@ const { width, height } = Dimensions.get('window')
 
 export const AdsContainer = styled.View`
   padding: 24px 0;
-  gap: 32px;
   height: ${height}px;
   width: ${width}px;
 `

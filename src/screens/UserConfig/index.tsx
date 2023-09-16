@@ -2,12 +2,13 @@ import React from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { Container, SwitchContainer } from "./style"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
-import { Switch } from "react-native"
+import { Linking, Switch } from "react-native"
 import { Label } from "../../components/Label"
 import { setAppIsDarkMode, setAppIsReaderVertical, setAppShowSuggestions } from "../../services/storage"
 import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
+import { CustomButton } from "../../components/Button"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
@@ -15,6 +16,15 @@ const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const { setThemeIsDark, setShowSuggestion, showSuggestion, themeIsDark, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
+
+  const handlePress = async () => {
+    const telegramUrl = 'https://t.me/mangafruitapp'
+    const supported = await Linking.canOpenURL(telegramUrl);
+
+    if (supported) {
+      await Linking.openURL(telegramUrl);
+    }
+  }
 
   return (
     <Container>
@@ -60,6 +70,9 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
         />
         <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configShowSuggestionLabel')}</Label>
       </SwitchContainer>
+      <CustomButton onPress={handlePress} style={{ marginTop: 16 }}>
+        {internalization.t('configCommunityButton')}
+      </CustomButton>
     </Container>
   )
 }

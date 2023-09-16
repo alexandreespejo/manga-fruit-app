@@ -29,6 +29,7 @@ const internalization = new I18n({
     configScreenTitle: 'Configuration',
     configShowSuggestionLabel: 'Show Home Suggestions',
     configIsDarkModeLabel: 'Dark Mode',
+    configCommunityButton: 'Community',
   },
   pt: {
     languageFilter: 'pt-br',
@@ -56,6 +57,7 @@ const internalization = new I18n({
     configScreenTitle: 'Configurações',
     configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
     configIsDarkModeLabel: 'Tema Escuro',
+    configCommunityButton: 'Comunidade',
   }
 })
 
