@@ -191,14 +191,12 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   }
 
   const changeFavoriteState = () => {
+    setChapterIsFavorite(!chapterIsFavorite)
     getFavoriteMangaList().then(list => {
       let favList = list
       if (chapterIsFavorite) favList = favList?.filter(favMangaData => JSON.stringify(favMangaData) !== JSON.stringify(mangaData))
       else favList.push(mangaData)
-
-      storeFavoriteMangaList(favList).then(() => {
-        setChapterIsFavorite(!chapterIsFavorite)
-      })
+      storeFavoriteMangaList(favList)
     })
   }
 

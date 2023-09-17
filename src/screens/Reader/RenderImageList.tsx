@@ -1,10 +1,11 @@
-import { createRef, memo, useRef } from "react"
-import { Dimensions, FlatList, Image, View } from "react-native"
+import { createRef, memo, useRef, useState } from "react"
+import { Dimensions, FlatList, Image, Platform, View } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view'
 import { AdsContainer } from "./style"
 import { Label } from "../../components/Label"
 import { useAppStore } from "../../store"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import Load from "../../components/Load"
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -21,6 +22,22 @@ type RenderImageListType = {
   imageList: any[]
 }
 
+const ImageLoader = memo(({ uri }: { uri: string }) => {
+  const [isImageLoading, setIsImageLoading] = useState(true)
+  return (
+    <View>
+      <Image
+        style={{ width: width, height: height, resizeMode: 'contain' }}
+        source={{ uri: uri }}
+        onLoadStart={() => setIsImageLoading(true)}
+        onLoadEnd={() => setIsImageLoading(false)}
+        progressiveRenderingEnabled={Platform.OS === 'android'}
+      />
+      {isImageLoading && <Load />}
+    </View>
+  )
+})
+
 const RenderZoomableImage = memo(({
   listRef,
   item
@@ -31,7 +48,7 @@ const RenderZoomableImage = memo(({
     return (
       <AdsContainer>
         <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
-        {/* <View style={{ marginTop: 32 }}>
+        <View style={{ marginTop: 32 }}>
           <BannerAd
             unitId={readerId1}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -48,7 +65,7 @@ const RenderZoomableImage = memo(({
               requestNonPersonalizedAdsOnly: true,
             }}
           />
-        </View> 
+        </View>
         <View style={{ marginTop: 32 }}>
           <BannerAd
             unitId={readerId3}
@@ -57,8 +74,8 @@ const RenderZoomableImage = memo(({
               requestNonPersonalizedAdsOnly: true,
             }}
           />
-        </View> 
-        */}
+        </View>
+
       </AdsContainer>
     )
   }
@@ -80,18 +97,10 @@ const RenderZoomableImage = memo(({
         if (zoom.zoomLevel <= 1.1)
           return listRef?.current.setNativeProps({ scrollEnabled: true })
       }}
-      // onDoubleTapAfter={() => {
-      //   scrollEnabledRef.current = true
-      //   setScrollEnabled(true)
-      //   zoomableViewRef.current.zoomTo(1)
-      // }}
       visualTouchFeedbackEnabled={false}
       disablePanOnInitialZoom
     >
-      <Image
-        style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={{ uri: item.uri }}
-      />
+      <ImageLoader {...item} />
     </ReactNativeZoomableView>
   )
 })

@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from "react"
 import { Image, InfoWrapper, MangaCardContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
 import { Label } from "../Label"
-import { StyleProp, ViewStyle } from "react-native"
+import { Platform, StyleProp, ViewStyle } from "react-native"
 
 interface MangaCardProps {
   data: any
@@ -56,7 +56,11 @@ export const MangaCard = memo(({
 
   return (
     <MangaCardContainer onPress={onCardClick} variant={variant} style={style}>
-      <Image source={{ uri: cover }} variant={variant} />
+      <Image
+        source={{ uri: cover }}
+        variant={variant}
+        progressiveRenderingEnabled={Platform.OS === 'android'}
+      />
       <InfoWrapper>
         <TitleContainer>
           <Label style={{ fontWeight: "bold" }}>{data?.attributes?.title?.en}</Label>

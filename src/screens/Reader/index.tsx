@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Alert, Modal, TouchableOpacity } from "react-native"
-import { getChapters, getPages } from "../../services/mangadex"
+import { getPages } from "../../services/mangadex"
 import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
@@ -61,7 +61,6 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
         chapterNumber: nextChapter?.chapter
       }
 
-    console.log(sequenceState)
     setChapterSequence(sequenceState)
   }
 
@@ -108,7 +107,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   const handleChapterSequence = async (direction: 'prev' | 'next') => {
     const selectedChapter = chapterSequence[direction]
     if (selectedChapter) {
-      const readAmount = await getReadChapterAmount()
+      // const readAmount = await getReadChapterAmount()
       // if (isLoaded && Number(readAmount) > 4) {
       //   await resetReadChapterAmount()
       //   show()

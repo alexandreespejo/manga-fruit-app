@@ -1,7 +1,6 @@
 import React from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { Container, SwitchContainer } from "./style"
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Linking, Switch } from "react-native"
 import { Label } from "../../components/Label"
 import { setAppIsDarkMode, setAppIsReaderVertical, setAppShowSuggestions } from "../../services/storage"
@@ -10,7 +9,6 @@ import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
 import { CustomButton } from "../../components/Button"
 
-const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
