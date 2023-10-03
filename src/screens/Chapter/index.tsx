@@ -4,7 +4,7 @@ import { ActivityIndicator } from "react-native"
 import { getChapters, getMangaAggregation, LanguageTypes, OrderTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
-import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList } from "../../services/storage"
+import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList, storeLastVisited } from "../../services/storage"
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
 import { RoundedButton } from "../../components/RoundedButton"
@@ -270,6 +270,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     loadFavorites()
     loadReadChapters()
     loadMangaAggregation()
+    storeLastVisited(mangaData)
   }, []))
 
   return (

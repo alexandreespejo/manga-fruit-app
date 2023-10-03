@@ -5,6 +5,9 @@ type GetFavoriteDataType = () => Promise<any[]>
 type StoreChapterReadType = (mangaId: string, chapterId: string) => Promise<void>
 type GetChapterReadType = () => Promise<object>
 
+type StoreLastVisitedType = (mangaData: any) => Promise<void>
+type GetLastVisitedType = () => Promise<any[]>
+
 export const getReadChapterAmount = async () => {
   const readAmount = await AsyncStorage.getItem('@manga_fruit_read_amount_chapter') ?? '0'
   return readAmount
@@ -57,6 +60,27 @@ export const getChapterRead: GetChapterReadType = async () => {
     return responseList
   } catch (e) {
     return {}
+  }
+}
+
+export const getLastVisited: GetLastVisitedType = async () => {
+  try {
+    const value = await AsyncStorage.getItem('@manga_fruit_last_visited')
+    const responseList = value ? JSON.parse(value) : []
+    return responseList
+  } catch (e) {
+    return []
+  }
+}
+
+export const storeLastVisited: StoreLastVisitedType = async (mangaData) => {
+  try {
+    let lastVisitedList: any[] = await getLastVisited()
+    lastVisitedList = lastVisitedList.filter(manga => manga.id !== mangaData.id)
+    lastVisitedList.splice(0, 0, mangaData)
+    await AsyncStorage.setItem('@manga_fruit_last_visited', JSON.stringify(lastVisitedList))
+  } catch (e) {
+    // saving error
   }
 }
 

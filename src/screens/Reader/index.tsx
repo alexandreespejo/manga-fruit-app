@@ -71,17 +71,16 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       const list: any[] = data?.chapter?.data
       const pageList = []
 
-      list.forEach((item, indx) => {
-        if (indx === Math.round(list.length / 2))
-          pageList.push({
-            type: 'ads',
-            uri: ''
-          })
-
+      list.forEach((item) => {
         pageList.push({
           type: 'image',
           uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
         })
+      })
+
+      pageList.push({
+        type: 'ads',
+        uri: ''
       })
 
       setPages(pageList)

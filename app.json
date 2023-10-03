@@ -38,7 +38,7 @@
       "bundleIdentifier": "com.alexandrehse.expotemplatetabs"
     },
     "android": {
-      "versionCode": 25,
+      "versionCode": 26,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#EE6364"

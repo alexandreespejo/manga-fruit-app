@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { NavigationProp } from '@react-navigation/native'
+import React, { useCallback, useState } from "react"
+import { NavigationProp, useFocusEffect } from '@react-navigation/native'
 import { Container, MangaListContainer, ScrollContainer, SearchNavigatorContainer, SearchNavigatorIndicator } from "./style"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
@@ -12,6 +12,7 @@ import { FontAwesome } from "@expo/vector-icons"
 import { useQuery } from "@tanstack/react-query"
 import { useTheme } from "styled-components"
 import { AppStoreType, useAppStore } from "../../store"
+import { getLastVisited } from "../../services/storage"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -35,6 +36,7 @@ const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any>
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const showSuggestion = useAppStore((state: AppStoreType) => state.showSuggestion)
   const [recommendationList, setRecommendationList] = useState([])
+  const [lastVisitedList, setLastVisitedList] = useState([])
 
   const loadLastUpdated = async () => {
     loadMostPopular()
@@ -65,24 +67,28 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
   const RenderHorizontalList = ({
     list,
     title
-  }: RenderHorizontalListProps) => (
-    <>
-      <Label
-        variant="Title"
-        children={title}
-        style={{ paddingHorizontal: 32, fontWeight: "bold" }}
-      />
-      <MangaListContainer
-        data={list}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
-        keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
-        getItemCount={() => list.length}
-        getItem={(data, index) => data[index]}
-        renderItem={renderManga}
-        horizontal
-      />
-    </>
-  )
+  }: RenderHorizontalListProps) => {
+    if (list.length === 0) return null
+
+    return (
+      <>
+        <Label
+          variant="Title"
+          children={title}
+          style={{ paddingHorizontal: 32, fontWeight: "bold" }}
+        />
+        <MangaListContainer
+          data={list}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+          keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
+          getItemCount={() => list.length}
+          getItem={(data, index) => data[index]}
+          renderItem={renderManga}
+          horizontal
+        />
+      </>
+    )
+  }
 
   const loadMostPopular = async () => {
     if (recommendationList.length) return
@@ -90,6 +96,15 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       setRecommendationList(list)
     })
   }
+
+  const loadData = useCallback(() => {
+    getLastVisited().then(list => {
+      if (JSON.stringify(list) !== JSON.stringify(lastVisitedList))
+        setLastVisitedList(list)
+    })
+  }, [])
+
+  useFocusEffect(loadData)
 
   return (
     <Container>
@@ -106,6 +121,10 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       {
         showSuggestion &&
         <ScrollContainer>
+          <RenderHorizontalList
+            title={internalization.t('homeLastVisited')}
+            list={lastVisitedList ?? []}
+          />
           <RenderHorizontalList
             title={internalization.t('homeMostPopular')}
             list={recommendationList ?? []}

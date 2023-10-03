@@ -11,6 +11,7 @@ const internalization = new I18n({
     //home screen
     homeMostPopular: 'Most Popular',
     homeLastUpdated: 'Last Updated',
+    homeLastVisited: 'Last Visited',
     //search screen
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
@@ -29,7 +30,7 @@ const internalization = new I18n({
     configScreenTitle: 'Configuration',
     configShowSuggestionLabel: 'Show Home Suggestions',
     configIsDarkModeLabel: 'Dark Mode',
-    configCommunityButton: 'Community',
+    configCommunityButton: 'Donations',
   },
   pt: {
     languageFilter: 'pt-br',
@@ -39,6 +40,7 @@ const internalization = new I18n({
     //home screen
     homeMostPopular: 'Mais Populares',
     homeLastUpdated: 'Ultimas Atualizações',
+    homeLastVisited: 'Ultimos Visitados',
     //search screen
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',
@@ -57,7 +59,7 @@ const internalization = new I18n({
     configScreenTitle: 'Configurações',
     configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
     configIsDarkModeLabel: 'Tema Escuro',
-    configCommunityButton: 'Comunidade',
+    configCommunityButton: 'Doações',
   }
 })
 
