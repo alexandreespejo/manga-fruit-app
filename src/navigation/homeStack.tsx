@@ -17,8 +17,9 @@ export default function HomeStack() {
       animationEnabled: false,
       headerBackTitle: internalization.t('headerBackLabel'),
       headerTintColor: theme.text,
+      headerShadowVisible: false,
       headerStyle: {
-        backgroundColor: theme.background,
+        backgroundColor: theme.background
       }
     }}>
       <Stack.Screen name="Home" options={{ title: internalization.t('homeScreenTitle') }} component={HomeScreen} />

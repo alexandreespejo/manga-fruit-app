@@ -10,16 +10,23 @@ const mangadexApi = axios.create({
 export type LanguageTypes = 'pt-br' | 'en'
 export type OrderTypes = "asc" | "desc"
 
-export const getSearch = async (title: string, limit: number, offset?: number) => {
+export const getSearch = async (title: string, limit: number, offset?: number, tags?: any[]) => {
   const { data } = await mangadexApi.get('manga/', {
     params: {
       title: title,
       limit,
       offset: offset ?? 0,
       availableTranslatedLanguage: ['pt-br'],
+      includedTags: tags,
+      includes: ['cover_art']
     }
   })
 
+  return data
+}
+
+export const getTags = async () => {
+  const { data } = await mangadexApi.get('manga/tag')
   return data
 }
 
@@ -68,6 +75,7 @@ export const getLastUpdates = async (
     params: {
       limit: 10,
       availableTranslatedLanguage: [lang ?? 'pt-br'],
+      includes: ['cover_art'],
       "order[updatedAt]": "desc"
     }
   })

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react"
+import React, { memo, useEffect, useMemo, useState } from "react"
 import { Image, InfoWrapper, MangaCardContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
 import { Label } from "../Label"
@@ -17,27 +17,31 @@ export const MangaCard = memo(({
   onSelectManga,
   style
 }: MangaCardProps) => {
-  const [cover, setCover] = useState<string | null>(null)
-  // const [tags, setTags] = useState([])
+  const [cover, setCover] = useState<string>()
 
   useEffect(() => {
-    // loadTags()
+    if (data?.relationships) {
+      const coverArt = (data?.relationships as any[]).find(rel => rel.type === "cover_art")
+      if (coverArt && coverArt?.attributes)
+        return setCover(`https://uploads.mangadex.org/covers/${data.id}/${coverArt?.attributes?.fileName}`)
+    }
     loadCover()
   }, [data])
+
+  // const [tags, setTags] = useState([])
 
   // const loadTags = () => {
   //   const tagList = data?.attributes?.tags
   //   setTags(tagList.map((item: any) => item?.attributes?.name?.en))
   // }
 
+
   const loadCover = async () => {
     try {
       const coverArt = data?.relationships.filter((item: any) => item.type === 'cover_art')[0]
       const coverData = await getCover(coverArt?.id)
       const { fileName } = coverData?.data?.attributes
-
       const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`
-
       setCover(responseCover)
     } catch (err) {
       console.log(err)

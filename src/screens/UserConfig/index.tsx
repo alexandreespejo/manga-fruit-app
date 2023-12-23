@@ -16,7 +16,7 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
   const theme = useTheme()
 
   const handlePress = async () => {
-    const telegramUrl = 'https://www.buymeacoffee.com/mangafruit'
+    const telegramUrl = 'https://www.vakinha.com.br/4320875'
     const supported = await Linking.canOpenURL(telegramUrl)
 
     if (supported) {

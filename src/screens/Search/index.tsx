@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
-import { Alert, ActivityIndicator } from "react-native"
-import { Container, Input, MangaListContainer, SearchButton, SearchContainer } from "./style"
+import { Alert, ActivityIndicator, Modal, TouchableOpacity, FlatList, View } from "react-native"
+import { CategoriesButton, CategoriesContainer, CategoriesItemContainer, Container, Header, MangaListContainer } from "./style"
 import { getSearch } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
@@ -10,25 +10,56 @@ import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
+import { useTags } from "../../hooks/useTags"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { SearchInput } from "../../components/SearchInput"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
-function SearchBar({ search, setSearch, onSearch }) {
+function Categories({ categories, setCategories }) {
   const theme = useTheme()
+  const { tags } = useTags()
+  const data = tags.filter(tag => tag?.attributes?.group === 'genre')
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const handleChangeVisibility = () => setIsModalVisible(!isModalVisible)
+  const selected = data.find(tag => tag?.id === categories[0])
 
   return (
-    <SearchContainer>
-      <Input
-        onChangeText={setSearch}
-        value={search}
-        placeholder={internalization.t('searchInputPlaceholder')}
-        placeholderTextColor={theme.text}
-        onSubmitEditing={onSearch}
-      />
-      <SearchButton onPress={onSearch}>
-        <FontAwesome name="search" size={24} color={theme.background} />
-      </SearchButton>
-    </SearchContainer>
+    <View style={{ marginTop: 8, flexDirection: "row", alignItems: 'center' }}>
+      <CategoriesButton onPress={handleChangeVisibility}>
+        <Label style={{ marginLeft: 8 }}>
+          {
+            selected ?
+              (selected?.attributes?.name?.en ?? '')
+              : "Categories"
+          }
+        </Label>
+        <FontAwesome name="chevron-down" color={theme.text} />
+      </CategoriesButton>
+      {selected && <TouchableOpacity style={{ marginLeft: 16 }} onPress={() => setCategories([])}><FontAwesome name="close" size={25} color={theme.tint} /></TouchableOpacity>}
+      <Modal visible={isModalVisible} transparent>
+        <SafeAreaView>
+          <CategoriesContainer>
+            <TouchableOpacity style={{ marginLeft: 8 }} onPress={handleChangeVisibility}><FontAwesome name="close" size={30} color={theme.text} /></TouchableOpacity>
+            <FlatList
+              style={{ width: '100%', marginTop: 8 }}
+              keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
+              data={data ?? []}
+              renderItem={({ item }) => (
+                <CategoriesItemContainer onPress={() => {
+                  if (item?.id)
+                    setCategories([item?.id])
+
+                  handleChangeVisibility()
+                }}>
+                  <Label>{item?.attributes?.name?.en ?? ''}</Label>
+                </CategoriesItemContainer>
+              )}
+            />
+          </CategoriesContainer>
+        </SafeAreaView>
+      </Modal>
+    </View>
   )
 }
 
@@ -44,6 +75,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
 
   const [search, setSearch] = useState('')
   const [searchData, setSearchData] = useState([])
+  const [categories, setCategories] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
 
@@ -63,7 +95,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
     if (offset && offset > total) return
 
     setIsFetchingNextPage(true)
-    getSearch(search, limit, offset).then((data) => {
+    getSearch(search, limit, offset, categories).then((data) => {
       if (data.total !== total) pagination.current.total = data.total
       pagination.current.page = page + 1
 
@@ -89,7 +121,10 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   return (
     <Container>
       {isLoading && <Load />}
-      <SearchBar search={search} setSearch={setSearch} onSearch={handleSearch} />
+      <Header>
+        <SearchInput search={search} setSearch={setSearch} onSearch={handleSearch} />
+        <Categories categories={categories} setCategories={setCategories} />
+      </Header>
       <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -97,7 +132,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
           requestNonPersonalizedAdsOnly: true,
         }}
       />
-      {searchData.length === 0 && <Label children={'No results for this search !'} variant="Title" />}
+      {searchData.length === 0 && <Label style={{ marginTop: 32 }} children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={searchData}

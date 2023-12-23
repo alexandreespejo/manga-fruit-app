@@ -16,6 +16,7 @@ export default function FavoritesStack() {
       animationEnabled: false,
       headerBackTitle: internalization.t('headerBackLabel'),
       headerTintColor: theme.text,
+      headerShadowVisible: false,
       headerStyle: {
         backgroundColor: theme.background,
       }

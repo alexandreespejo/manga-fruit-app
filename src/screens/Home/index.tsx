@@ -13,24 +13,14 @@ import { useQuery } from "@tanstack/react-query"
 import { useTheme } from "styled-components"
 import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../services/storage"
+import { TouchableOpacity, View } from "react-native"
+import { SearchInput } from "../../components/SearchInput"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
 type RenderHorizontalListProps = {
   list: any[]
   title: string
-}
-
-const SearchButtonNavigator = ({ navigation }: { navigation: NavigationProp<any> }) => {
-  const theme = useTheme()
-
-  return (
-    <SearchNavigatorContainer onPress={() => { navigation.navigate('Search') }}>
-      <SearchNavigatorIndicator>
-        <FontAwesome name="search" size={24} color={theme.background} />
-      </SearchNavigatorIndicator>
-    </SearchNavigatorContainer>
-  )
 }
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
@@ -109,14 +99,18 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
   return (
     <Container>
       {isLoading && <Load />}
-      <SearchButtonNavigator navigation={navigation} />
-      <BannerAd
-        unitId={adUnitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }}>
+        <SearchInput disabled />
+      </TouchableOpacity>
+      <View style={{ marginTop: 8, flexDirection: 'row' }}>
+        <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      </View>
 
       {
         showSuggestion &&

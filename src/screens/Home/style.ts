@@ -8,6 +8,7 @@ export const Container = styled.SafeAreaView`
 
 export const ScrollContainer = styled.ScrollView`
   flex: 1;
+  margin-top: 8px;
 `
 
 export const SearchNavigatorIndicator = styled.View`

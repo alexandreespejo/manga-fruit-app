@@ -1,5 +1,11 @@
 import { VirtualizedList } from 'react-native';
+import { BlurView } from 'expo-blur';
 import styled from 'styled-components/native'
+
+export const Header = styled.View`
+  display: flex;
+  align-items: flex-start;
+`
 
 export const MangaCardContainer = styled.TouchableOpacity`
   display: flex;
@@ -56,37 +62,43 @@ export const Tag = styled.View`
   color:white;
 `
 
-export const SearchButton = styled.TouchableOpacity`
+export const CategoriesButton = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 75px;
-  border-radius: 25px;
-  background-color: ${(props) => props.theme.tint};
+  gap: 8px;
+  height: 35px;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: auto;
+  border-radius: 100%;
+  background-color: ${(props) => props.theme.tint3};
+  border: 1px solid ${(props) => props.theme.tint};
+  filter: blur(100%);
 `
 
-export const SearchContainer = styled.View`
+export const CategoriesItemContainer = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  color:${(props) => props.theme.text};
-  background-color: ${(props) => props.theme.items};
-  border: 1px ${(props) => props.theme.tint};
   height: 50px;
-  width: 90%;
-  border-radius:25px;
-`;
+  width: 100%;
+  border-radius: 8px;
+`
 
-export const Input = styled.TextInput`
+export const CategoriesContainer = styled(BlurView).attrs(() => ({
+  intensity: 50
+}))`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   height: 100%;
-  flex: 1;
-  font-size: 20px;
-  padding:0 10px;
-  color:${(props) => props.theme.text};
-`;
+  width: 100%;
+  background-color: ${(props) => props.theme.items3};
+  padding: 32px 16px 8px;
+  
+`
 
 export const Container = styled.SafeAreaView`
   flex: 1;

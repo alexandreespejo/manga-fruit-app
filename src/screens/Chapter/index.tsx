@@ -11,7 +11,7 @@ import { RoundedButton } from "../../components/RoundedButton"
 
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Dropdown } from "../../components/Dropdown"
-import internalization from "../../services/internalization"
+import internalization, { languageOptions, orderOptions } from "../../services/internalization"
 import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
 import { useCurrentManga } from "./store"
@@ -29,30 +29,8 @@ interface HandleFilterProps {
   order?: OrderTypes
 }
 
-const LanguageOptions = {
-  'en': [
-    { label: 'Portuguese', value: 'pt-br' },
-    { label: 'English', value: 'en' },
-  ],
-  'pt-br': [
-    { label: 'Portugues', value: 'pt-br' },
-    { label: 'Ingles', value: 'en' },
-  ]
-}
-
-const OrderOptions = {
-  'en': [
-    { label: 'Ascending', value: 'asc' },
-    { label: 'Descending', value: 'desc' },
-  ],
-  'pt-br': [
-    { label: 'Crescente', value: 'asc' },
-    { label: 'Decrescente', value: 'desc' },
-  ]
-}
-
-const currentLanguageOptions = LanguageOptions[internalization.t('languageFilter')] ?? []
-const currentOrderOptions = OrderOptions[internalization.t('languageFilter')] ?? []
+const currentLanguageOptions = languageOptions[internalization.t('languageFilter')] ?? []
+const currentOrderOptions = orderOptions[internalization.t('languageFilter')] ?? []
 const defaultLanguage = internalization.t('languageFilter')
 
 const FiltersModal = memo(({
@@ -293,26 +271,31 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      {/* <BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-      /> */}
-      <ChapterList
-        data={chapters}
-        renderItem={renderChapter}
-        keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
-        onEndReached={() => hasNextPage && fetchNextPage()}
-        getItemCount={() => chapters.length}
-        getItem={(data, index) => data[index]}
-        maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
-        onEndReachedThreshold={0.5}
-        progressViewOffset={50}
-        refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
-        ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={theme.tint} />}
       />
+      {
+        chapters.length === 0
+          ? <Label style={{ width: '100%', textAlign: 'center' }}>{internalization.t('searchNoDataFound')}</Label>
+          : <ChapterList
+            data={chapters}
+            renderItem={renderChapter}
+            keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
+            onEndReached={() => hasNextPage && fetchNextPage()}
+            getItemCount={() => chapters.length}
+            getItem={(data, index) => data[index]}
+            maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
+            onEndReachedThreshold={0.5}
+            progressViewOffset={50}
+            refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
+            ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={theme.tint} />}
+          />
+      }
+
 
     </Container>
   )

@@ -15,9 +15,11 @@ export default function MyTabs() {
     <Tab.Navigator initialRouteName="HomeStack" screenOptions={{
       tabBarActiveTintColor: theme.tint,
       tabBarStyle: {
-        backgroundColor: theme.background
+        backgroundColor: theme.background,
+        borderTopWidth: 0,
       },
       headerTintColor: theme.text,
+      headerShadowVisible: false,
       headerStyle: {
         backgroundColor: theme.background,
       },

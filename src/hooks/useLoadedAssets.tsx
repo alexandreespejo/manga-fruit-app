@@ -5,8 +5,10 @@ import * as SplashScreen from "expo-splash-screen"
 import mobileAds from 'react-native-google-mobile-ads'
 import { getAppIsReaderVertical, getIsDarkMode, getShowSuggestions } from "../services/storage"
 import { AppStoreType, useAppStore } from "../store"
+import { useTags } from "./useTags"
 
 export function useLoadedAssets() {
+  const { loadTags } = useTags()
   const setThemeIsDark = useAppStore((state: AppStoreType) => state.setThemeIsDark)
   const setShowSuggestion = useAppStore((state: AppStoreType) => state.setShowSuggestion)
   const setVerticalOrientation = useAppStore((state: AppStoreType) => state.setVerticalOrientation)
@@ -33,8 +35,10 @@ export function useLoadedAssets() {
         const isReaderVertical = await getAppIsReaderVertical()
         setVerticalOrientation(isReaderVertical)
 
+        await loadTags()
+
         //Load ads SDK
-        await mobileAds().initialize()
+        // await mobileAds().initialize()
 
       } catch (e) {
         // We might want to provide this error information to an error reporting service
