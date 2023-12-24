@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { NavigationProp, useFocusEffect } from '@react-navigation/native'
-import { Container, MangaListContainer, ScrollContainer, SearchNavigatorContainer, SearchNavigatorIndicator } from "./style"
+import { Container, MangaListContainer, ScrollContainer } from "./style"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
@@ -8,13 +8,11 @@ import internalization from "../../services/internalization"
 import { getRecommendations } from "../../services/recommendations"
 import { Label } from "../../components/Label"
 import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
-import { FontAwesome } from "@expo/vector-icons"
 import { useQuery } from "@tanstack/react-query"
-import { useTheme } from "styled-components"
 import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../services/storage"
-import { TouchableOpacity, View } from "react-native"
-import { SearchInput } from "../../components/SearchInput"
+import { View } from "react-native"
+import { SearchInputButton } from "../../components/SearchInput"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -99,9 +97,7 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
   return (
     <Container>
       {isLoading && <Load />}
-      <TouchableOpacity onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }}>
-        <SearchInput disabled />
-      </TouchableOpacity>
+      <SearchInputButton onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }} />
       <View style={{ marginTop: 8, flexDirection: 'row' }}>
         <BannerAd
           unitId={adUnitId}
