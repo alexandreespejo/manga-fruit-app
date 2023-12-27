@@ -10,6 +10,18 @@ export const SearchButton = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: ${(props) => props.theme.tint};
 `
+
+export const SearchButtonDisabled = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 75px;
+  border-radius: 8px;
+  background-color: ${(props) => props.theme.tint};
+`
+
 export const SearchContainer = styled.View`
   flex-direction: row;
   align-items: center;

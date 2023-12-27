@@ -72,7 +72,7 @@ export const CategoriesButton = styled.TouchableOpacity`
   padding-left: 8px;
   padding-right: 8px;
   width: auto;
-  border-radius: 100%;
+  border-radius: 50px;
   background-color: ${(props) => props.theme.tint3};
   border: 1px solid ${(props) => props.theme.tint};
   filter: blur(100%);
@@ -88,14 +88,15 @@ export const CategoriesItemContainer = styled.TouchableOpacity`
 `
 
 export const CategoriesContainer = styled(BlurView).attrs(() => ({
-  intensity: 50
+  intensity: 70,
+  // blurReductionFactor: 10
 }))`
-  display: flex;
+  display: flex; 
   align-items: flex-end;
   justify-content: center;
   height: 100%;
   width: 100%;
-  background-color: ${(props) => props.theme.items3};
+  background-color: ${(props) => props.theme.items};
   padding: 32px 16px 8px;
   
 `

@@ -2,8 +2,8 @@ import React from "react"
 import { FontAwesome } from "@expo/vector-icons"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
-import { Input, SearchButton, SearchContainer } from "./style"
-import { TouchableOpacity, TouchableOpacityProps, View } from "react-native"
+import { Input, SearchButton, SearchButtonDisabled, SearchContainer } from "./style"
+import { TouchableOpacity, TouchableOpacityProps } from "react-native"
 import { Label } from "../Label"
 
 type SearchInputType = {
@@ -18,9 +18,9 @@ export function SearchInputButton(props: TouchableOpacityProps) {
     <TouchableOpacity {...props}>
       <SearchContainer>
         <Label variant="Title" children={internalization.t('searchInputPlaceholder')} style={{ paddingLeft: 8 }} />
-        <SearchButton as={View}>
+        <SearchButtonDisabled>
           <FontAwesome name="search" size={24} color={theme.background} />
-        </SearchButton>
+        </SearchButtonDisabled>
       </SearchContainer>
     </TouchableOpacity>
   )

@@ -16,7 +16,7 @@ import { SearchInput } from "../../components/SearchInput"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
-function Categories({ categories, setCategories }) {
+function Categories({ categories, setCategories }: { categories: string[], setCategories: React.Dispatch<React.SetStateAction<string[]>> }) {
   const theme = useTheme()
   const { tags } = useTags()
   const data = tags.filter(tag => tag?.attributes?.group === 'genre')
@@ -37,8 +37,8 @@ function Categories({ categories, setCategories }) {
         <FontAwesome name="chevron-down" color={theme.text} />
       </CategoriesButton>
       {selected && <TouchableOpacity style={{ marginLeft: 16 }} onPress={() => setCategories([])}><FontAwesome name="close" size={25} color={theme.tint} /></TouchableOpacity>}
-      <Modal visible={isModalVisible} transparent>
-        <SafeAreaView>
+      <Modal visible={isModalVisible}>
+        <SafeAreaView style={{ backgroundColor: theme.background }}>
           <CategoriesContainer>
             <TouchableOpacity style={{ marginLeft: 8 }} onPress={handleChangeVisibility}><FontAwesome name="close" size={30} color={theme.text} /></TouchableOpacity>
             <FlatList
@@ -75,7 +75,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
 
   const [search, setSearch] = useState('')
   const [searchData, setSearchData] = useState([])
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
 
