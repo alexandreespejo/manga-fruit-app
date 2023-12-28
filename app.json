@@ -20,6 +20,9 @@
             "deploymentTarget": "13.0"
           }
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin"
       ]
     ],
     "splash": {

@@ -8,10 +8,13 @@ import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
 import { CustomButton } from "../../components/Button"
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin"
+import { useAuth } from "../../hooks/useAuth"
 
 const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { signIn } = useAuth()
   const { setThemeIsDark, setShowSuggestion, showSuggestion, themeIsDark, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
 
@@ -26,6 +29,11 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
 
   return (
     <Container>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={signIn}
+      />
       <SwitchContainer>
         <Switch
           trackColor={switchTrackColor}
