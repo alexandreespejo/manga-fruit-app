@@ -14,7 +14,7 @@ import { useAuth } from "../../hooks/useAuth"
 const switchTrackColor = { false: '#767577', true: '#f4f3f4' }
 
 export default function UserConfigScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const { signIn } = useAuth()
+  const { signIn, isSignedIn } = useAuth()
   const { setThemeIsDark, setShowSuggestion, showSuggestion, themeIsDark, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
 
@@ -29,6 +29,7 @@ export default function UserConfigScreen({ navigation }: { navigation: Navigatio
 
   return (
     <Container>
+      {isSignedIn && <Label children="logado" />}
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}

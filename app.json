@@ -23,7 +23,8 @@
       ],
       [
         "@react-native-google-signin/google-signin"
-      ]
+      ],
+      "expo-localization"
     ],
     "splash": {
       "image": "./assets/images/splash.png",

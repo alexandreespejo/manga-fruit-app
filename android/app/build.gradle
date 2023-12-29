@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
 
 import com.android.build.OutputFile
 
@@ -237,6 +238,7 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    namespace 'com.alexandrehse.expotemplatetabs'
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
