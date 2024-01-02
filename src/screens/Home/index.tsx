@@ -3,7 +3,6 @@ import { NavigationProp, useFocusEffect } from '@react-navigation/native'
 import { Container, MangaListContainer, ScrollContainer } from "./style"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { getRecommendations } from "../../services/recommendations"
 import { Label } from "../../components/Label"
@@ -13,6 +12,7 @@ import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../services/storage"
 import { View } from "react-native"
 import { SearchInputButton } from "../../components/SearchInput"
+import { AdsBanner } from "../../components/AdsManager"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -99,13 +99,7 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       {isLoading && <Load />}
       <SearchInputButton onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }} />
       <View style={{ marginTop: 8, flexDirection: 'row' }}>
-        <BannerAd
-          unitId={adUnitId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
+        <AdsBanner adUnitId={adUnitId} />
       </View>
 
       {

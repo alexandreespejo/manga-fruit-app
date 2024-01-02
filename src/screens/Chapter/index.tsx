@@ -8,13 +8,12 @@ import { getChapterRead, getFavoriteMangaList, storeFavoriteMangaList, storeLast
 import Load from "../../components/Load"
 import { CustomButton } from "../../components/Button"
 import { RoundedButton } from "../../components/RoundedButton"
-
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import { Dropdown } from "../../components/Dropdown"
 import internalization, { languageOptions, orderOptions } from "../../services/internalization"
 import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
 import { useCurrentManga } from "./store"
+import { AdsBanner } from "../../components/AdsManager"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -271,13 +270,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      <BannerAd
-        unitId={adUnitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-      />
+      <AdsBanner adUnitId={adUnitId} />
       {
         chapters.length === 0
           ? <Label style={{ width: '100%', textAlign: 'center' }}>{internalization.t('searchNoDataFound')}</Label>

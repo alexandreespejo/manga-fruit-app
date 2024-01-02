@@ -6,13 +6,13 @@ import { getSearch } from "../../services/mangadex"
 import { FontAwesome } from "@expo/vector-icons"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
 import { useTags } from "../../hooks/useTags"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { SearchInput } from "../../components/SearchInput"
+import { AdsBanner } from "../../components/AdsManager"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
@@ -125,13 +125,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
         <SearchInput search={search} setSearch={setSearch} onSearch={handleSearch} />
         <Categories categories={categories} setCategories={setCategories} />
       </Header>
-      <BannerAd
-        unitId={adUnitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-      />
+      <AdsBanner adUnitId={adUnitId} />
       {searchData.length === 0 && <Label style={{ marginTop: 32 }} children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}

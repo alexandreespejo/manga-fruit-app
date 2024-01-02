@@ -6,6 +6,7 @@ import { Label } from "../../components/Label"
 import { useAppStore } from "../../store"
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Load from "../../components/Load"
+import { AdsBanner } from "../../components/AdsManager"
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -49,33 +50,14 @@ const RenderZoomableImage = memo(({
       <AdsContainer>
         <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
         <View style={{ marginTop: 32 }}>
-          <BannerAd
-            unitId={readerId1}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
+          <AdsBanner adUnitId={readerId1} />
         </View>
         <View style={{ marginTop: 32 }}>
-          <BannerAd
-            unitId={readerId2}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
+          <AdsBanner adUnitId={readerId2} />
         </View>
         <View style={{ marginTop: 32 }}>
-          <BannerAd
-            unitId={readerId3}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
+          <AdsBanner adUnitId={readerId3} />
         </View>
-
       </AdsContainer>
     )
   }

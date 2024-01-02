@@ -11,6 +11,10 @@ type AuthStoreType = {
 }
 
 const API_URL = 'https://black-rat-tools-api-ca40dcaaa486.herokuapp.com'
+const SUBSCRIPTIONS_MAP = {
+  "1M": "https://buy.stripe.com/8wMaEGeJteLq7965ko",
+  "12M": "https://buy.stripe.com/5kAcMO9p98n23WUfZ3"
+}
 
 export const useAuthStore = create<AuthStoreType>((set) => ({
   authUserInfo: undefined,
@@ -50,7 +54,10 @@ const cancelSubscriptionById = async (subscription: string): Promise<any> => {
   return data;
 };
 
+const useGoogleSignin = () => GoogleSignin
+
 export const useAuth = () => {
+  const { configure, hasPlayServices, signIn: signInGoogle } = useGoogleSignin()
   const { setAuthUserInfo, authUserInfo, customerInfo, setCustomerInfo } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
   const isSignedIn = authUserInfo !== undefined
@@ -72,11 +79,11 @@ export const useAuth = () => {
   }
 
   const signIn = async () => {
-    GoogleSignin.configure()
+    configure()
     setIsLoading(true)
     try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-      const userInfo = await GoogleSignin.signIn();
+      await hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const userInfo = await signInGoogle();
 
       if (userInfo) {
         setAuthUserInfo(userInfo)
@@ -102,7 +109,7 @@ export const useAuth = () => {
   const signOut = async () => {
     setIsLoading(true)
     try {
-      await GoogleSignin.signOut();
+      await signOut();
       setAuthUserInfo(undefined)
     } catch (error) {
       console.error(error);
@@ -117,6 +124,12 @@ export const useAuth = () => {
     Linking.openURL(customerInfo.manage_billing_url)
   }
 
+  const handleSelectSubscription = (subscription: '1M' | '12M') => () => {
+    console.log(subscription)
+    const planURL = SUBSCRIPTIONS_MAP[subscription]
+    Linking.openURL(`${planURL}?prefilled_email=${authUserInfo.user.email}`)
+  }
+
   const cancelSubscription = () => customerInfo && cancelSubscriptionById(customerInfo.subscriptionId)
 
   return {
@@ -125,6 +138,7 @@ export const useAuth = () => {
     cancelSubscription,
     updateCustomerInfo,
     manageBilling,
+    handleSelectSubscription,
     isLoading,
     isSignedIn,
     authUserInfo,

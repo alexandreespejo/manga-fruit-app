@@ -39,7 +39,6 @@ export const Image = styled.Image<MangaCardProps>`
   ${({ variant }) => variant === 'Small' && css`
     height: 200px;
     width: 150px;
-    border: 1px solid black;
   `}
 `;
 

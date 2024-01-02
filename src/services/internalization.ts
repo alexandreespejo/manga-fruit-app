@@ -8,60 +8,68 @@ const internalization = new I18n({
     headerBackLabel: 'Back',
     homeScreenTitle: 'Home',
     favoriteScreenTitle: 'Favorites',
-    //home screen
+    // Home screen
     homeMostPopular: 'Most Popular',
     homeLastUpdated: 'Last Updated',
     homeLastVisited: 'Last Visited',
-    //search screen
+    // Search screen
     searchInputPlaceholder: 'Search a title',
     searchRequestErrorTitle: 'Fail',
     searchRequestErrorMessage: 'Server problems, please try again later!',
     searchNoDataFound: 'No data found', // Added for no data found
-    //chapter screen
+    // Chapter screen
     chapterListLabel: 'Chapter',
     chapterFilterConfirm: 'Filter',
     chapterFilterCancel: 'Cancel',
     chapterFilterLanguageLabel: 'Language',
     chapterFilterInitialChapterLabel: 'Initial chapter',
     chapterFilterOrderLabel: 'Order',
-    //reader screen
+    // Reader screen
     readerNextPageLabel: 'Next',
     readerPreviousPageLabel: 'Previous',
-    //config screen
+    // Config screen
     configScreenTitle: 'Configuration',
     configShowSuggestionLabel: 'Show Home Suggestions',
     configIsDarkModeLabel: 'Dark Mode',
     configCommunityButton: 'Donations',
+    becomePremium: 'Become Premium', // Added missing key
+    becomePremiumDescription: 'Get rid of ads and access exclusive features for subscribers.', // Added missing key
+    month: 'Month', // Added missing key
+    year: 'Year', // Added missing key
   },
   'pt': {
     languageFilter: 'pt-br',
     headerBackLabel: 'Voltar',
     homeScreenTitle: 'Inicio',
     favoriteScreenTitle: 'Favoritos',
-    //home screen
+    // Home screen
     homeMostPopular: 'Mais Populares',
     homeLastUpdated: 'Ultimas Atualizações',
     homeLastVisited: 'Ultimos Visitados',
-    //search screen
+    // Search screen
     searchInputPlaceholder: 'Pesquise um titulo',
     searchRequestErrorTitle: 'Falha',
     searchRequestErrorMessage: 'Problemas no servidor, por favor tente novamente mais tarde!',
     searchNoDataFound: 'Nenhum dado encontrado', // Added for no data found
-    //chapter screen
+    // Chapter screen
     chapterListLabel: 'Capitulo',
     chapterFilterConfirm: 'Filtrar',
     chapterFilterCancel: 'Cancelar',
     chapterFilterLanguageLabel: 'Linguagem',
     chapterFilterInitialChapterLabel: 'Capitulo inicial',
     chapterFilterOrderLabel: 'Ordem',
-    //reader screen
+    // Reader screen
     readerNextPageLabel: 'Próximo',
     readerPreviousPageLabel: 'Anterior',
-    //config screen
+    // User screen
     configScreenTitle: 'Configurações',
     configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
     configIsDarkModeLabel: 'Tema Escuro',
     configCommunityButton: 'Doações',
+    becomePremium: 'Virar Premium',
+    becomePremiumDescription: 'Fique livre dos anúncios e tenha acesso a funções exclusivas para assinantes.',
+    month: 'Mês',
+    year: 'Ano'
   },
   'es': {
     languageFilter: 'es',
@@ -92,6 +100,10 @@ const internalization = new I18n({
     configShowSuggestionLabel: 'Mostrar sugerencias al inicio',
     configIsDarkModeLabel: 'Modo Oscuro',
     configCommunityButton: 'Donaciones',
+    becomePremium: 'Hacerse Premium', // Added missing key
+    becomePremiumDescription: 'Libérate de los anuncios y accede a funciones exclusivas para suscriptores.', // Added missing key
+    month: 'Mes', // Added missing key
+    year: 'Año', // Added missing key
   }
 }
 )
