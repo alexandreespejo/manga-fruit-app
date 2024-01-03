@@ -95,7 +95,7 @@ export const getShowLastReaders = async () => {
 }
 
 export const getShowSuggestions = async () => {
-  const state = await AsyncStorage.getItem('@manga_fruit_application_show_suggestions') ?? 'false'
+  const state = await AsyncStorage.getItem('@manga_fruit_application_show_suggestions') ?? 'true'
   return state === 'true'
 }
 

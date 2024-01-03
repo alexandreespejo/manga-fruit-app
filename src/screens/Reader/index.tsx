@@ -5,7 +5,7 @@ import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./s
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
-import { getReadChapterAmount, incrementReadChapterAmount, storeChapterRead } from "../../services/storage"
+import { getReadChapterAmount, incrementReadChapterAmount, storeChapterRead } from "../../hooks/useAppStorage"
 // import { useInterstitialAd } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"

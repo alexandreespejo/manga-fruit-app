@@ -3,7 +3,7 @@ import { Ionicons, Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons
 import * as Font from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
 import mobileAds from 'react-native-google-mobile-ads'
-import { getAppIsReaderVertical, getIsDarkMode, getShowSuggestions } from "../services/storage"
+import { getAppIsReaderVertical, getIsDarkMode, getShowSuggestions } from "./useAppStorage"
 import { AppStoreType, useAppStore } from "../store"
 import { useTags } from "./useTags"
 

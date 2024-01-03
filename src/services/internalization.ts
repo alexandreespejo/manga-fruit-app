@@ -31,11 +31,15 @@ const internalization = new I18n({
     configScreenTitle: 'Configuration',
     configShowSuggestionLabel: 'Show Home Suggestions',
     configIsDarkModeLabel: 'Dark Mode',
+    configIsVerticalModeLabel: 'Vertical reading',
     configCommunityButton: 'Donations',
     becomePremium: 'Become Premium', // Added missing key
     becomePremiumDescription: 'Get rid of ads and access exclusive features for subscribers.', // Added missing key
     month: 'Month', // Added missing key
     year: 'Year', // Added missing key
+    manageSubButtonText: 'Manage Subscription', // Replicated from pt
+    updateButtonText: 'Update', // Replicated from pt
+    logoutButtonText: 'Logout', // Replicated from pt
   },
   'pt': {
     languageFilter: 'pt-br',
@@ -65,11 +69,15 @@ const internalization = new I18n({
     configScreenTitle: 'Configurações',
     configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
     configIsDarkModeLabel: 'Tema Escuro',
+    configIsVerticalModeLabel: 'Leitura Vertical',
     configCommunityButton: 'Doações',
     becomePremium: 'Virar Premium',
     becomePremiumDescription: 'Fique livre dos anúncios e tenha acesso a funções exclusivas para assinantes.',
     month: 'Mês',
-    year: 'Ano'
+    year: 'Ano',
+    manageSubButtonText: 'Minha Assinatura', // Added missing key
+    updateButtonText: 'Atualizar', // Added missing key
+    logoutButtonText: 'Deslogar', // Added missing key
   },
   'es': {
     languageFilter: 'es',
@@ -99,11 +107,15 @@ const internalization = new I18n({
     configScreenTitle: 'Configuraciones',
     configShowSuggestionLabel: 'Mostrar sugerencias al inicio',
     configIsDarkModeLabel: 'Modo Oscuro',
+    configIsVerticalModeLabel: 'Lectura vertical',
     configCommunityButton: 'Donaciones',
     becomePremium: 'Hacerse Premium', // Added missing key
     becomePremiumDescription: 'Libérate de los anuncios y accede a funciones exclusivas para suscriptores.', // Added missing key
     month: 'Mes', // Added missing key
     year: 'Año', // Added missing key
+    manageSubButtonText: 'Gestionar Suscripción', // Replicated from pt
+    updateButtonText: 'Actualizar', // Replicated from pt
+    logoutButtonText: 'Cerrar sesión', // Replicated from pt
   }
 }
 )

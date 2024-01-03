@@ -57,7 +57,7 @@ const cancelSubscriptionById = async (subscription: string): Promise<any> => {
 const useGoogleSignin = () => GoogleSignin
 
 export const useAuth = () => {
-  const { configure, hasPlayServices, signIn: signInGoogle } = useGoogleSignin()
+  const { configure, hasPlayServices, signIn: signInGoogle, signOut: signOutGoogle } = useGoogleSignin()
   const { setAuthUserInfo, authUserInfo, customerInfo, setCustomerInfo } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
   const isSignedIn = authUserInfo !== undefined
@@ -109,7 +109,7 @@ export const useAuth = () => {
   const signOut = async () => {
     setIsLoading(true)
     try {
-      await signOut();
+      await signOutGoogle();
       setAuthUserInfo(undefined)
     } catch (error) {
       console.error(error);
@@ -120,12 +120,10 @@ export const useAuth = () => {
 
   const manageBilling = async () => {
     if (!customerInfo?.manage_billing_url) return
-
     Linking.openURL(customerInfo.manage_billing_url)
   }
 
   const handleSelectSubscription = (subscription: '1M' | '12M') => () => {
-    console.log(subscription)
     const planURL = SUBSCRIPTIONS_MAP[subscription]
     Linking.openURL(`${planURL}?prefilled_email=${authUserInfo.user.email}`)
   }

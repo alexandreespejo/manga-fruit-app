@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
 import { NavigationProp, useFocusEffect } from '@react-navigation/native'
 import { Container, MangaListContainer } from "./style"
-import { getFavoriteMangaList } from "../../services/storage"
+import { getFavoriteMangaList } from "../../hooks/useAppStorage"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { AdsBanner } from "../../components/AdsManager"

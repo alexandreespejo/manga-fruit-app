@@ -11,7 +11,7 @@ export type AppStoreType = {
 
 export const useAppStore = create<AppStoreType>((set, get) => ({
   themeIsDark: false,
-  showSuggestion: false,
+  showSuggestion: true,
   verticalOrientation: false,
   setVerticalOrientation: (state) => set(() => ({ verticalOrientation: state })),
   setThemeIsDark: (state) => set(() => ({ themeIsDark: state })),
