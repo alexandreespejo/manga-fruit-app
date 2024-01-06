@@ -11,6 +11,7 @@ type AuthStoreType = {
 }
 
 const API_URL = 'https://black-rat-tools-api-ca40dcaaa486.herokuapp.com'
+
 const SUBSCRIPTIONS_MAP = {
   "1M": "https://buy.stripe.com/8wMaEGeJteLq7965ko",
   "12M": "https://buy.stripe.com/5kAcMO9p98n23WUfZ3"

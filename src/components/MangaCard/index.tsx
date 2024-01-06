@@ -1,9 +1,8 @@
-import React, { memo, useEffect, useMemo, useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { Image, InfoWrapper, MangaCardContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
 import { Label } from "../Label"
 import { Platform, StyleProp, ViewStyle } from "react-native"
-
 interface MangaCardProps {
   data: any
   onSelectManga: (data: any) => void
@@ -28,13 +27,6 @@ export const MangaCard = memo(({
     loadCover()
   }, [data])
 
-  // const [tags, setTags] = useState([])
-
-  // const loadTags = () => {
-  //   const tagList = data?.attributes?.tags
-  //   setTags(tagList.map((item: any) => item?.attributes?.name?.en))
-  // }
-
 
   const loadCover = async () => {
     try {
@@ -52,19 +44,16 @@ export const MangaCard = memo(({
     onSelectManga({ ...data, coverLink: cover })
   }
 
-  // const renderTags = () => {
-  //   return tags.map((tag, index) => {
-  //     return <Tag key={tag}><Title tag index={index}>{tag}</Title></Tag>
-  //   })
-  // }
-
   return (
     <MangaCardContainer onPress={onCardClick} variant={variant} style={style}>
-      <Image
-        source={{ uri: cover }}
-        variant={variant}
-        progressiveRenderingEnabled={Platform.OS === 'android'}
-      />
+      {
+        cover &&
+        <Image
+          source={{ uri: cover }}
+          variant={variant}
+          progressiveRenderingEnabled={Platform.OS === 'android'}
+        />
+      }
       <InfoWrapper>
         <TitleContainer>
           <Label style={{ fontWeight: "bold" }}>{data?.attributes?.title?.en}</Label>

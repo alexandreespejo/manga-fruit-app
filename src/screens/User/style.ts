@@ -16,7 +16,17 @@ export const SubscriptionContainer = styled.View`
   margin-top: 16px;
 `
 
+export const PremiumIndicatorContainer = styled.View`
+  position: absolute;
+  z-index: 1000;
+  top: -5;
+  right: 0;
+  background-color:${(props) => props.theme.tint};
+  border-radius: 50px;
+`
 export const UserProfileContainer = styled.View`
+position: relative;
+  margin-top: 8px;
   height: 102px;
   width: 102px;
   border-radius: 102px;

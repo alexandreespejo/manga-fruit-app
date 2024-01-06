@@ -25,6 +25,8 @@ type RenderImageListType = {
 
 const ImageLoader = memo(({ uri }: { uri: string }) => {
   const [isImageLoading, setIsImageLoading] = useState(true)
+  if (!uri) return null
+  Image.prefetch(uri)
   return (
     <View>
       <Image

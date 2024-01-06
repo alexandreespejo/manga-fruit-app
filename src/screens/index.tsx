@@ -11,7 +11,7 @@ function Screens() {
   const themeIsDark = useAppStore((state: any) => state.themeIsDark)
 
   return (
-    <ThemeProvider theme={Colors[themeIsDark ? 'dark' : 'light']}>
+    <ThemeProvider theme={Colors['dark']}>
       <NavigationContainer>
         <StatusBar
           barStyle="dark-content"
