@@ -2,5 +2,9 @@
   <string name="app_name">Manga Fruit</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
-  <string name="server_client_id">975191089175-c745k706rb061c1o36i3atqf1umb4i0r.apps.googleusercontent.com</string>
+  <!-- DEV -->
+  <!-- <string name="server_client_id">975191089175-c745k706rb061c1o36i3atqf1umb4i0r.apps.googleusercontent.com</string> -->
+  
+  <!-- PROD -->
+  <string name="server_client_id">975191089175-5u4ka8m3lm234fcg7vddd0qg1ejrdks9.apps.googleusercontent.com</string>
 </resources>
