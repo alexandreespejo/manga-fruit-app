@@ -19,7 +19,7 @@ export const SubscriptionContainer = styled.View`
 export const PremiumIndicatorContainer = styled.View`
   position: absolute;
   z-index: 1000;
-  top: -5;
+  top: -5px;
   right: 0;
   background-color:${(props) => props.theme.tint};
   border-radius: 50px;
