@@ -24,19 +24,18 @@ type RenderImageListType = {
 }
 
 const ImageLoader = memo(({ uri }: { uri: string }) => {
-  const [isImageLoading, setIsImageLoading] = useState(true)
-  if (!uri) return null
-  Image.prefetch(uri)
+  // const [isImageLoading, setIsImageLoading] = useState(true)
   return (
     <View>
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
         source={{ uri: uri }}
-        onLoadStart={() => setIsImageLoading(true)}
-        onLoadEnd={() => setIsImageLoading(false)}
+        // onLoadStart={() => setIsImageLoading(true)}
+        // onLoadEnd={() => setIsImageLoading(false)}
+        loadingIndicatorSource={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Loading_spinner.svg/2048px-Loading_spinner.svg.png' }}
         progressiveRenderingEnabled={Platform.OS === 'android'}
       />
-      {isImageLoading && <Load />}
+      {/* {isImageLoading && <Load />} */}
     </View>
   )
 })
@@ -50,7 +49,6 @@ const RenderZoomableImage = memo(({
   if (item.type === "ads") {
     return (
       <AdsContainer>
-        <Label variant="Headline" style={{ paddingHorizontal: 24 }}>Momento Paga Boleto</Label>
         <View style={{ marginTop: 32 }}>
           <AdsBanner adUnitId={readerId1} />
         </View>

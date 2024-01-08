@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Alert, Modal, TouchableOpacity } from "react-native"
+import { Alert, Image, Modal, TouchableOpacity } from "react-native"
 import { getPages } from "../../services/mangadex"
 import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
@@ -64,19 +64,28 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
     setChapterSequence(sequenceState)
   }
 
-  const loadPages = () => {
-    setIsLoading(true)
-    const id = readerData?.chapterId
-    getPages(id).then(data => {
+  const loadPages = async () => {
+    try {
+      setIsLoading(true)
+      const id = readerData?.chapterId
+      const data = await getPages(id)
       const list: any[] = data?.chapter?.data
-      const pageList = []
+      const pageList: { type: string, uri: string }[] = []
 
-      list.forEach((item) => {
-        pageList.push({
+      list.forEach((item, index) => {
+        const page = {
           type: 'image',
           uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
-        })
+        }
+        if (index >= 5) Image.prefetch(page.uri)
+        pageList.push(page)
       })
+
+      const fistPageSequence = pageList.slice(0, 5)
+
+      for (const page of fistPageSequence) {
+        await Image.prefetch(page.uri)
+      }
 
       pageList.push({
         type: 'ads',
@@ -84,8 +93,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       })
 
       setPages(pageList)
-
-    }).catch(() => {
+    } catch (e) {
       Alert.alert(
         internalization.t('searchRequestErrorTitle'),
         internalization.t('searchRequestErrorMessage'),
@@ -98,9 +106,9 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
         ],
         { cancelable: false }
       )
-    }).finally(() => {
+    } finally {
       setIsLoading(false)
-    })
+    }
   }
 
   const handleChapterSequence = async (direction: 'prev' | 'next') => {
@@ -145,12 +153,9 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
   useEffect(() => {
     if (!readerData?.chapterId) return
-
-    incrementReadChapterAmount()
     storeChapterRead(readerData?.managaId, readerData?.chapterNumber)
     loadChapterSequence()
     loadPages()
-    // load()
   }, [readerData])
 
   return (
