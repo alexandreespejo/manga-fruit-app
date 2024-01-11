@@ -5,7 +5,8 @@ import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./s
 import { FontAwesome } from "@expo/vector-icons"
 import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
-import { getReadChapterAmount, incrementReadChapterAmount, storeChapterRead } from "../../hooks/useAppStorage"
+import { storeChapterRead } from "../../hooks/useAppStorage"
+import { CacheManager } from "react-native-expo-image-cache"
 // import { useInterstitialAd } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
@@ -28,9 +29,6 @@ const defaultChapterSequenceState = {
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const theme = useTheme()
   const aggregation = useCurrentManga(state => state.aggregation)
-  // const { isLoaded, isClosed, load, show } = useInterstitialAd(intersticialId, {
-  //   requestNonPersonalizedAdsOnly: true,
-  // })
   const [readerData, setReaderData] = useState<ReaderDataType>(route?.params?.data)
   const [focusMode, setFocusMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -72,19 +70,18 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
       const list: any[] = data?.chapter?.data
       const pageList: { type: string, uri: string }[] = []
 
-      list.forEach((item, index) => {
+      for (const item of list) {
         const page = {
           type: 'image',
           uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
         }
-        if (index >= 5) Image.prefetch(page.uri)
+
+        if (pageList.length >= 5) Image.prefetch(page.uri)
+        else {
+          const path = await CacheManager.get(page.uri, { md5: false }).getPath()
+          page.uri = path
+        }
         pageList.push(page)
-      })
-
-      const fistPageSequence = pageList.slice(0, 5)
-
-      for (const page of fistPageSequence) {
-        await Image.prefetch(page.uri)
       }
 
       pageList.push({

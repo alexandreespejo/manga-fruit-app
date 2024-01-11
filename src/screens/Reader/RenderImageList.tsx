@@ -29,10 +29,9 @@ const ImageLoader = memo(({ uri }: { uri: string }) => {
     <View>
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={{ uri: uri }}
+        source={{ uri: uri, cache: 'force-cache' }}
         // onLoadStart={() => setIsImageLoading(true)}
         // onLoadEnd={() => setIsImageLoading(false)}
-        loadingIndicatorSource={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Loading_spinner.svg/2048px-Loading_spinner.svg.png' }}
         progressiveRenderingEnabled={Platform.OS === 'android'}
       />
       {/* {isImageLoading && <Load />} */}
