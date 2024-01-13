@@ -24,17 +24,17 @@ type RenderImageListType = {
 }
 
 const ImageLoader = memo(({ uri }: { uri: string }) => {
-  // const [isImageLoading, setIsImageLoading] = useState(true)
+  const [isImageLoading, setIsImageLoading] = useState(false)
   return (
-    <View>
+    <View style={{ width: width, height: height }}>
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
         source={{ uri: uri, cache: 'force-cache' }}
-        // onLoadStart={() => setIsImageLoading(true)}
-        // onLoadEnd={() => setIsImageLoading(false)}
+        onLoadStart={() => setIsImageLoading(true)}
+        onLoadEnd={() => setIsImageLoading(false)}
         progressiveRenderingEnabled={Platform.OS === 'android'}
       />
-      {/* {isImageLoading && <Load />} */}
+      {isImageLoading && <Load />}
     </View>
   )
 })
@@ -107,6 +107,7 @@ export const RenderImageList = memo(({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       horizontal={!isVerticalOrientation}
+      decelerationRate='fast'
       scrollEnabled
       pagingEnabled
     />

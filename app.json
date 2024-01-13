@@ -23,8 +23,7 @@
       ],
       [
         "@react-native-google-signin/google-signin"
-      ],
-      "expo-localization"
+      ]
     ],
     "splash": {
       "image": "./assets/images/splash.png",
@@ -42,7 +41,7 @@
       "bundleIdentifier": "com.alexandrehse.expotemplatetabs"
     },
     "android": {
-      "versionCode": 33,
+      "versionCode": 34,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#EE6364"

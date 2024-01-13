@@ -76,11 +76,11 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
           uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
         }
 
-        if (pageList.length >= 5) Image.prefetch(page.uri)
-        else {
-          const path = await CacheManager.get(page.uri, { md5: false }).getPath()
-          page.uri = path
-        }
+        // if (pageList.length >= 5) CacheManager.get(page.uri, { md5: false }).getPath()
+        // else {
+        const path = await CacheManager.get(page.uri, { md5: false }).getPath()
+        page.uri = path
+        // }
         pageList.push(page)
       }
 

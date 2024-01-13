@@ -34,7 +34,6 @@ export const MangaCard = memo(({
       const coverData = await getCover(coverArt?.id)
       const { fileName } = coverData?.data?.attributes
       const responseCover = `https://uploads.mangadex.org/covers/${data.id}/${fileName}`
-      await Image.prefetch(responseCover)
       setCover(responseCover)
     } catch (err) {
       console.log(err)
