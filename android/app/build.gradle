@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-apply plugin: "com.facebook.react"
+// apply plugin: "com.facebook.react"
 
 import com.android.build.OutputFile
 
@@ -146,7 +146,7 @@ android {
         applicationId 'com.alexandrehse.expotemplatetabs'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 34
+        versionCode 36
         versionName "1.5.1"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
