@@ -1,5 +1,5 @@
 import { createRef, memo, useRef, useState } from "react"
-import { Dimensions, FlatList, Image, Platform, View } from "react-native"
+import { Dimensions, FlatList, Image, Platform, View, VirtualizedList } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view'
 import { AdsContainer } from "./style"
 import { Label } from "../../components/Label"
@@ -39,6 +39,20 @@ const ImageLoader = memo(({ uri }: { uri: string }) => {
   )
 })
 
+const AdsRender = memo(() => (
+  <AdsContainer>
+    <View style={{ marginTop: 32 }}>
+      <AdsBanner adUnitId={readerId1} />
+    </View>
+    <View style={{ marginTop: 32 }}>
+      <AdsBanner adUnitId={readerId2} />
+    </View>
+    <View style={{ marginTop: 32 }}>
+      <AdsBanner adUnitId={readerId3} />
+    </View>
+  </AdsContainer>
+), () => true)
+
 const RenderZoomableImage = memo(({
   listRef,
   item
@@ -46,19 +60,7 @@ const RenderZoomableImage = memo(({
   const zoomableViewRef = createRef<ReactNativeZoomableView>()
 
   if (item.type === "ads") {
-    return (
-      <AdsContainer>
-        <View style={{ marginTop: 32 }}>
-          <AdsBanner adUnitId={readerId1} />
-        </View>
-        <View style={{ marginTop: 32 }}>
-          <AdsBanner adUnitId={readerId2} />
-        </View>
-        <View style={{ marginTop: 32 }}>
-          <AdsBanner adUnitId={readerId3} />
-        </View>
-      </AdsContainer>
-    )
+    return <AdsRender />
   }
 
   return (
@@ -72,13 +74,13 @@ const RenderZoomableImage = memo(({
       onZoomBefore={(a, b, zoom) => {
         if (!listRef?.current) return
 
-        if (zoom.zoomLevel > 1.1)
+        if (zoom.zoomLevel > 1.3)
           return listRef?.current.setNativeProps({ scrollEnabled: false })
 
-        if (zoom.zoomLevel <= 1.1)
+        if (zoom.zoomLevel <= 1.3)
           return listRef?.current.setNativeProps({ scrollEnabled: true })
       }}
-      visualTouchFeedbackEnabled={false}
+      // visualTouchFeedbackEnabled={false}
       disablePanOnInitialZoom
     >
       <ImageLoader {...item} />
@@ -93,7 +95,7 @@ export const RenderImageList = memo(({
   const listRef = useRef<FlatList<any>>()
 
   return (
-    <FlatList
+    <VirtualizedList
       ref={listRef}
       keyExtractor={(item) => `key-${JSON.stringify(item)}}`}
       data={imageList}
@@ -107,6 +109,8 @@ export const RenderImageList = memo(({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       horizontal={!isVerticalOrientation}
+      getItemCount={() => imageList.length}
+      getItem={(data, index) => data[index]}
       decelerationRate='fast'
       scrollEnabled
       pagingEnabled
