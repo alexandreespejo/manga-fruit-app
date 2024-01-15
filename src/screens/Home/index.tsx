@@ -10,9 +10,10 @@ import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { useQuery } from "@tanstack/react-query"
 import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../hooks/useAppStorage"
-import { View } from "react-native"
+import { Alert, View } from "react-native"
 import { SearchInputButton } from "../../components/SearchInput"
 import { AdsBanner } from "../../components/AdsManager"
+import { useAuth } from "../../hooks/useAuth"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -22,8 +23,10 @@ type RenderHorizontalListProps = {
 }
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { userIsPremium } = useAuth()
   const showSuggestion = useAppStore((state: AppStoreType) => state.showSuggestion)
   const [recommendationList, setRecommendationList] = useState([])
+  const [isLoadingAds, setIsLoadingAds] = useState(false)
   const [lastVisitedList, setLastVisitedList] = useState([])
 
   const loadLastUpdated = async () => {
@@ -96,12 +99,14 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
 
   return (
     <Container>
-      {isLoading && <Load />}
+      {isLoading || isLoadingAds ? <Load /> : null}
       <SearchInputButton onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }} />
-      <View style={{ marginTop: 8, flexDirection: 'row' }}>
-        <AdsBanner adUnitId={adUnitId} />
-      </View>
-
+      {
+        !userIsPremium ?
+          <View style={{ marginTop: 8, flexDirection: 'row' }}>
+            <AdsBanner adUnitId={adUnitId} onLoadStart={() => setIsLoadingAds(true)} onAdLoaded={() => setIsLoadingAds(false)} onAdFailedToLoad={() => Alert.alert('failed ads')} />
+          </View> : null
+      }
       {
         showSuggestion &&
         <ScrollContainer>
