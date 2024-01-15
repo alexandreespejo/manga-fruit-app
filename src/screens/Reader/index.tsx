@@ -78,8 +78,8 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
         // if (pageList.length >= 5) CacheManager.get(page.uri, { md5: false }).getPath()
         // else {
-        const path = await CacheManager.get(page.uri, { md5: false }).getPath()
-        page.uri = path
+        // const path = await CacheManager.get(page.uri, { md5: false }).getPath()
+        // page.uri = path
         // }
         pageList.push(page)
       }
