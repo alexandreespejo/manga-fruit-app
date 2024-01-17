@@ -1,10 +1,8 @@
 import { createRef, memo, useRef, useState } from "react"
-import { Dimensions, FlatList, Image, Platform, View, VirtualizedList } from "react-native"
+import { Dimensions, FlatList, Image, Platform, View } from "react-native"
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view'
 import { AdsContainer } from "./style"
-import { Label } from "../../components/Label"
 import { useAppStore } from "../../store"
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Load from "../../components/Load"
 import { AdsBanner } from "../../components/AdsManager"
 
@@ -26,7 +24,7 @@ type RenderImageListType = {
 const ImageLoader = memo(({ uri }: { uri: string }) => {
   const [isImageLoading, setIsImageLoading] = useState(false)
   return (
-    <View style={{ width: width, height: height }}>
+    <View style={{ width: '100%', height: '100%' }}>
       <Image
         style={{ width: width, height: height, resizeMode: 'contain' }}
         source={{ uri: uri, cache: 'force-cache' }}
@@ -95,7 +93,7 @@ export const RenderImageList = memo(({
   const listRef = useRef<FlatList<any>>()
 
   return (
-    <VirtualizedList
+    <FlatList
       ref={listRef}
       keyExtractor={(item) => `key-${JSON.stringify(item)}}`}
       data={imageList}
@@ -109,9 +107,6 @@ export const RenderImageList = memo(({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       horizontal={!isVerticalOrientation}
-      getItemCount={() => imageList.length}
-      getItem={(data, index) => data[index]}
-      decelerationRate='fast'
       scrollEnabled
       pagingEnabled
     />

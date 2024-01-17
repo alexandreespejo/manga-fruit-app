@@ -7,16 +7,10 @@ type AdsBannerType = {
   onLoadStart?: () => void
 } & Omit<BannerAdProps, 'unitId' | 'size'>
 
-const development = false
+const development = true
 
 export const AdsBanner: FC<AdsBannerType> = memo(({ adUnitId, onLoadStart, ...rest }) => {
-  const { userIsPremium } = useAuth()
-
   useEffect(() => onLoadStart, [])
-
-  if (userIsPremium) {
-    return null
-  }
 
   return (
     <BannerAd

@@ -103,8 +103,13 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       <SearchInputButton onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }} />
       {
         !userIsPremium ?
-          <View style={{ marginTop: 8, flexDirection: 'row' }}>
-            <AdsBanner adUnitId={adUnitId} onLoadStart={() => setIsLoadingAds(true)} onAdLoaded={() => setIsLoadingAds(false)} onAdFailedToLoad={() => Alert.alert('failed ads')} />
+          <View style={{ marginVertical: 8, flexDirection: 'row' }}>
+            <AdsBanner
+              adUnitId={adUnitId}
+              onLoadStart={() => setIsLoadingAds(true)}
+              onAdLoaded={() => setIsLoadingAds(false)}
+              onAdFailedToLoad={() => setIsLoadingAds(false)}
+            />
           </View> : null
       }
       {

@@ -5,13 +5,16 @@ import { getFavoriteMangaList } from "../../hooks/useAppStorage"
 import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import { AdsBanner } from "../../components/AdsManager"
-// import { createRecommendations } from "../../services/recommendations"
+import { View } from "react-native"
+import { useAuth } from "../../hooks/useAuth"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7261642143'
 
 export default function FavoritesScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { userIsPremium } = useAuth()
   const [mangaList, setMangaList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingAds, setIsLoadingAds] = useState(false)
   const handleSelectManga = async (mangaData: any) => {
     navigation.navigate('Chapter', { mangaData })
   }
@@ -30,8 +33,18 @@ export default function FavoritesScreen({ navigation }: { navigation: Navigation
 
   return (
     <Container>
-      {isLoading && <Load />}
-      <AdsBanner adUnitId={adUnitId} />
+      {isLoading || isLoadingAds ? <Load /> : null}
+      {
+        !userIsPremium ?
+          <View style={{ marginVertical: 8, flexDirection: 'row' }}>
+            <AdsBanner
+              adUnitId={adUnitId}
+              onLoadStart={() => setIsLoadingAds(true)}
+              onAdLoaded={() => setIsLoadingAds(false)}
+              onAdFailedToLoad={() => setIsLoadingAds(false)}
+            />
+          </View> : null
+      }
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}
         data={mangaList}

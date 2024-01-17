@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react"
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { ActivityIndicator } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { getChapters, getMangaAggregation, LanguageTypes, OrderTypes } from "../../services/mangadex"
 import { Container, ChapterButton, ChapterList, HeaderWrapper, ChapterText, FiltersModalContainer, FilterForm, FilterFormWrapper, ChapterInput, FormField, ChapterDivider } from "./style"
 import { NavigationProp, RouteProp, useFocusEffect } from "@react-navigation/native"
@@ -14,6 +14,7 @@ import { Label } from "../../components/Label"
 import { useTheme } from "styled-components"
 import { useCurrentManga } from "./store"
 import { AdsBanner } from "../../components/AdsManager"
+import { useAuth } from "../../hooks/useAuth"
 
 const adUnitId = 'ca-app-pub-4863844449125415/7605085638'
 
@@ -104,6 +105,7 @@ const FiltersModal = memo(({
 
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
   const theme = useTheme()
+  const { userIsPremium } = useAuth()
   const queryClient = useQueryClient()
   const { aggregation, setAggregation } = useCurrentManga()
   const { mangaData } = route.params ?? {}
@@ -114,6 +116,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
   })
   const [chaptersTotal, setChaptersTotal] = useState(40)
   const [chaptersRead, setChaptersRead] = useState([])
+  const [isLoadingAds, setIsLoadingAds] = useState(false)
   const [chapterIsFavorite, setChapterIsFavorite] = useState(false)
   const currentQueryKey = `chapter-${mangaData?.id}`
 
@@ -252,7 +255,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
 
   return (
     <Container>
-      {isInitialLoading && <Load />}
+      {isInitialLoading || isLoadingAds ? <Load /> : null}
       <HeaderWrapper>
         <Label
           variant="Headline"
@@ -270,7 +273,17 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
           />
         </HeaderWrapper>
       </HeaderWrapper>
-      <AdsBanner adUnitId={adUnitId} />
+      {
+        !userIsPremium ?
+          <View style={{ marginVertical: 8, flexDirection: 'row' }}>
+            <AdsBanner
+              adUnitId={adUnitId}
+              onLoadStart={() => setIsLoadingAds(true)}
+              onAdLoaded={() => setIsLoadingAds(false)}
+              onAdFailedToLoad={() => setIsLoadingAds(false)}
+            />
+          </View> : null
+      }
       {
         chapters.length === 0
           ? <Label style={{ width: '100%', textAlign: 'center' }}>{internalization.t('searchNoDataFound')}</Label>

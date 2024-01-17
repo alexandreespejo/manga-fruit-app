@@ -13,6 +13,7 @@ import { useTags } from "../../hooks/useTags"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { SearchInput } from "../../components/SearchInput"
 import { AdsBanner } from "../../components/AdsManager"
+import { useAuth } from "../../hooks/useAuth"
 
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
@@ -70,13 +71,14 @@ const DEFAULT_PAGINATION = {
 }
 
 export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { userIsPremium } = useAuth()
   const theme = useTheme()
+  const [isLoadingAds, setIsLoadingAds] = useState(false)
   const pagination = useRef(DEFAULT_PAGINATION)
 
   const [search, setSearch] = useState('')
   const [searchData, setSearchData] = useState([])
   const [categories, setCategories] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(false)
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
 
   const handleSelectManga = async (mangaData: any) => {
@@ -120,12 +122,22 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
 
   return (
     <Container>
-      {isLoading && <Load />}
+      {isLoadingAds ? <Load /> : null}
       <Header>
         <SearchInput search={search} setSearch={setSearch} onSearch={handleSearch} />
         <Categories categories={categories} setCategories={setCategories} />
       </Header>
-      <AdsBanner adUnitId={adUnitId} />
+      {
+        !userIsPremium ?
+          <View style={{ marginVertical: 8, flexDirection: 'row' }}>
+            <AdsBanner
+              adUnitId={adUnitId}
+              onLoadStart={() => setIsLoadingAds(true)}
+              onAdLoaded={() => setIsLoadingAds(false)}
+              onAdFailedToLoad={() => setIsLoadingAds(false)}
+            />
+          </View> : null
+      }
       {searchData.length === 0 && <Label style={{ marginTop: 32 }} children={'No results for this search !'} variant="Title" />}
       <MangaListContainer
         contentContainerStyle={{ alignItems: 'center' }}

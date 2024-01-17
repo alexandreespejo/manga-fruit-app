@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Alert, Image, Modal, TouchableOpacity } from "react-native"
+import { Alert, Modal, TouchableOpacity } from "react-native"
 import { getPages } from "../../services/mangadex"
 import { ActionButton, ActionLabel, FooterContainer, ReaderContainer } from "./style"
 import { FontAwesome } from "@expo/vector-icons"
