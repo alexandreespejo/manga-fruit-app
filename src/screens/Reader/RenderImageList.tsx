@@ -5,6 +5,8 @@ import { AdsContainer } from "./style"
 import { useAppStore } from "../../store"
 import Load from "../../components/Load"
 import { AdsBanner } from "../../components/AdsManager"
+import { ImageZoom } from "@likashefqet/react-native-image-zoom"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -25,14 +27,7 @@ const ImageLoader = memo(({ uri }: { uri: string }) => {
   const [isImageLoading, setIsImageLoading] = useState(false)
   return (
     <View style={{ width: '100%', height: '100%' }}>
-      <Image
-        style={{ width: width, height: height, resizeMode: 'contain' }}
-        source={{ uri: uri, cache: 'force-cache' }}
-        onLoadStart={() => setIsImageLoading(true)}
-        onLoadEnd={() => setIsImageLoading(false)}
-        progressiveRenderingEnabled={Platform.OS === 'android'}
-      />
-      {isImageLoading && <Load />}
+
     </View>
   )
 })
@@ -57,9 +52,20 @@ const RenderZoomableImage = memo(({
 }: RenderZoomableImageType) => {
   const zoomableViewRef = createRef<ReactNativeZoomableView>()
 
-  if (item.type === "ads") {
+  if (item.type === "ads")
     return <AdsRender />
-  }
+
+  return <GestureHandlerRootView style={{ flex: 1 }}>
+    <ImageZoom
+      uri={item.uri}
+      minScale={0.5}
+      maxScale={3}
+      style={{ width: width, height: height, resizeMode: 'contain' }}
+      onInteractionStart={() => listRef?.current.setNativeProps({ scrollEnabled: false })}
+      onInteractionEnd={() => listRef?.current.setNativeProps({ scrollEnabled: true })}
+      resizeMode="contain"
+    />
+  </GestureHandlerRootView>
 
   return (
     <ReactNativeZoomableView
@@ -69,19 +75,23 @@ const RenderZoomableImage = memo(({
       maxZoom={3}
       minZoom={1}
       zoomStep={0}
-      onZoomBefore={(a, b, zoom) => {
-        if (!listRef?.current) return
+      initialZoom={1}
+      // onZoomBefore={(a, b, zoom) => {
+      //   if (!listRef?.current) return
 
-        if (zoom.zoomLevel > 1.3)
-          return listRef?.current.setNativeProps({ scrollEnabled: false })
+      //   if (zoom.zoomLevel > 1.3)
+      //     return listRef?.current.setNativeProps({ scrollEnabled: false })
 
-        if (zoom.zoomLevel <= 1.3)
-          return listRef?.current.setNativeProps({ scrollEnabled: true })
-      }}
-      // visualTouchFeedbackEnabled={false}
+      //   if (zoom.zoomLevel <= 1.3)
+      //     return listRef?.current.setNativeProps({ scrollEnabled: true })
+      // }}
       disablePanOnInitialZoom
     >
-      <ImageLoader {...item} />
+      <Image
+        style={{ width: width, height: height, resizeMode: 'contain' }}
+        source={{ uri: item.uri, cache: 'force-cache' }}
+        progressiveRenderingEnabled={Platform.OS === 'android'}
+      />
     </ReactNativeZoomableView>
   )
 })
@@ -89,7 +99,6 @@ const RenderZoomableImage = memo(({
 export const RenderImageList = memo(({
   imageList
 }: RenderImageListType) => {
-  const isVerticalOrientation = useAppStore(state => state.verticalOrientation)
   const listRef = useRef<FlatList<any>>()
 
   return (
@@ -106,7 +115,6 @@ export const RenderImageList = memo(({
       )}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      horizontal={!isVerticalOrientation}
       scrollEnabled
       pagingEnabled
     />

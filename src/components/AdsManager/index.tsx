@@ -11,7 +11,7 @@ const development = true
 
 export const AdsBanner: FC<AdsBannerType> = memo(({ adUnitId, onLoadStart, ...rest }) => {
   useEffect(() => onLoadStart, [])
-
+  return null
   return (
     <BannerAd
       unitId={development ? TestIds.BANNER : adUnitId}

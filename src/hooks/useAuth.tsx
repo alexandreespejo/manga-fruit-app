@@ -55,7 +55,8 @@ const cancelSubscriptionById = async (subscription: string): Promise<any> => {
   return data;
 };
 
-const useGoogleSignin = () => GoogleSignin
+// const useGoogleSignin = () => GoogleSignin
+const useGoogleSignin = () => ({} as any)
 
 export const useAuth = () => {
   const { configure, hasPlayServices, signIn: signInGoogle, signOut: signOutGoogle } = useGoogleSignin()

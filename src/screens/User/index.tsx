@@ -7,7 +7,7 @@ import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
 import { CustomButton } from "../../components/Button"
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin"
+// import { GoogleSigninButton } from "@react-native-google-signin/google-signin"
 import { useAuth } from "../../hooks/useAuth"
 import { SubscriptionCard } from "../../components/SubscriptionCard"
 import Load from "../../components/Load"
@@ -56,7 +56,7 @@ const SubscriptionManager = () => {
 }
 
 export default function UserConfigScreen() {
-  const { signIn, isSignedIn, authUserInfo, isLoading, userIsPremium } = useAuth()
+  // const { signIn, isSignedIn, authUserInfo, isLoading, userIsPremium } = useAuth()
   const { setShowSuggestion, showSuggestion, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
 
@@ -71,8 +71,8 @@ export default function UserConfigScreen() {
 
   return (
     <Container>
-      {isLoading && <Load />}
-      {
+      {/* {isLoading && <Load />} */}
+      {/* {
         isSignedIn ? (<>
           <UserProfileContainer>
             {
@@ -95,7 +95,7 @@ export default function UserConfigScreen() {
             onPress={signIn}
           />
         )
-      }
+      } */}
       <ConfigContainer style={{ marginTop: 16 }}>
         <Label variant="Title">{internalization.t('configScreenTitle')}</Label>
         <SwitchContainer>

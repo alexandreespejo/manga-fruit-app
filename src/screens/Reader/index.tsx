@@ -12,6 +12,7 @@ import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
 import { RenderImageList } from "./RenderImageList"
 import { useCurrentManga } from "../Chapter/store"
+import { Label } from "../../components/Label"
 
 const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
 
@@ -110,15 +111,8 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
 
   const handleChapterSequence = async (direction: 'prev' | 'next') => {
     const selectedChapter = chapterSequence[direction]
-    if (selectedChapter) {
-      // const readAmount = await getReadChapterAmount()
-      // if (isLoaded && Number(readAmount) > 4) {
-      //   await resetReadChapterAmount()
-      //   show()
-      // }
-
+    if (selectedChapter)
       setReaderData(selectedChapter)
-    }
   }
 
   const closePage = () => {
