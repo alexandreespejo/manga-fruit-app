@@ -4,7 +4,7 @@ import * as Font from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
 import mobileAds from 'react-native-google-mobile-ads'
 import { getAppIsReaderVertical, getIsDarkMode, getShowSuggestions } from "./useAppStorage"
-import { AppStoreType, useAppStore } from "../store"
+import { AppStoreType, getAsyncStorage, useAppStore } from "../store"
 import { useTags } from "./useTags"
 
 export function useLoadedAssets() {
@@ -12,6 +12,8 @@ export function useLoadedAssets() {
   const setThemeIsDark = useAppStore((state: AppStoreType) => state.setThemeIsDark)
   const setShowSuggestion = useAppStore((state: AppStoreType) => state.setShowSuggestion)
   const setVerticalOrientation = useAppStore((state: AppStoreType) => state.setVerticalOrientation)
+  const setLoadAllPagesOnce = useAppStore((state: AppStoreType) => state.setLoadAllPagesOnce)
+  const storeKeys = useAppStore((state: AppStoreType) => state.storeKeys)
   const [isLoadingComplete, setLoadingComplete] = useState(false)
 
   useEffect(() => {
@@ -34,6 +36,9 @@ export function useLoadedAssets() {
 
         const isReaderVertical = await getAppIsReaderVertical()
         setVerticalOrientation(isReaderVertical)
+
+        const loadAllPagesOnce = await getAsyncStorage(storeKeys.loadAllPagesOnce)
+        setLoadAllPagesOnce(loadAllPagesOnce)
 
         await loadTags()
 

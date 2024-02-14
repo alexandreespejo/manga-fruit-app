@@ -7,14 +7,11 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import Load from "../../components/Load"
 import { storeChapterRead } from "../../hooks/useAppStorage"
 import { CacheManager } from "react-native-expo-image-cache"
-// import { useInterstitialAd } from "react-native-google-mobile-ads"
 import internalization from "../../services/internalization"
 import { useTheme } from "styled-components"
 import { RenderImageList } from "./RenderImageList"
 import { useCurrentManga } from "../Chapter/store"
-import { Label } from "../../components/Label"
-
-const intersticialId = 'ca-app-pub-4863844449125415/5598910378'
+import { useAppStore } from "../../store"
 
 type ReaderDataType = {
   managaId: string
@@ -35,6 +32,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
   const [isLoading, setIsLoading] = useState(false)
   const [pages, setPages] = useState([])
   const [chapterSequence, setChapterSequence] = useState(defaultChapterSequenceState)
+  const loadAllPagesOnce = useAppStore((state) => state.loadAllPagesOnce)
 
   const loadChapterSequence = async () => {
     const currentChapterNumber = Number(readerData?.chapterNumber)
@@ -77,18 +75,19 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
           uri: `${data?.baseUrl}/data/${data?.chapter?.hash}/${item}`
         }
 
-        // if (pageList.length >= 5) CacheManager.get(page.uri, { md5: false }).getPath()
-        // else {
-        // const path = await CacheManager.get(page.uri, { md5: false }).getPath()
-        // page.uri = path
-        // }
+        if (pageList.length < 6 || loadAllPagesOnce) {
+          const path = await CacheManager.get(page.uri, { md5: false }).getPath()
+          page.uri = path
+        }
+
         pageList.push(page)
       }
 
-      pageList.push({
-        type: 'ads',
-        uri: ''
-      })
+      if (pageList.length)
+        pageList.splice(pageList.length / 2, 0, {
+          type: 'ads',
+          uri: ''
+        })
 
       setPages(pageList)
     } catch (e) {

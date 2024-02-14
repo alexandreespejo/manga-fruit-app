@@ -7,7 +7,7 @@ import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
 import { CustomButton } from "../../components/Button"
-// import { GoogleSigninButton } from "@react-native-google-signin/google-signin"
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin"
 import { useAuth } from "../../hooks/useAuth"
 import { SubscriptionCard } from "../../components/SubscriptionCard"
 import Load from "../../components/Load"
@@ -56,8 +56,8 @@ const SubscriptionManager = () => {
 }
 
 export default function UserConfigScreen() {
-  // const { signIn, isSignedIn, authUserInfo, isLoading, userIsPremium } = useAuth()
-  const { setShowSuggestion, showSuggestion, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
+  const { signIn, isSignedIn, authUserInfo, isLoading, userIsPremium } = useAuth()
+  const { setLoadAllPagesOnce, loadAllPagesOnce, setVerticalOrientation, verticalOrientation } = useAppStore((state: AppStoreType) => state)
   const theme = useTheme()
 
   const handlePress = async () => {
@@ -71,8 +71,8 @@ export default function UserConfigScreen() {
 
   return (
     <Container>
-      {/* {isLoading && <Load />} */}
-      {/* {
+      {isLoading && <Load />}
+      {
         isSignedIn ? (<>
           <UserProfileContainer>
             {
@@ -95,7 +95,7 @@ export default function UserConfigScreen() {
             onPress={signIn}
           />
         )
-      } */}
+      }
       <ConfigContainer style={{ marginTop: 16 }}>
         <Label variant="Title">{internalization.t('configScreenTitle')}</Label>
         <SwitchContainer>
@@ -115,16 +115,12 @@ export default function UserConfigScreen() {
         <SwitchContainer>
           <Switch
             trackColor={switchTrackColor}
-            thumbColor={showSuggestion ? theme.tint : '#f4f3f4'}
+            thumbColor={loadAllPagesOnce ? theme.tint : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => {
-              const newState = !showSuggestion
-              setAppShowSuggestions(newState)
-              setShowSuggestion(newState)
-            }}
-            value={showSuggestion}
+            onValueChange={() => setLoadAllPagesOnce(!loadAllPagesOnce)}
+            value={loadAllPagesOnce}
           />
-          <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configShowSuggestionLabel')}</Label>
+          <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configLoadPagesOnceLabel')}</Label>
         </SwitchContainer>
       </ConfigContainer>
       <CustomButton onPress={handlePress} style={{ marginTop: 16 }}>

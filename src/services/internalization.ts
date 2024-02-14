@@ -32,6 +32,7 @@ const internalization = new I18n({
     configShowSuggestionLabel: 'Show Home Suggestions',
     configIsDarkModeLabel: 'Dark Mode',
     configIsVerticalModeLabel: 'Vertical reading',
+    configLoadPagesOnceLabel: 'Load Pages at Once',
     configCommunityButton: 'Donations',
     becomePremium: 'Become Premium', // Added missing key
     becomePremiumDescription: 'Get rid of ads and access exclusive features for subscribers.', // Added missing key
@@ -70,6 +71,7 @@ const internalization = new I18n({
     configShowSuggestionLabel: 'Mostrar Sugestões no Inicio',
     configIsDarkModeLabel: 'Tema Escuro',
     configIsVerticalModeLabel: 'Leitura Vertical',
+    configLoadPagesOnceLabel: 'Carregar Páginas de Uma Vez',
     configCommunityButton: 'Doações',
     becomePremium: 'Virar Premium',
     becomePremiumDescription: 'Fique livre dos anúncios e tenha acesso a funções exclusivas para assinantes.',
@@ -108,6 +110,7 @@ const internalization = new I18n({
     configShowSuggestionLabel: 'Mostrar sugerencias al inicio',
     configIsDarkModeLabel: 'Modo Oscuro',
     configIsVerticalModeLabel: 'Lectura vertical',
+    configLoadPagesOnceLabel: 'Cargar páginas a la vez',
     configCommunityButton: 'Donaciones',
     becomePremium: 'Hacerse Premium', // Added missing key
     becomePremiumDescription: 'Libérate de los anuncios y accede a funciones exclusivas para suscriptores.', // Added missing key

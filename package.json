@@ -2,7 +2,6 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@likashefqet/react-native-image-zoom": "^2.2.0",
-    "@openspacelabs/react-native-zoomable-view": "^2.1.5",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/bottom-tabs": "6.0.9",
