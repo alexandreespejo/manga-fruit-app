@@ -9,7 +9,7 @@ type AdsBannerType = {
   style?: StyleProp<ViewStyle>
 } & Omit<BannerAdProps, 'unitId' | 'size'>
 
-const development = true
+const development = false
 
 export const AdsBanner: FC<AdsBannerType> = memo(({ adUnitId, onLoadStart, style, ...rest }) => {
   const { userIsPremium } = useAuth()
