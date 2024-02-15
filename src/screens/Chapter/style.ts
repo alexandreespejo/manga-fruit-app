@@ -68,7 +68,7 @@ export const HeaderWrapper = styled.View`
 `
 
 export const ChapterButton = styled.TouchableOpacity`
-   height: 30px;
+   padding: 15px 0;
    width: 100%;
 `
 

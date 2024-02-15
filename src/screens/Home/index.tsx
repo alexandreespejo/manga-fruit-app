@@ -10,10 +10,8 @@ import { LanguageTypes, getLastUpdates } from "../../services/mangadex"
 import { useQuery } from "@tanstack/react-query"
 import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../hooks/useAppStorage"
-import { Alert, View } from "react-native"
 import { SearchInputButton } from "../../components/SearchInput"
 import { AdsBanner } from "../../components/AdsManager"
-import { useAuth } from "../../hooks/useAuth"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -23,7 +21,6 @@ type RenderHorizontalListProps = {
 }
 
 export default function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const { userIsPremium } = useAuth()
   const showSuggestion = useAppStore((state: AppStoreType) => state.showSuggestion)
   const [recommendationList, setRecommendationList] = useState([])
   const [isLoadingAds, setIsLoadingAds] = useState(false)
@@ -36,7 +33,7 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     return data?.data ?? []
   }
 
-  const { isLoading, isError, data, error } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ['lastUpdates'],
     queryFn: loadLastUpdated,
   })
@@ -101,17 +98,13 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     <Container>
       {isLoading || isLoadingAds ? <Load /> : null}
       <SearchInputButton onPress={() => navigation.navigate('Search')} style={{ alignItems: 'center' }} />
-      {
-        !userIsPremium ?
-          <View style={{ marginVertical: 8, flexDirection: 'row' }}>
-            <AdsBanner
-              adUnitId={adUnitId}
-              onLoadStart={() => setIsLoadingAds(true)}
-              onAdLoaded={() => setIsLoadingAds(false)}
-              onAdFailedToLoad={() => setIsLoadingAds(false)}
-            />
-          </View> : null
-      }
+      <AdsBanner
+        adUnitId={adUnitId}
+        onLoadStart={() => setIsLoadingAds(true)}
+        onAdLoaded={() => setIsLoadingAds(false)}
+        onAdFailedToLoad={() => setIsLoadingAds(false)}
+        style={{ marginVertical: 8, flexDirection: 'row' }}
+      />
       {
         showSuggestion &&
         <ScrollContainer>

@@ -67,12 +67,13 @@ export const useAuth = () => {
 
   const updateCustomerInfo = async () => {
     if (!authUserInfo) return
-
     try {
       setIsLoading(true)
       const customer = await fetchCustomerData(authUserInfo.user.email)
       if (customer?.id && customer?.email === authUserInfo.user.email)
         setCustomerInfo(customer)
+      else
+        setCustomerInfo(undefined)
     } catch (e) {
       console.log(e)
     } finally {
@@ -113,6 +114,7 @@ export const useAuth = () => {
     try {
       await signOutGoogle();
       setAuthUserInfo(undefined)
+      setCustomerInfo(undefined)
     } catch (error) {
       console.error(error);
     } finally {

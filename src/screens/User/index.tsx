@@ -1,6 +1,6 @@
 import React from "react"
 import { ConfigContainer, Container, PremiumIndicatorContainer, SubscriptionContainer, SwitchContainer, UserProfile, UserProfileContainer } from "./style"
-import { Linking, Switch } from "react-native"
+import { Linking, Switch, View } from "react-native"
 import { Label } from "../../components/Label"
 import { setAppIsReaderVertical, setAppShowSuggestions } from "../../hooks/useAppStorage"
 import { useTheme } from "styled-components/native"
@@ -72,6 +72,9 @@ export default function UserConfigScreen() {
   return (
     <Container>
       {isLoading && <Load />}
+      <View style={{ display: 'flex', width: '90%' }}>
+        <Label variant="Title">Login</Label>
+      </View>
       {
         isSignedIn ? (<>
           <UserProfileContainer>

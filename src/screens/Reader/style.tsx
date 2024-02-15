@@ -1,11 +1,10 @@
-import { Dimensions } from 'react-native'
 import styled from 'styled-components/native'
-const { width, height } = Dimensions.get('window')
 
 export const AdsContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 24px 0;
-  height: ${height}px;
-  width: ${width}px;
 `
 
 export const ActionButton = styled.TouchableOpacity`

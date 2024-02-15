@@ -157,6 +157,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
             : (
               <RenderImageList
                 imageList={pages}
+                closePage={closePage}
               />
             )
         }

@@ -36,7 +36,7 @@ export default function MyTabs() {
       <Tab.Screen name="ConfigStack" component={UserConfigScreen} options={{
         tabBarLabel: '',
         headerShown: false,
-        tabBarIcon: ({ focused }) => <FontAwesome name="gear" size={30} color={focused ? theme.tint : 'lightgray'} />,
+        tabBarIcon: ({ focused }) => <FontAwesome name="user" size={30} color={focused ? theme.tint : 'lightgray'} />,
       }} />
     </Tab.Navigator>
   )
