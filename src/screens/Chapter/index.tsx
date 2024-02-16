@@ -103,6 +103,24 @@ const FiltersModal = memo(({
   )
 })
 
+type RenderChapterProps = {
+  item: any
+  isRead: boolean
+  openReader: (item: any) => void
+}
+
+const RenderChapter = ({ item, isRead, openReader }: RenderChapterProps) => {
+  const label = `${internalization.t('chapterListLabel')} ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
+  return (
+    <>
+      <ChapterButton onPress={() => openReader(item)}>
+        <ChapterText numberOfLines={1} isRead={isRead}>{label}</ChapterText>
+      </ChapterButton>
+      <ChapterDivider />
+    </>
+  )
+}
+
 const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) => {
   const theme = useTheme()
   const { userIsPremium } = useAuth()
@@ -209,7 +227,7 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
     })
   }
 
-  const openReader = async (chapterData: any) => {
+  const openReader = (chapterData: any) => {
     navigation.navigate('Reader', {
       data: {
         managaId: mangaData.id,
@@ -217,19 +235,6 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
         chapterNumber: chapterData?.attributes?.chapter,
       }
     })
-  }
-
-  const renderChapter = ({ item }) => {
-    const label = `${internalization.t('chapterListLabel')} ${item?.attributes?.chapter} ${item?.attributes?.title ? `: ${item?.attributes?.title}` : ''}`
-    const isRead = chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)
-    return (
-      <>
-        <ChapterButton onPress={() => openReader(item)}>
-          <ChapterText numberOfLines={1} isRead={isRead}>{label}</ChapterText>
-        </ChapterButton>
-        <ChapterDivider />
-      </>
-    )
   }
 
   const handleFilter = ({
@@ -287,19 +292,24 @@ const ChapterScreen = memo(({ navigation, route }: { navigation: NavigationProp<
       {
         chapters.length === 0
           ? <Label style={{ width: '100%', textAlign: 'center' }}>{internalization.t('searchNoDataFound')}</Label>
-          : <ChapterList
-            data={chapters}
-            renderItem={renderChapter}
-            keyExtractor={(item, index) => `${JSON.stringify(item)}_${index}`}
-            onEndReached={() => hasNextPage && fetchNextPage()}
-            getItemCount={() => chapters.length}
-            getItem={(data, index) => data[index]}
-            maxToRenderPerBatch={DEFAULT_PAGINATION.limit}
-            onEndReachedThreshold={0.5}
-            progressViewOffset={50}
-            refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
-            ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={theme.tint} />}
-          />
+          : (
+            <ChapterList
+              data={chapters}
+              renderItem={({ item }: any) => <RenderChapter item={item} isRead={chaptersRead && chaptersRead.find(data => data === item?.attributes?.chapter)} openReader={openReader} />}
+              keyExtractor={(item) => `${JSON.stringify(item)}`}
+              onEndReached={() => hasNextPage && fetchNextPage()}
+              getItemCount={() => chapters.length}
+              getItem={(data, index) => data[index]}
+              maxToRenderPerBatch={15}
+              initialNumToRender={15}
+              windowSize={15}
+              onEndReachedThreshold={0.5}
+              progressViewOffset={50}
+              refreshing={(isFetchingNextPage || isFetching) && hasNextPage}
+              ListFooterComponent={((isFetchingNextPage || isFetching) && hasNextPage) && <ActivityIndicator size="large" color={theme.tint} />}
+              removeClippedSubviews
+            />
+          )
       }
 
 

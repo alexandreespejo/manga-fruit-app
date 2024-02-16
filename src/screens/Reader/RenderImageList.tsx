@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react"
-import { Dimensions, FlatList, View } from "react-native"
+import { Dimensions, FlatList, View, VirtualizedList } from "react-native"
 import { AdsContainer } from "./style"
 import Load from "../../components/Load"
 import { AdsBanner } from "../../components/AdsManager"
@@ -95,22 +95,29 @@ export const RenderImageList = memo(({
   const listRef = useRef<FlatList<any>>()
 
   return (
-    <FlatList
+    <VirtualizedList
       ref={listRef}
       keyExtractor={(item) => `key-${JSON.stringify(item)}}`}
       data={imageList}
       style={{ width: width, height: height }}
-      renderItem={props => (
-        <RenderZoomableImage
-          listRef={listRef}
-          closePage={closePage}
-          {...props}
-        />
-      )}
+      renderItem={props => {
+        return (
+          <RenderZoomableImage
+            listRef={listRef}
+            closePage={closePage}
+            {...props}
+          />
+        )
+      }}
+      getItemCount={() => imageList.length}
+      getItem={(data, index) => data[index]}
+      maxToRenderPerBatch={2}
+      initialNumToRender={2}
+      windowSize={2}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       horizontal={!verticalOrientation}
-      onViewableItemsChanged={(info) => console.log(info)}
+      // onViewableItemsChanged={(info) => console.log(info)}
       scrollEnabled
       pagingEnabled
     />
