@@ -12,6 +12,7 @@ import { useTheme } from "styled-components"
 import { RenderImageList } from "./RenderImageList"
 import { useCurrentManga } from "../Chapter/store"
 import { useAppStore } from "../../store"
+import { useAuth } from "../../hooks/useAuth"
 
 type ReaderDataType = {
   managaId: string
@@ -26,6 +27,7 @@ const defaultChapterSequenceState = {
 
 export default function ReaderScreen({ navigation, route }: { navigation: NavigationProp<any>, route: RouteProp<any> }) {
   const theme = useTheme()
+  const { userIsPremium } = useAuth()
   const aggregation = useCurrentManga(state => state.aggregation)
   const [readerData, setReaderData] = useState<ReaderDataType>(route?.params?.data)
   const [focusMode, setFocusMode] = useState(false)
@@ -83,7 +85,7 @@ export default function ReaderScreen({ navigation, route }: { navigation: Naviga
         pageList.push(page)
       }
 
-      if (pageList.length)
+      if (pageList.length && !userIsPremium)
         pageList.splice(pageList.length / 2, 0, {
           type: 'ads',
           uri: ''

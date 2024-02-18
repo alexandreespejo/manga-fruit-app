@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react"
 import { Dimensions, FlatList, View, VirtualizedList } from "react-native"
 import { AdsContainer } from "./style"
 import Load from "../../components/Load"
-import { AdsBanner } from "../../components/AdsManager"
+import { AdsBanner, AdsBannerType } from "../../components/AdsManager"
 import { ImageZoom } from "@likashefqet/react-native-image-zoom"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { CacheManager } from "react-native-expo-image-cache"
@@ -11,6 +11,7 @@ import { Label } from "../../components/Label"
 import internalization from "../../services/internalization"
 import { CustomButton } from "../../components/Button"
 import { useNavigation } from "@react-navigation/native"
+import { useAuth } from "../../hooks/useAuth"
 
 const readerId1 = 'ca-app-pub-4863844449125415/1684777520'
 const readerId2 = 'ca-app-pub-4863844449125415/2147526547'
@@ -29,13 +30,13 @@ type RenderImageListType = {
   closePage: () => void
 }
 
-const AdsRender = memo(({ closePage }: Pick<RenderImageListType, 'closePage'>) => {
+const AdsRender = memo(({ closePage, ...rest }: Pick<RenderImageListType, 'closePage'> & Omit<AdsBannerType, 'adUnitId'>) => {
   const navigation = useNavigation()
   return (
     <AdsContainer style={{ width, height }}>
       <Label variant="Headline">Ads</Label>
       <View style={{ marginTop: 32 }}>
-        <AdsBanner adUnitId={readerId1} />
+        <AdsBanner adUnitId={readerId1} {...rest} />
       </View>
       <View style={{ marginTop: 32 }}>
         <AdsBanner adUnitId={readerId2} />
@@ -69,22 +70,28 @@ const RenderZoomableImage = memo(({
   }, [])
 
   if (item.type === "ads")
-    return <AdsRender closePage={closePage} />
-
-  return (<GestureHandlerRootView style={{ flex: 1 }}>
-    <ImageZoom
-      uri={item.uri}
-      minScale={0.5}
-      maxScale={3}
-      style={{ width: width, height: height, resizeMode: 'contain' }}
-      onInteractionStart={() => listRef?.current.setNativeProps({ scrollEnabled: false })}
-      onInteractionEnd={() => listRef?.current.setNativeProps({ scrollEnabled: true })}
+    return <AdsRender closePage={closePage}
       onLoadStart={() => setIsImageLoading(true)}
-      onLoadEnd={() => setIsImageLoading(false)}
-      resizeMode="contain"
+      onAdLoaded={() => setIsImageLoading(false)}
+      onAdFailedToLoad={() => setIsImageLoading(false)}
     />
-    {isImageLoading && <Load />}
-  </GestureHandlerRootView>)
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ImageZoom
+        uri={item.uri}
+        minScale={0.5}
+        maxScale={3}
+        style={{ width: width, height: height, resizeMode: 'contain' }}
+        onInteractionStart={() => listRef?.current.setNativeProps({ scrollEnabled: false })}
+        onInteractionEnd={() => listRef?.current.setNativeProps({ scrollEnabled: true })}
+        onLoadStart={() => setIsImageLoading(true)}
+        onLoadEnd={() => setIsImageLoading(false)}
+        resizeMode="contain"
+      />
+      {isImageLoading && <Load />}
+    </GestureHandlerRootView>
+  )
 })
 
 export const RenderImageList = memo(({

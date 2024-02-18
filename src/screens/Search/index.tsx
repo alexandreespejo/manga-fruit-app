@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { NavigationProp } from '@react-navigation/native'
 import { Alert, ActivityIndicator, Modal, TouchableOpacity, FlatList, View } from "react-native"
 import { CategoriesButton, CategoriesContainer, CategoriesItemContainer, Container, Header, MangaListContainer } from "./style"
@@ -119,6 +119,8 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   }
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
+
+  useEffect(handleSearch, [])
 
   return (
     <Container>

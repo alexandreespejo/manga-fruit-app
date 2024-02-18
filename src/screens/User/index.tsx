@@ -1,8 +1,8 @@
 import React from "react"
 import { ConfigContainer, Container, PremiumIndicatorContainer, SubscriptionContainer, SwitchContainer, UserProfile, UserProfileContainer } from "./style"
-import { Linking, Switch, View } from "react-native"
+import { Linking, ScrollView, Switch, View } from "react-native"
 import { Label } from "../../components/Label"
-import { setAppIsReaderVertical, setAppShowSuggestions } from "../../hooks/useAppStorage"
+import { setAppIsReaderVertical } from "../../hooks/useAppStorage"
 import { useTheme } from "styled-components/native"
 import { AppStoreType, useAppStore } from "../../store"
 import internalization from "../../services/internalization"
@@ -24,9 +24,6 @@ const SubscriptionManager = () => {
         <>
           <CustomButton onPress={manageBilling} style={{ marginTop: 16 }}>
             {internalization.t('manageSubButtonText')}
-          </CustomButton>
-          <CustomButton onPress={signOut} style={{ marginTop: 16 }}>
-            {internalization.t('logoutButtonText')}
           </CustomButton>
         </>
       ) : (
@@ -51,6 +48,9 @@ const SubscriptionManager = () => {
       <CustomButton onPress={updateCustomerInfo} style={{ marginTop: 16 }}>
         {internalization.t('updateButtonText')}
       </CustomButton>
+      <CustomButton onPress={signOut} style={{ marginTop: 16 }}>
+        {internalization.t('logoutButtonText')}
+      </CustomButton>
     </>
   )
 }
@@ -71,64 +71,66 @@ export default function UserConfigScreen() {
 
   return (
     <Container>
-      {isLoading && <Load />}
-      <View style={{ display: 'flex', width: '90%' }}>
-        <Label variant="Title">Login</Label>
-      </View>
-      {
-        isSignedIn ? (<>
-          <UserProfileContainer>
-            {
-              userIsPremium ? (
-                <PremiumIndicatorContainer>
-                  <MaterialCommunityIcons name="crown-circle" size={24} color={'white'} />
-                </PremiumIndicatorContainer>
-              ) : null
-            }
-            <UserProfile source={{ uri: authUserInfo.user.photo ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }} />
-          </UserProfileContainer>
-          <Label variant="Title" children={`${authUserInfo.user.name}`} />
-          <SubscriptionManager />
-        </>
-        ) : (
-          <GoogleSigninButton
-            style={{ marginTop: 32 }}
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={signIn}
-          />
-        )
-      }
-      <ConfigContainer style={{ marginTop: 16 }}>
-        <Label variant="Title">{internalization.t('configScreenTitle')}</Label>
-        <SwitchContainer>
-          <Switch
-            trackColor={switchTrackColor}
-            thumbColor={verticalOrientation ? theme.tint : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => {
-              const newState = !verticalOrientation
-              setVerticalOrientation(newState)
-              setAppIsReaderVertical(newState)
-            }}
-            value={verticalOrientation}
-          />
-          <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configIsVerticalModeLabel')}</Label>
-        </SwitchContainer>
-        <SwitchContainer>
-          <Switch
-            trackColor={switchTrackColor}
-            thumbColor={loadAllPagesOnce ? theme.tint : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setLoadAllPagesOnce(!loadAllPagesOnce)}
-            value={loadAllPagesOnce}
-          />
-          <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configLoadPagesOnceLabel')}</Label>
-        </SwitchContainer>
-      </ConfigContainer>
-      <CustomButton onPress={handlePress} style={{ marginTop: 16 }}>
-        {internalization.t('configCommunityButton')}
-      </CustomButton>
+      <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
+        {isLoading && <Load />}
+        <View style={{ display: 'flex', width: '90%', marginTop: 16 }}>
+          <Label variant="Title">Login</Label>
+        </View>
+        {
+          isSignedIn ? (<>
+            <UserProfileContainer>
+              {
+                userIsPremium ? (
+                  <PremiumIndicatorContainer>
+                    <MaterialCommunityIcons name="crown-circle" size={24} color={'white'} />
+                  </PremiumIndicatorContainer>
+                ) : null
+              }
+              <UserProfile source={{ uri: authUserInfo.user.photo ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }} />
+            </UserProfileContainer>
+            <Label variant="Title" children={`${authUserInfo.user.name}`} />
+            <SubscriptionManager />
+          </>
+          ) : (
+            <GoogleSigninButton
+              style={{ marginTop: 32 }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={signIn}
+            />
+          )
+        }
+        <ConfigContainer style={{ marginTop: 16 }}>
+          <Label variant="Title">{internalization.t('configScreenTitle')}</Label>
+          <SwitchContainer>
+            <Switch
+              trackColor={switchTrackColor}
+              thumbColor={verticalOrientation ? theme.tint : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={() => {
+                const newState = !verticalOrientation
+                setVerticalOrientation(newState)
+                setAppIsReaderVertical(newState)
+              }}
+              value={verticalOrientation}
+            />
+            <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configIsVerticalModeLabel')}</Label>
+          </SwitchContainer>
+          <SwitchContainer>
+            <Switch
+              trackColor={switchTrackColor}
+              thumbColor={loadAllPagesOnce ? theme.tint : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={() => setLoadAllPagesOnce(!loadAllPagesOnce)}
+              value={loadAllPagesOnce}
+            />
+            <Label variant="Text" style={{ marginLeft: 8 }}>{internalization.t('configLoadPagesOnceLabel')}</Label>
+          </SwitchContainer>
+        </ConfigContainer>
+        <CustomButton onPress={handlePress} style={{ marginTop: 16 }}>
+          {internalization.t('configCommunityButton')}
+        </CustomButton>
+      </ScrollView>
     </Container>
   )
 }

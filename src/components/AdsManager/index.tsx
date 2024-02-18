@@ -3,7 +3,7 @@ import { BannerAd, BannerAdSize, TestIds, BannerAdProps } from "react-native-goo
 import { useAuth } from "../../hooks/useAuth";
 import { StyleProp, View, ViewStyle } from "react-native";
 
-type AdsBannerType = {
+export type AdsBannerType = {
   adUnitId: string
   onLoadStart?: () => void
   style?: StyleProp<ViewStyle>
