@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import { SearchInput } from "../../components/SearchInput"
 import { AdsBanner } from "../../components/AdsManager"
 import { useAuth } from "../../hooks/useAuth"
-
+import recommendations from '../../services/recommendations.json'
 const adUnitId = 'ca-app-pub-4863844449125415/3423097775'
 
 function Categories({ categories, setCategories }: { categories: string[], setCategories: React.Dispatch<React.SetStateAction<string[]>> }) {
@@ -70,6 +70,8 @@ const DEFAULT_PAGINATION = {
   total: 15,
 }
 
+const defaultDataList = recommendations.data
+
 export default function SearchScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const { userIsPremium } = useAuth()
   const theme = useTheme()
@@ -77,7 +79,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   const pagination = useRef(DEFAULT_PAGINATION)
 
   const [search, setSearch] = useState('')
-  const [searchData, setSearchData] = useState([])
+  const [searchData, setSearchData] = useState(defaultDataList)
   const [categories, setCategories] = useState<string[]>([])
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
 
@@ -86,6 +88,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   }
 
   const handleSearch = () => {
+    if (!search.length) return setSearchData(defaultDataList)
     setSearchData([])
     pagination.current = { ...DEFAULT_PAGINATION }
     searchRequest()
@@ -94,7 +97,7 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   const searchRequest = () => {
     const { page, limit, total } = pagination.current
     const offset = page * limit
-    if (offset && offset > total) return
+    if ((offset && offset > total) || !search.length) return
 
     setIsFetchingNextPage(true)
     getSearch(search, limit, offset, categories).then((data) => {
@@ -119,8 +122,6 @@ export default function SearchScreen({ navigation }: { navigation: NavigationPro
   }
 
   const renderManga = ({ item }) => <MangaCard key={item.id} data={item} onSelectManga={handleSelectManga} />
-
-  useEffect(handleSearch, [])
 
   return (
     <Container>

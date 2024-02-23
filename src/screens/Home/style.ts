@@ -8,7 +8,6 @@ export const Container = styled.SafeAreaView`
 
 export const ScrollContainer = styled.ScrollView`
   flex: 1;
-  margin-top: 8px;
 `
 
 export const SearchNavigatorIndicator = styled.View`
@@ -42,7 +41,5 @@ export const SuggestionFieldContainer = styled.View`
 `
 
 export const MangaListContainer = styled(VirtualizedList)`
-  margin-top: 10px;
   width:100%;
-  min-height: 300px;
 `

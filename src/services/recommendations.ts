@@ -1,4 +1,5 @@
 import axios from "axios"
+import recommendations from './recommendations.json'
 
 export const createRecommendations = async (mangaList: any[]) => {
   const body = { topten: mangaList }
@@ -6,7 +7,7 @@ export const createRecommendations = async (mangaList: any[]) => {
 }
 
 export const getRecommendations = async (key?: 'topten') => {
-  const { data } = await axios.get('https://getpantry.cloud/apiv1/pantry/1b33986d-c6a6-4b69-97e7-2ccf27ac9c00/basket/recommendations')
+  const { data } = recommendations
 
   return data[key] ?? data
 }

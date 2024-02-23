@@ -1,19 +1,30 @@
 import React, { memo, useEffect, useState } from "react"
-import { Image, InfoWrapper, MangaCardContainer, Title, TitleContainer } from "./style"
 import { getCover } from "../../services/mangadex"
 import { Label } from "../Label"
 import { Platform, StyleProp, ViewStyle } from "react-native"
+import styled from 'styled-components/native'
+
+const MangaCardContainer = styled.TouchableOpacity`
+  display: flex;
+  flex-direction: column;
+  width: 107px;
+`;
+
+const Image = styled.Image`
+  height: 157px;
+  width: 107px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+`;
 
 interface MangaCardProps {
   data: any
   onSelectManga: (data: any) => void
-  variant?: 'Large' | 'Small'
   style?: StyleProp<ViewStyle>
 }
 
-export const MangaCard = memo(({
+export const MangaCardLarge = memo(({
   data,
-  variant = 'Large',
   onSelectManga,
   style
 }: MangaCardProps) => {
@@ -45,18 +56,12 @@ export const MangaCard = memo(({
   }
 
   return (
-    <MangaCardContainer onPress={onCardClick} variant={variant} style={style}>
+    <MangaCardContainer onPress={onCardClick} style={style}>
       <Image
         source={cover ? { uri: cover } : require('./loading-image.png')}
-        variant={variant}
         progressiveRenderingEnabled={Platform.OS === 'android'}
       />
-      <InfoWrapper>
-        <TitleContainer>
-          <Label variant="Description" numberOfLines={2}>{data?.attributes?.title?.en}</Label>
-          {variant === 'Large' && <Title autor>Status: {data?.attributes?.status ?? ''}</Title>}
-        </TitleContainer>
-      </InfoWrapper>
+      <Label variant="Description" numberOfLines={2}>{data?.attributes?.title?.en}</Label>
     </MangaCardContainer>
   )
 })  

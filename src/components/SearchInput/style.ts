@@ -1,27 +1,22 @@
+import { css } from "styled-components";
 import styled from "styled-components/native";
-
+const SearchButtonStyle = css`
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+height: 100%;
+width: 50px;
+border-radius: 8px;
+background-color: ${(props) => props.theme.tint};
+`
 export const SearchButton = styled.TouchableOpacity`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 75px;
-  border-radius: 8px;
-  background-color: ${(props) => props.theme.tint};
+  ${SearchButtonStyle}
 `
 
 export const SearchButtonDisabled = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 75px;
-  border-radius: 8px;
-  background-color: ${(props) => props.theme.tint};
+${SearchButtonStyle}
 `
-
 export const SearchContainer = styled.View`
   flex-direction: row;
   align-items: center;

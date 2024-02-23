@@ -76,7 +76,8 @@ export const getLastUpdates = async (
       limit: 10,
       availableTranslatedLanguage: [lang ?? 'pt-br'],
       includes: ['cover_art'],
-      "order[updatedAt]": "desc"
+      "order[updatedAt]": "desc",
+      contentRating: ['safe']
     }
   })
 

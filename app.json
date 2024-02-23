@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Manga Fruit",
-    "slug": "expo-template-tabs",
-    "version": "1.5.1",
+    "slug": "manga-fruit",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -38,15 +38,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.alexandrehse.expotemplatetabs"
+      "bundleIdentifier": "com.manga.fruit"
     },
     "android": {
-      "versionCode": 44,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#EE6364"
       },
-      "package": "com.alexandrehse.expotemplatetabs"
+      "package": "com.manga.fruit"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

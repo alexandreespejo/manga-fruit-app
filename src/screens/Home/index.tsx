@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { NavigationProp, useFocusEffect } from '@react-navigation/native'
 import { Container, MangaListContainer, ScrollContainer } from "./style"
-import { MangaCard } from "../../components/MangaCard"
 import Load from "../../components/Load"
 import internalization from "../../services/internalization"
 import { getRecommendations } from "../../services/recommendations"
@@ -12,6 +11,8 @@ import { AppStoreType, useAppStore } from "../../store"
 import { getLastVisited } from "../../hooks/useAppStorage"
 import { SearchInputButton } from "../../components/SearchInput"
 import { AdsBanner } from "../../components/AdsManager"
+import { MangaCardLarge } from "../../components/MangaCard/manga-card-large"
+import { View } from "react-native"
 
 const adUnitId = 'ca-app-pub-4863844449125415/1327516507'
 
@@ -43,9 +44,8 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
   }
 
   const renderManga = ({ item }) => (
-    <MangaCard
+    <MangaCardLarge
       key={item.id}
-      variant="Small"
       data={item}
       onSelectManga={handleSelectManga}
       style={{ marginLeft: 16 }}
@@ -59,11 +59,11 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
     if (list.length === 0) return null
 
     return (
-      <>
+      <View style={{ display: 'flex', flexDirection: 'column', marginTop: 32 }}>
         <Label
-          variant="Title"
+          variant="Headline"
           children={title}
-          style={{ paddingHorizontal: 32, fontWeight: "bold" }}
+          style={{ paddingHorizontal: 32, fontWeight: "bold", marginBottom: 16 }}
         />
         <MangaListContainer
           data={list}
@@ -72,9 +72,10 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
           getItemCount={() => list.length}
           getItem={(data, index) => data[index]}
           renderItem={renderManga}
+          showsHorizontalScrollIndicator={false}
           horizontal
         />
-      </>
+      </View>
     )
   }
 
@@ -107,7 +108,7 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
       />
       {
         showSuggestion &&
-        <ScrollContainer>
+        <ScrollContainer showsVerticalScrollIndicator={false}>
           <RenderHorizontalList
             title={internalization.t('homeLastVisited')}
             list={lastVisitedList ?? []}
@@ -116,10 +117,10 @@ export default function HomeScreen({ navigation }: { navigation: NavigationProp<
             title={internalization.t('homeMostPopular')}
             list={recommendationList ?? []}
           />
-          <RenderHorizontalList
+          {/* <RenderHorizontalList
             title={internalization.t('homeLastUpdated')}
             list={data ?? []}
-          />
+          /> */}
         </ScrollContainer>
       }
     </Container>

@@ -19,7 +19,7 @@ export function SearchInputButton(props: TouchableOpacityProps) {
       <SearchContainer>
         <Label variant="Title" children={internalization.t('searchInputPlaceholder')} style={{ paddingLeft: 8 }} />
         <SearchButtonDisabled>
-          <FontAwesome name="search" size={24} color={theme.background} />
+          <FontAwesome name="search" size={16} color={theme.text} />
         </SearchButtonDisabled>
       </SearchContainer>
     </TouchableOpacity>
@@ -40,7 +40,7 @@ export function SearchInput({ search, setSearch, onSearch, disabled }: SearchInp
         pointerEvents={disabled ? "none" : 'auto'}
       />
       <SearchButton onPress={onSearch} disabled={disabled}>
-        <FontAwesome name="search" size={24} color={theme.background} />
+        <FontAwesome name="search" size={16} color={theme.text} />
       </SearchButton>
     </SearchContainer>
   )
