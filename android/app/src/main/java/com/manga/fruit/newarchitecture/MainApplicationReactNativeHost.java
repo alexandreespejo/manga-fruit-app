@@ -1,4 +1,4 @@
-package com.alexandrehse.expotemplatetabs.newarchitecture;
+package com.manga.fruit.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.alexandrehse.expotemplatetabs.BuildConfig;
-import com.alexandrehse.expotemplatetabs.newarchitecture.components.MainComponentsRegistry;
-import com.alexandrehse.expotemplatetabs.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.manga.fruit.BuildConfig;
+import com.manga.fruit.newarchitecture.components.MainComponentsRegistry;
+import com.manga.fruit.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -41,7 +41,7 @@
       "bundleIdentifier": "com.manga.fruit"
     },
     "android": {
-      "versionCode": 1,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#EE6364"
@@ -53,7 +53,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "a3fc4a59-ee84-4a6d-8498-14617d4d9ae6"
+        "projectId": "d0a6d89d-43e5-4087-87ab-c8dacb4fe06a"
       }
     }
   },

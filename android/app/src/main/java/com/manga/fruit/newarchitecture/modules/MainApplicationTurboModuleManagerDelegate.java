@@ -1,4 +1,4 @@
-package com.alexandrehse.expotemplatetabs.newarchitecture.modules;
+package com.manga.fruit.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

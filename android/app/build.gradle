@@ -143,11 +143,11 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId 'com.alexandrehse.expotemplatetabs'
+        applicationId 'com.manga.fruit'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 44
-        versionName "1.5.1"
+        versionCode 3
+        versionName "1.0.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -238,7 +238,7 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    namespace 'com.alexandrehse.expotemplatetabs'
+    namespace 'com.manga.fruit'
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

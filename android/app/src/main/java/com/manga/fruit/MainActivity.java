@@ -1,4 +1,4 @@
-package com.alexandrehse.expotemplatetabs;
+package com.manga.fruit;
 
 import android.os.Build;
 import android.os.Bundle;
